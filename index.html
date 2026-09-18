@@ -1,0 +1,2541 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zahlendrache 1x1</title>
+<style>
+/* ============================================================
+   Zahlendrache – das kleine 1x1
+   Farbwelt: warmes Petrol als Grund, Mandarine als Akzent,
+   jede Reihe hat ihre eigene Farbe (Reihe = Information).
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  --ground:        #f1f4f2;
+  --ground-2:      #e3e9e6;
+  --surface:       #ffffff;
+  --surface-2:     #f7faf8;
+  --ink:           #16303b;
+  --ink-soft:      #567680;
+  --ink-faint:     #8aa3ab;
+  --line:          #d9e2df;
+
+  --accent:        #f26430;
+  --accent-deep:   #d34c1c;
+  --accent-soft:   #ffe7dd;
+  --good:          #1c9d6c;
+  --good-soft:     #d9f2e7;
+  --warn:          #c9911c;
+  --info:          #2b87d3;
+  --info-deep:     #1f6ba8;
+  --info-soft:     #ddeefb;
+
+  --dragon-skin:   #2fb37f;
+  --dragon-belly:  #9fe3c4;
+  --dragon-horn:   #f2c14e;
+  --dragon-cheek:  #ffb3a0;
+
+  --shadow-key:    rgba(22, 48, 59, .22);
+  --shadow-soft:   0 2px 10px rgba(22, 48, 59, .07);
+
+  --r-1: 10px;
+  --r-2: 16px;
+  --r-3: 24px;
+
+  --row-1:  #7c6ce0;
+  --row-2:  #1fa97a;
+  --row-3:  #2b87d3;
+  --row-4:  #e07b39;
+  --row-5:  #d94f4f;
+  --row-6:  #17998f;
+  --row-7:  #b75bc9;
+  --row-8:  #c9911c;
+  --row-9:  #5c77d6;
+  --row-10: #d95f8b;
+
+  --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
+  --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground:      #0f1f27;
+    --ground-2:    #16303b;
+    --surface:     #17313d;
+    --surface-2:   #1d3b48;
+    --ink:         #eaf3f1;
+    --ink-soft:    #a2bcc3;
+    --ink-faint:   #6d8b94;
+    --line:        #274a58;
+    --accent:      #ff7d4d;
+    --accent-deep: #ff9a72;
+    --accent-soft: #3a2419;
+    --good:        #3fc795;
+    --good-soft:   #123a2d;
+    --warn:        #e8bb55;
+    --info:        #5cb0f0;
+    --info-deep:   #7cc4fb;
+    --info-soft:   #14303f;
+    --shadow-key:  rgba(0, 0, 0, .5);
+    --shadow-soft: 0 2px 12px rgba(0, 0, 0, .3);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground:      #0f1f27;
+  --ground-2:    #16303b;
+  --surface:     #17313d;
+  --surface-2:   #1d3b48;
+  --ink:         #eaf3f1;
+  --ink-soft:    #a2bcc3;
+  --ink-faint:   #6d8b94;
+  --line:        #274a58;
+  --accent:      #ff7d4d;
+  --accent-deep: #ff9a72;
+  --accent-soft: #3a2419;
+  --good:        #3fc795;
+  --good-soft:   #123a2d;
+  --warn:        #e8bb55;
+  --info:        #5cb0f0;
+  --info-deep:   #7cc4fb;
+  --info-soft:   #14303f;
+  --shadow-key:  rgba(0, 0, 0, .5);
+  --shadow-soft: 0 2px 12px rgba(0, 0, 0, .3);
+}
+
+* { box-sizing: border-box; }
+
+/* Muss die display-Regeln der Komponenten schlagen */
+[hidden] { display: none !important; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+}
+
+h1, h2, h3, .question, .mode-title, .btn, .pad button {
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-wrap: balance;
+}
+
+button { font-family: inherit; color: inherit; }
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+#fx {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.app {
+  min-height: 100%;
+  max-width: 560px;
+  margin: 0 auto;
+  padding-inline: 16px;
+  padding-block: 14px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  flex: 1;
+}
+
+.screen-center { justify-content: center; }
+
+/* ---------------- Kopfzeile ---------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand-dragon { width: 42px; height: 42px; flex: none; }
+.brand h1 { margin: 0; font-size: 1.5rem; letter-spacing: -.01em; }
+.tagline { margin: 0; font-size: .8rem; color: var(--ink-soft); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+
+.icon-btn {
+  width: 42px; height: 42px;
+  flex: none;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform .12s ease, border-color .12s ease;
+}
+.icon-btn:hover { border-color: var(--accent); }
+.icon-btn:active { transform: scale(.94); }
+.icon-btn[aria-pressed="false"] { opacity: .45; }
+
+/* ---------------- Statuskarte ---------------- */
+
+.status-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--surface);
+  border-radius: var(--r-3);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-soft);
+}
+
+.status-level { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.eyebrow {
+  font-size: .72rem; font-weight: 800; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--accent);
+}
+.status-level strong { font-family: var(--font-display); font-size: 1.25rem; line-height: 1.15; }
+
+.xpbar {
+  height: 9px;
+  background: var(--ground-2);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.xpbar-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: linear-gradient(90deg, var(--accent), var(--dragon-horn));
+  transition: width .5s cubic-bezier(.2,.8,.3,1);
+}
+.xp-note { font-size: .76rem; color: var(--ink-soft); }
+
+.status-goal { position: relative; width: 84px; height: 84px; flex: none; display: grid; place-items: center; }
+.ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
+.ring-track { fill: none; stroke: var(--ground-2); stroke-width: 9; }
+.ring-fill {
+  fill: none; stroke: var(--good); stroke-width: 9; stroke-linecap: round;
+  stroke-dasharray: 207.3; stroke-dashoffset: 207.3;
+  transition: stroke-dashoffset .6s cubic-bezier(.2,.8,.3,1);
+}
+.ring-label { position: relative; text-align: center; line-height: 1.1; }
+.ring-label strong { display: block; font-family: var(--font-display); font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+.ring-label span { font-size: .62rem; color: var(--ink-soft); font-weight: 700; }
+
+.star-strip {
+  font-size: .88rem;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding-inline: 4px;
+}
+.star-strip strong { color: var(--ink); font-variant-numeric: tabular-nums; }
+.star-icon { color: var(--dragon-horn); font-size: 1.1em; }
+.sep { color: var(--ink-faint); }
+
+/* ---------------- Spielmodi ---------------- */
+
+.modes { display: grid; gap: 10px; }
+
+.mode {
+  text-align: left;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 13px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform .1s ease, box-shadow .1s ease, border-color .1s ease;
+}
+.mode:hover { border-color: var(--accent); }
+.mode:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
+.mode-title { font-size: 1.12rem; }
+.mode-sub { font-size: .84rem; color: var(--ink-soft); }
+
+.mode-hero {
+  background: var(--accent);
+  border-color: var(--accent-deep);
+  box-shadow: 0 4px 0 var(--accent-deep);
+  color: #fff;
+  padding: 16px;
+}
+.mode-hero:hover { border-color: var(--accent-deep); }
+.mode-hero:active { box-shadow: 0 0 0 var(--accent-deep); transform: translateY(4px); }
+.mode-hero .mode-sub { color: rgba(255,255,255,.88); }
+.mode-kicker {
+  font-size: .68rem; font-weight: 800; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(255,255,255,.8);
+}
+.mode-hero .mode-title { font-size: 1.4rem; }
+
+.mode[disabled] { opacity: .45; cursor: default; box-shadow: none; }
+
+/* ---------------- Reihen-Raster ---------------- */
+
+.section-title {
+  margin: 4px 0 -6px;
+  font-size: 1.05rem;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.hint { font-family: var(--font-body); font-size: .78rem; font-weight: 600; color: var(--ink-soft); }
+
+.rows-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+@media (max-width: 380px) { .rows-grid { grid-template-columns: repeat(4, 1fr); } }
+
+.row-card {
+  --c: var(--ink-soft);
+  position: relative;
+  aspect-ratio: 1 / 1;
+  border: 2px solid var(--line);
+  border-radius: var(--r-1);
+  background: var(--surface);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  padding: 0;
+  transition: transform .1s ease;
+}
+.row-card:active { transform: scale(.95); }
+.row-card .fill {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  background: var(--c);
+  opacity: .16;
+  transition: height .5s cubic-bezier(.2,.8,.3,1);
+}
+.row-card .num {
+  position: relative;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--c);
+  line-height: 1;
+}
+.row-card .num small { font-size: .62em; font-weight: 700; opacity: .8; }
+.row-card .medal {
+  position: absolute;
+  top: 3px; right: 4px;
+  font-size: .8rem;
+  line-height: 1;
+}
+.row-card[data-mastered="true"] { border-color: var(--c); }
+
+/* ---------------- Abzeichen ---------------- */
+
+.badges { display: flex; flex-wrap: wrap; gap: 8px; }
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 2px solid var(--line);
+  border-radius: 99px;
+  padding: 5px 13px 5px 9px;
+  font-size: .8rem;
+  font-weight: 700;
+  background: var(--surface);
+  color: var(--ink-faint);
+}
+.badge .sym { font-size: 1.05rem; filter: grayscale(1); opacity: .5; }
+.badge[data-earned="true"] { color: var(--ink); border-color: var(--dragon-horn); background: var(--surface); }
+.badge[data-earned="true"] .sym { filter: none; opacity: 1; }
+
+.link-btn {
+  align-self: center;
+  margin-top: auto;
+  padding: 10px 6px;
+  background: none;
+  border: 0;
+  color: var(--ink-soft);
+  font-weight: 700;
+  font-size: .85rem;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ---------------- Spielbildschirm ---------------- */
+
+.gamebar { display: flex; align-items: center; gap: 12px; }
+
+.progress {
+  flex: 1;
+  height: 12px;
+  background: var(--ground-2);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 99px;
+  background: var(--good);
+  transition: width .35s cubic-bezier(.2,.8,.3,1);
+}
+.progress-fill.is-time { background: var(--accent); transition: width 1s linear; }
+
+.streak-chip {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: var(--ground-2);
+  color: var(--ink-soft);
+  min-width: 62px;
+  justify-content: center;
+  transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.streak-chip.is-hot { background: var(--accent); color: #fff; }
+.streak-chip.is-blaze { background: var(--accent); color: #fff; transform: scale(1.08); box-shadow: 0 0 0 4px var(--accent-soft); }
+
+.stage {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  min-height: 0;
+}
+
+.mascot { width: 92px; height: 92px; }
+.mascot svg { width: 100%; height: 100%; display: block; }
+.mascot .eyes-happy, .mascot .mouth-happy, .mascot .mouth-oops { display: none; }
+.mascot[data-mood="happy"] .eyes-open,
+.mascot[data-mood="happy"] .mouth-idle { display: none; }
+.mascot[data-mood="happy"] .eyes-happy,
+.mascot[data-mood="happy"] .mouth-happy { display: block; }
+.mascot[data-mood="oops"] .mouth-idle { display: none; }
+.mascot[data-mood="oops"] .mouth-oops { display: block; }
+.mascot[data-mood="happy"] { animation: hop .5s ease; }
+.mascot[data-mood="oops"] { animation: wobble .5s ease; }
+
+@keyframes hop {
+  0%, 100% { transform: translateY(0); }
+  35% { transform: translateY(-16px) scale(1.04); }
+  60% { transform: translateY(0) scaleY(.94); }
+}
+@keyframes wobble {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(-6deg); }
+  75% { transform: rotate(6deg); }
+}
+
+.round-label {
+  margin: 0;
+  font-size: .72rem;
+  font-weight: 800;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.question {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 2.5vw, 14px);
+  font-size: clamp(2.6rem, 13vw, 4rem);
+  line-height: 1;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--q-color, var(--ink));
+}
+.question.is-shake,
+.worksheet.is-shake { animation: shake .4s ease; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-9px); }
+  40% { transform: translateX(9px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+.q-op { color: var(--ink-faint); font-size: .62em; }
+.q-answer {
+  min-width: 2.1ch;
+  padding-inline: 4px;
+  border-bottom: 5px solid var(--q-color, var(--ink-faint));
+  color: var(--ink);
+}
+.q-answer.is-empty { color: var(--ink-faint); }
+.q-answer.is-right { color: var(--good); border-color: var(--good); }
+.q-answer.is-wrong { color: var(--accent); border-color: var(--accent); }
+
+.feedback {
+  margin: 0;
+  min-height: 1.6em;
+  font-weight: 800;
+  font-size: 1.02rem;
+  color: var(--ink-soft);
+}
+.feedback.is-right { color: var(--good); }
+.feedback.is-wrong { color: var(--accent); }
+
+.helper {
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-soft);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+}
+.helper-tip { margin: 0; font-size: .92rem; font-weight: 700; color: var(--ink); }
+.helper-tip b { color: var(--accent); }
+
+.dots { display: grid; gap: 3px; justify-content: center; }
+.dots i {
+  width: clamp(6px, 2vw, 10px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--q-color, var(--accent));
+  opacity: .75;
+  display: block;
+}
+
+/* ---------------- Tastenfeld ---------------- */
+
+.pad-wrap { flex: none; display: flex; flex-direction: column; gap: 10px; }
+
+.tip-btn {
+  align-self: center;
+  border: 2px dashed var(--line);
+  background: none;
+  color: var(--ink-soft);
+  border-radius: 99px;
+  padding: 6px 16px;
+  font-weight: 700;
+  font-size: .82rem;
+  cursor: pointer;
+}
+.tip-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tip-btn.is-gone { visibility: hidden; }
+
+.pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.pad button {
+  border: 0;
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--r-2);
+  padding: 14px 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  box-shadow: 0 4px 0 var(--shadow-key);
+  transition: transform .06s ease, box-shadow .06s ease;
+  touch-action: manipulation;
+}
+.pad button:active, .pad button.is-down {
+  transform: translateY(4px);
+  box-shadow: 0 0 0 var(--shadow-key);
+}
+.pad-util { background: var(--ground-2) !important; font-size: 1.3rem !important; }
+.pad-ok { background: var(--good) !important; color: #fff !important; font-size: 1.25rem !important; }
+
+/* ---------------- Ergebnis ---------------- */
+
+.result-card {
+  background: var(--surface);
+  border-radius: var(--r-3);
+  padding: 26px 22px;
+  text-align: center;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.result-card h2 { margin: 0; font-size: 1.75rem; }
+.result-card .eyebrow { margin-bottom: -10px; }
+
+.result-stars {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.result-stars .star-icon { font-size: 1em; }
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  border-block: 2px solid var(--line);
+  padding-block: 12px;
+}
+.result-grid div { display: flex; flex-direction: column; }
+.result-grid strong { font-family: var(--font-display); font-size: 1.4rem; font-variant-numeric: tabular-nums; }
+.result-grid span { font-size: .74rem; color: var(--ink-soft); font-weight: 700; }
+
+.result-news { display: flex; flex-direction: column; gap: 8px; }
+.news-item {
+  background: var(--accent-soft);
+  border-radius: var(--r-1);
+  padding: 9px 12px;
+  font-size: .88rem;
+  font-weight: 700;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  text-align: left;
+}
+.news-item .sym { font-size: 1.2rem; }
+
+.result-review { font-size: .84rem; color: var(--ink-soft); }
+.result-review b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.result-actions { display: flex; flex-direction: column; gap: 8px; }
+
+.btn {
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 13px 18px;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent-deep);
+  box-shadow: 0 4px 0 var(--accent-deep);
+}
+.btn-primary:active { box-shadow: 0 0 0 var(--accent-deep); transform: translateY(4px); }
+.btn-ghost { background: none; box-shadow: none; color: var(--ink-soft); font-size: .9rem; }
+.btn-ghost:active { transform: none; }
+
+/* ---------------- Eltern ---------------- */
+
+.lead { margin: 0; font-size: .92rem; color: var(--ink-soft); max-width: 62ch; }
+
+.heat-wrap { overflow-x: auto; }
+.heat {
+  display: grid;
+  grid-template-columns: repeat(11, minmax(24px, 1fr));
+  gap: 3px;
+  min-width: 300px;
+}
+.heat span {
+  aspect-ratio: 1;
+  border-radius: 5px;
+  display: grid;
+  place-items: center;
+  font-size: .68rem;
+  font-weight: 800;
+  background: var(--ground-2);
+  color: var(--ink-faint);
+}
+.heat .head { background: none; color: var(--ink-soft); }
+.heat .cell { color: transparent; }
+.heat .cell[data-box="0"] { background: var(--ground-2); }
+.heat .cell[data-box="1"] { background: color-mix(in srgb, var(--good) 18%, var(--ground-2)); }
+.heat .cell[data-box="2"] { background: color-mix(in srgb, var(--good) 34%, var(--ground-2)); }
+.heat .cell[data-box="3"] { background: color-mix(in srgb, var(--good) 52%, var(--ground-2)); }
+.heat .cell[data-box="4"] { background: color-mix(in srgb, var(--good) 74%, var(--ground-2)); }
+.heat .cell[data-box="5"] { background: var(--good); }
+.heat .cell[data-shaky="true"] { box-shadow: inset 0 0 0 2px var(--accent); }
+
+.legend { display: flex; align-items: center; gap: 8px; font-size: .74rem; color: var(--ink-soft); font-weight: 700; }
+.legend-scale { display: flex; gap: 3px; }
+.legend-scale i { width: 18px; height: 12px; border-radius: 3px; display: block; }
+.legend-scale i[data-box="0"] { background: var(--ground-2); }
+.legend-scale i[data-box="1"] { background: color-mix(in srgb, var(--good) 18%, var(--ground-2)); }
+.legend-scale i[data-box="2"] { background: color-mix(in srgb, var(--good) 34%, var(--ground-2)); }
+.legend-scale i[data-box="3"] { background: color-mix(in srgb, var(--good) 52%, var(--ground-2)); }
+.legend-scale i[data-box="4"] { background: color-mix(in srgb, var(--good) 74%, var(--ground-2)); }
+.legend-scale i[data-box="5"] { background: var(--good); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; align-items: start; }
+.stat {
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 12px 14px;
+  box-shadow: var(--shadow-soft);
+}
+.stat strong { display: block; font-family: var(--font-display); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.stat span { font-size: .76rem; color: var(--ink-soft); font-weight: 700; }
+.stat .detail { display: block; font-size: .8rem; color: var(--ink); font-weight: 700; margin-top: 2px; }
+
+.calendar { display: flex; gap: 5px; flex-wrap: wrap; }
+.calendar span {
+  width: 30px;
+  border-radius: 6px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  font-size: .66rem;
+  font-weight: 800;
+  background: var(--ground-2);
+  color: var(--ink-faint);
+}
+.calendar span[data-active="true"] { background: var(--good); color: #fff; }
+
+.danger { margin-top: auto; display: flex; justify-content: center; padding-top: 12px; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+
+/* ============================================================
+   Teilen: Geteilt-Rätsel und halbschriftliche Division
+   Orange steht fürs Malnehmen, Blau fürs Teilen.
+   ============================================================ */
+
+.mode-hero-div {
+  background: var(--info);
+  border-color: var(--info-deep);
+  box-shadow: 0 4px 0 var(--info-deep);
+}
+.mode-hero-div:hover { border-color: var(--info-deep); }
+.mode-hero-div:active { box-shadow: 0 0 0 var(--info-deep); }
+
+.worksheet {
+  width: 100%;
+  max-width: 380px;
+  background: var(--surface);
+  border-radius: var(--r-3);
+  padding: 18px 16px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ws-head {
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 8vw, 2.2rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--info);
+}
+.ws-head .res {
+  display: inline-block;
+  min-width: 2.2ch;
+  color: var(--ink-faint);
+  border-bottom: 5px solid var(--info);
+}
+.ws-head .res.is-done { color: var(--good); border-color: var(--good); }
+
+.ws-prompt {
+  margin: 0;
+  text-align: center;
+  font-size: .95rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  min-height: 2.6em;
+}
+
+.ws-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ws-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px 10px;
+  border-radius: var(--r-1);
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-faint);
+  transition: background .2s ease, color .2s ease;
+}
+.ws-line.is-done { color: var(--ink); }
+.ws-line.is-done .val { color: var(--good); }
+.ws-line.is-active { background: var(--info-soft); color: var(--ink); }
+.ws-line .cursor {
+  display: inline-block;
+  min-width: 2.2ch;
+  text-align: center;
+  color: var(--info);
+  border-bottom: 4px solid var(--info);
+}
+.ws-line.is-sum { border-top: 2px dashed var(--line); border-radius: 0 0 var(--r-1) var(--r-1); }
+
+.choices { display: grid; gap: 8px; }
+.choice {
+  border: 2px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--r-2);
+  padding: 15px 12px;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.choice:hover { border-color: var(--info); }
+.choice:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
+.choice.is-wrong { border-color: var(--accent); color: var(--accent); opacity: .55; box-shadow: none; }
+.choice.is-right { border-color: var(--good); background: var(--good-soft); box-shadow: 0 3px 0 var(--good); }
+
+.heat-div { grid-template-columns: repeat(11, minmax(26px, 1fr)); }
+.heat-div .cell { color: var(--ink-soft); font-size: .6rem; }
+.heat-div .cell[data-box="4"], .heat-div .cell[data-box="5"] { color: #fff; }
+
+</style>
+<style>/* Schriften lokal gehostet (SIL OFL 1.1), keine Verbindung zu Google */
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/nunito-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/nunito-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/nunito-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}
+</style>
+</head>
+<body>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<div class="app">
+
+  <!-- ======================= START ======================= -->
+  <section class="screen" id="screen-home">
+    <header class="topbar">
+      <div class="brand">
+        <svg class="brand-dragon" viewBox="0 0 120 120" aria-hidden="true">
+          <path d="M26 34 L20 10 L44 24 Z" fill="var(--dragon-horn)"/>
+          <path d="M94 34 L100 10 L76 24 Z" fill="var(--dragon-horn)"/>
+          <ellipse cx="60" cy="66" rx="44" ry="40" fill="var(--dragon-skin)"/>
+          <ellipse cx="60" cy="86" rx="25" ry="17" fill="var(--dragon-belly)"/>
+          <circle cx="44" cy="56" r="11" fill="#fff"/><circle cx="76" cy="56" r="11" fill="#fff"/>
+          <circle cx="46" cy="58" r="5.5" fill="#15343f"/><circle cx="78" cy="58" r="5.5" fill="#15343f"/>
+          <ellipse cx="52" cy="82" rx="3" ry="2.4" fill="#15343f" opacity=".55"/>
+          <ellipse cx="68" cy="82" rx="3" ry="2.4" fill="#15343f" opacity=".55"/>
+          <path d="M48 92 Q60 100 72 92" stroke="#15343f" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>
+        </svg>
+        <div>
+          <h1>Zahlendrache</h1>
+          <p class="tagline">Das kleine 1&nbsp;&times;&nbsp;1</p>
+        </div>
+      </div>
+      <button class="icon-btn" id="btn-sound" type="button" aria-pressed="true" title="Ton an/aus">
+        <span id="sound-icon">&#9834;</span>
+      </button>
+    </header>
+
+    <div class="status-card">
+      <div class="status-level">
+        <span class="eyebrow">Stufe <span id="level-num">1</span></span>
+        <strong id="level-title">Zahlen-Küken</strong>
+        <div class="xpbar"><div class="xpbar-fill" id="xp-fill"></div></div>
+        <span class="xp-note" id="xp-note">Noch 100 Sterne bis zur nächsten Stufe</span>
+      </div>
+      <div class="status-goal">
+        <svg class="ring" viewBox="0 0 80 80" aria-hidden="true">
+          <circle class="ring-track" cx="40" cy="40" r="33"/>
+          <circle class="ring-fill" cx="40" cy="40" r="33" id="goal-ring"/>
+        </svg>
+        <div class="ring-label">
+          <strong id="goal-count">0</strong>
+          <span>von 20 heute</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="star-strip">
+      <span class="star-icon" aria-hidden="true">&#9733;</span>
+      <strong id="star-count">0</strong> Sterne gesammelt
+      <span class="sep" aria-hidden="true">&bull;</span>
+      Beste Serie: <strong id="best-streak">0</strong>
+    </div>
+
+    <h2 class="section-title">Malnehmen</h2>
+    <div class="modes">
+      <button class="mode mode-hero" type="button" data-mode="reise">
+        <span class="mode-kicker">Empfohlen</span>
+        <span class="mode-title">Lernreise</span>
+        <span class="mode-sub" id="reise-sub">10 Aufgaben, genau passend für dich</span>
+      </button>
+      <button class="mode" type="button" data-mode="blitz">
+        <span class="mode-title">Blitzrunde</span>
+        <span class="mode-sub">60 Sekunden, so viele wie möglich</span>
+      </button>
+    </div>
+
+    <h2 class="section-title">Deine Reihen <span class="hint">Tippe eine Reihe zum Üben</span></h2>
+    <div class="rows-grid" id="rows-grid"></div>
+
+    <h2 class="section-title">Teilen</h2>
+    <div class="modes">
+      <button class="mode mode-hero mode-hero-div" type="button" data-mode="teilen">
+        <span class="mode-kicker">Umkehraufgaben</span>
+        <span class="mode-title">Geteilt-Rätsel</span>
+        <span class="mode-sub" id="teilen-sub">48 : 8 = ? – im Kopf gelöst</span>
+      </button>
+      <button class="mode" type="button" data-mode="halb">
+        <span class="mode-title">Halbschriftlich teilen</span>
+        <span class="mode-sub" id="halb-sub">Große Aufgaben in zwei Häppchen zerlegen</span>
+      </button>
+    </div>
+
+    <h2 class="section-title">Extra</h2>
+    <div class="modes">
+      <button class="mode" type="button" data-mode="schwer">
+        <span class="mode-title">Knifflige Aufgaben</span>
+        <span class="mode-sub" id="hard-sub">Deine Wackelkandidaten</span>
+      </button>
+    </div>
+
+    <h2 class="section-title">Abzeichen <span class="hint" id="badge-count"></span></h2>
+    <div class="badges" id="badges"></div>
+
+    <button class="link-btn" id="btn-parents" type="button">Für Eltern &rsaquo;</button>
+  </section>
+
+  <!-- ======================= SPIEL ======================= -->
+  <section class="screen" id="screen-game" hidden>
+    <header class="gamebar">
+      <button class="icon-btn" id="btn-quit" type="button" title="Runde beenden">&#10005;</button>
+      <div class="progress" role="progressbar" aria-label="Fortschritt in der Runde">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="streak-chip" id="streak-chip"><span class="flame" aria-hidden="true">&#9650;</span><span id="streak-num">0</span></div>
+    </header>
+
+    <div class="stage">
+      <div class="mascot" id="mascot" data-mood="idle">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <path d="M26 34 L20 10 L44 24 Z" fill="var(--dragon-horn)"/>
+          <path d="M94 34 L100 10 L76 24 Z" fill="var(--dragon-horn)"/>
+          <ellipse cx="60" cy="66" rx="44" ry="40" fill="var(--dragon-skin)"/>
+          <ellipse cx="60" cy="86" rx="25" ry="17" fill="var(--dragon-belly)"/>
+          <circle cx="30" cy="76" r="7" fill="var(--dragon-cheek)"/>
+          <circle cx="90" cy="76" r="7" fill="var(--dragon-cheek)"/>
+          <g class="eyes-open">
+            <circle cx="44" cy="56" r="12" fill="#fff"/><circle cx="76" cy="56" r="12" fill="#fff"/>
+            <circle cx="46" cy="58" r="6" fill="#15343f"/><circle cx="78" cy="58" r="6" fill="#15343f"/>
+          </g>
+          <g class="eyes-happy">
+            <path d="M34 58 Q44 48 54 58" stroke="#15343f" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M66 58 Q76 48 86 58" stroke="#15343f" stroke-width="5" fill="none" stroke-linecap="round"/>
+          </g>
+          <ellipse cx="52" cy="81" rx="3.2" ry="2.6" fill="#15343f" opacity=".55"/>
+          <ellipse cx="68" cy="81" rx="3.2" ry="2.6" fill="#15343f" opacity=".55"/>
+          <path class="mouth-idle" d="M50 91 Q60 97 70 91" stroke="#15343f" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path class="mouth-happy" d="M46 88 Q60 106 74 88 Z" fill="#15343f" opacity=".8"/>
+          <path class="mouth-oops" d="M50 95 Q60 88 70 95" stroke="#15343f" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <p class="round-label" id="round-label">Lernreise</p>
+
+      <div class="question" id="question">
+        <span class="q-num" id="q-a">7</span>
+        <span class="q-op" id="q-op">&times;</span>
+        <span class="q-num" id="q-b">8</span>
+        <span class="q-op">=</span>
+        <span class="q-answer" id="answer-display" aria-live="polite">?</span>
+      </div>
+
+      <p class="feedback" id="feedback">&nbsp;</p>
+
+      <div class="worksheet" id="worksheet" hidden>
+        <p class="ws-head">
+          <span id="ws-dividend">84</span> : <span id="ws-divisor">6</span> =
+          <span class="res" id="ws-result">?</span>
+        </p>
+        <p class="ws-prompt" id="ws-prompt"></p>
+        <ol class="ws-steps" id="ws-steps"></ol>
+      </div>
+
+      <div class="helper" id="helper" hidden>
+        <p class="helper-tip" id="helper-tip"></p>
+        <div class="dots" id="helper-dots" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="choices" id="choices" hidden></div>
+
+    <div class="pad-wrap" id="pad-wrap">
+      <button class="tip-btn" id="btn-tip" type="button">Tipp zeigen</button>
+      <div class="pad" id="pad">
+        <button type="button" data-key="1">1</button>
+        <button type="button" data-key="2">2</button>
+        <button type="button" data-key="3">3</button>
+        <button type="button" data-key="4">4</button>
+        <button type="button" data-key="5">5</button>
+        <button type="button" data-key="6">6</button>
+        <button type="button" data-key="7">7</button>
+        <button type="button" data-key="8">8</button>
+        <button type="button" data-key="9">9</button>
+        <button type="button" data-key="del" class="pad-util">&#9003;</button>
+        <button type="button" data-key="0">0</button>
+        <button type="button" data-key="ok" class="pad-ok">OK</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ERGEBNIS ======================= -->
+  <section class="screen screen-center" id="screen-result" hidden>
+    <div class="result-card">
+      <p class="eyebrow" id="result-kicker">Runde geschafft</p>
+      <h2 id="result-title">Stark gemacht!</h2>
+      <div class="result-stars"><span class="star-icon" aria-hidden="true">&#9733;</span><span id="result-stars">0</span></div>
+      <div class="result-grid">
+        <div><strong id="result-correct">0</strong><span>richtig</span></div>
+        <div><strong id="result-total">0</strong><span>Aufgaben</span></div>
+        <div><strong id="result-streak">0</strong><span>beste Serie</span></div>
+      </div>
+      <div class="result-news" id="result-news"></div>
+      <div class="result-review" id="result-review"></div>
+      <div class="result-actions">
+        <button class="btn btn-primary" id="btn-again" type="button">Noch eine Runde</button>
+        <button class="btn" id="btn-home" type="button">Zur Übersicht</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= ELTERN ======================= -->
+  <section class="screen" id="screen-parents" hidden>
+    <header class="topbar">
+      <div class="brand"><h1>Für Eltern</h1></div>
+      <button class="icon-btn" id="btn-back" type="button" title="Zurück">&#8592;</button>
+    </header>
+
+    <p class="lead">Jede Aufgabe wandert durch fünf Fächer eines Karteikastens. Je dunkler das Feld, desto sicherer sitzt sie. Falsch beantwortete Aufgaben rutschen zurück und kommen häufiger dran.</p>
+
+    <div class="heat-wrap">
+      <div class="heat" id="heat"></div>
+    </div>
+    <div class="legend">
+      <span>neu</span>
+      <span class="legend-scale" aria-hidden="true">
+        <i data-box="0"></i><i data-box="1"></i><i data-box="2"></i><i data-box="3"></i><i data-box="4"></i><i data-box="5"></i>
+      </span>
+      <span>sitzt</span>
+    </div>
+
+    <h2 class="section-title">Teilen</h2>
+    <p class="lead">Dieselbe Übersicht für die Umkehraufgaben. Zeile = Teiler, Spalte = Ergebnis, im Feld steht die Aufgabe.</p>
+    <div class="heat-wrap">
+      <div class="heat heat-div" id="heat-div"></div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <h2 class="section-title">Übungstage</h2>
+    <div class="calendar" id="calendar"></div>
+
+    <div class="danger">
+      <button class="btn btn-ghost" id="btn-reset" type="button">Fortschritt zurücksetzen</button>
+    </div>
+  </section>
+
+</div>
+<script>
+/* =============================================================
+   Zahlendrache – kleines 1x1, Umkehraufgaben, halbschriftlich teilen
+
+   Lernlogik: Leitner-Karteikasten mit fünf Fächern. Jede Aufgabe
+   steigt bei einer sicheren Antwort ein Fach auf und rutscht bei
+   einem Fehler zwei Fächer zurück. Die Auswahl der nächsten
+   Aufgabe gewichtet niedrige Fächer und lange nicht Geübtes.
+   Mal- und Geteilt-Aufgaben haben getrennte Karteikästen, denn
+   7×8 zu können heißt noch nicht, 56:8 zu können.
+   ============================================================= */
+(function () {
+  'use strict';
+
+  /* ---------- Konstanten ---------- */
+
+  var STORAGE_KEY = 'zahlendrache.v1';
+  var MAX_BOX = 5;
+  var ROUND_LENGTH = 10;
+  var HALB_LENGTH = 5;
+  var BLITZ_SECONDS = 60;
+  var DAILY_GOAL = 20;
+
+  /* Reihenfolge der Lernreise: erst die tragenden Reihen,
+     dann die, die darauf aufbauen, zuletzt 7 und 9. */
+  var STAGES = [[1, 2, 10], [5], [3, 4], [6, 8], [7, 9]];
+
+  var LEVELS = [
+    { at: 0,    title: 'Zahlen-Küken' },
+    { at: 120,  title: 'Zahlen-Entdecker' },
+    { at: 300,  title: 'Reihen-Sammler' },
+    { at: 600,  title: 'Rechen-Ritter' },
+    { at: 1000, title: 'Blitzrechner' },
+    { at: 1600, title: 'Drachenreiter' },
+    { at: 2400, title: '1x1-Profi' },
+    { at: 3400, title: '1x1-Meister' },
+    { at: 5000, title: 'Großmeister des 1x1' }
+  ];
+
+  var BADGES = [
+    { id: 'start',   sym: '🥚', name: 'Erste Runde' },
+    { id: 'serie10', sym: '🔥', name: '10er-Serie' },
+    { id: 'serie25', sym: '🌟', name: '25er-Serie' },
+    { id: 'perfekt', sym: '🎯', name: 'Fehlerfreie Runde' },
+    { id: 'blitz15', sym: '⚡', name: '15 im Blitz' },
+    { id: 'schnell', sym: '💨', name: '25 Blitzantworten' },
+    { id: 'reihe1',  sym: '🏅', name: 'Erste Reihe sitzt' },
+    { id: 'reihe5',  sym: '🏆', name: '5 Reihen sitzen' },
+    { id: 'meister', sym: '👑', name: '1x1-Meister' },
+    { id: 'teilen1', sym: '🍰', name: 'Erstes Geteilt-Rätsel' },
+    { id: 'teilen50',sym: '➗', name: '50 Geteilt-Aufgaben sitzen' },
+    { id: 'halb5',   sym: '🧩', name: '5-mal halbschriftlich' },
+    { id: 'halb25',  sym: '🧠', name: '25-mal halbschriftlich' },
+    { id: 'tag',     sym: '✅', name: 'Tagesziel' },
+    { id: 'woche',   sym: '📅', name: '5 Übungstage' },
+    { id: 'sterne',  sym: '⭐', name: '500 Sterne' }
+  ];
+
+  var PRAISE_RIGHT = ['Richtig!', 'Sitzt!', 'Genau!', 'Super!', 'Stark!', 'Perfekt!', 'Klasse!', 'Volltreffer!'];
+  var PRAISE_STREAK = ['Serie läuft!', 'Weiter so!', 'Du bist im Flow!', 'Unaufhaltsam!'];
+
+  /* ---------- kleine Helfer ---------- */
+
+  var $ = function (id) { return document.getElementById(id); };
+  var rnd = function (n) { return Math.floor(Math.random() * n); };
+  var pick = function (arr) { return arr[rnd(arr.length)]; };
+  var clamp = function (v, lo, hi) { return Math.max(lo, Math.min(hi, v)); };
+
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
+
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = rnd(i + 1);
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
+
+  /* ---------- Spielstand ---------- */
+
+  var DEFAULT_STATE = {
+    version: 2,
+    stars: 0,
+    facts: {},          /* "7x8":  { box, right, wrong, last, bestMs } */
+    divFacts: {},       /* "56:8": { box, right, wrong, last, bestMs } */
+    badges: {},
+    days: {},           /* "2026-09-18": { a: gestellt, c: richtig } */
+    bestStreak: 0,
+    bestBlitz: 0,
+    rounds: 0,
+    divRounds: 0,
+    halbSolved: 0,
+    perfectRounds: 0,
+    fastAnswers: 0,
+    unlockedCount: 3,
+    levelSeen: 1,
+    sound: true
+  };
+
+  var state = load();
+
+  function load() {
+    var base = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return base;
+      var saved = JSON.parse(raw);
+      Object.keys(base).forEach(function (k) {
+        if (saved[k] !== undefined && saved[k] !== null) base[k] = saved[k];
+      });
+    } catch (e) { /* Speicher nicht verfügbar – dann eben ohne */ }
+    return base;
+  }
+
+  function save() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  /* ---------- Aufgaben ---------- */
+  /* Eine Aufgabe ist entweder { kind:'mul', a, b } oder { kind:'div', p, b }. */
+
+  function mulTask(a, b) { return { kind: 'mul', a: a, b: b, answer: a * b }; }
+  function divTask(p, b) { return { kind: 'div', p: p, b: b, answer: p / b }; }
+
+  function taskKey(t) { return t.kind === 'div' ? t.p + ':' + t.b : t.a + 'x' + t.b; }
+  function taskLabel(t) { return t.kind === 'div' ? t.p + ' : ' + t.b : t.a + ' × ' + t.b; }
+  function taskStore(t) { return t.kind === 'div' ? state.divFacts : state.facts; }
+
+  function taskStats(t) {
+    var store = taskStore(t), k = taskKey(t);
+    if (!store[k]) store[k] = { box: 0, right: 0, wrong: 0, last: 0, bestMs: 0 };
+    return store[k];
+  }
+
+  function peekStats(t) { return taskStore(t)[taskKey(t)]; }
+
+  function mulBox(a, b) {
+    var f = state.facts[a + 'x' + b];
+    return f ? f.box : 0;
+  }
+
+  function divBox(p, b) {
+    var f = state.divFacts[p + ':' + b];
+    return f ? f.box : 0;
+  }
+
+  /* Wie sicher sitzt eine Reihe? 0 … 1 */
+  function rowScore(row) {
+    var sum = 0;
+    for (var b = 1; b <= 10; b++) sum += mulBox(row, b);
+    return sum / (10 * MAX_BOX);
+  }
+
+  function rowMastered(row) {
+    for (var b = 1; b <= 10; b++) if (mulBox(row, b) < 4) return false;
+    return true;
+  }
+
+  function masteredRows() {
+    var n = 0;
+    for (var r = 1; r <= 10; r++) if (rowMastered(r)) n++;
+    return n;
+  }
+
+  function secureDivCount() {
+    var n = 0;
+    Object.keys(state.divFacts).forEach(function (k) {
+      if (state.divFacts[k].box >= 4) n++;
+    });
+    return n;
+  }
+
+  /* Freigeschaltete Reihen der Lernreise: die nächste Etappe öffnet,
+     sobald die aktuelle im Schnitt Fach 3 erreicht hat. */
+  function unlockedRows() {
+    var rows = STAGES[0].slice();
+    for (var s = 1; s < STAGES.length; s++) {
+      var prev = STAGES[s - 1];
+      var avg = prev.reduce(function (acc, r) { return acc + rowScore(r); }, 0) / prev.length;
+      if (avg < 0.6) break;
+      rows = rows.concat(STAGES[s]);
+    }
+    return rows;
+  }
+
+  function mulPool(rows) {
+    var set = {};
+    rows.forEach(function (r) { set[r] = true; });
+    var out = [];
+    for (var a = 1; a <= 10; a++) {
+      for (var b = 1; b <= 10; b++) {
+        if (set[a] || set[b]) out.push(mulTask(a, b));
+      }
+    }
+    return out;
+  }
+
+  /* Geteilt-Aufgaben sind die Umkehrung: p : b = a.
+     Durch 1 zu teilen bringt nichts, das lassen wir weg. */
+  function divPool(rows) {
+    var set = {};
+    rows.forEach(function (r) { set[r] = true; });
+    var out = [];
+    for (var b = 2; b <= 10; b++) {
+      if (!set[b]) continue;
+      for (var a = 1; a <= 10; a++) out.push(divTask(a * b, b));
+    }
+    return out;
+  }
+
+  /* Gewicht: niedriges Fach = dringend, lange nicht gesehen = fällig */
+  function weightOf(t) {
+    var f = peekStats(t);
+    if (!f) return 20;
+    var w = [26, 16, 9, 5, 3, 1.5][f.box];
+    var days = (Date.now() - (f.last || 0)) / 86400000;
+    if (days > 1) w *= 1 + Math.min(days, 7) * 0.25;
+    if (f.wrong > f.right) w *= 1.6;
+    return w;
+  }
+
+  function pickTask(pool, avoid) {
+    var candidates = pool.filter(function (t) { return !avoid || taskKey(t) !== avoid; });
+    if (!candidates.length) candidates = pool;
+    var total = 0;
+    var weights = candidates.map(function (t) {
+      var w = weightOf(t); total += w; return w;
+    });
+    var r = Math.random() * total;
+    for (var i = 0; i < candidates.length; i++) {
+      r -= weights[i];
+      if (r <= 0) return candidates[i];
+    }
+    return candidates[candidates.length - 1];
+  }
+
+  /* Wackelkandidaten aus beiden Karteikästen */
+  function shakyTasks() {
+    var out = [];
+    Object.keys(state.facts).forEach(function (k) {
+      var f = state.facts[k];
+      if (f.wrong > 0 && f.box <= 2) {
+        var p = k.split('x');
+        out.push({ t: mulTask(+p[0], +p[1]), f: f });
+      }
+    });
+    Object.keys(state.divFacts).forEach(function (k) {
+      var f = state.divFacts[k];
+      if (f.wrong > 0 && f.box <= 2) {
+        var p = k.split(':');
+        out.push({ t: divTask(+p[0], +p[1]), f: f });
+      }
+    });
+    out.sort(function (x, y) { return (y.f.wrong - x.f.wrong) || (x.f.box - y.f.box); });
+    return out;
+  }
+
+  /* ---------- Rechentricks ---------- */
+
+  function tipForMul(a, b) {
+    var lo = Math.min(a, b), hi = Math.max(a, b), p = a * b;
+    if (a === b) return 'Eine Quadratzahl: <b>' + a + ' × ' + a + ' = ' + p + '</b>. Die lohnt sich auswendig!';
+    switch (lo) {
+      case 1:  return 'Mal 1 ändert nichts: <b>' + hi + '</b> bleibt <b>' + hi + '</b>.';
+      case 2:  return 'Mal 2 heißt verdoppeln: <b>' + hi + ' + ' + hi + ' = ' + p + '</b>.';
+      case 3:  return 'Verdopple und leg einmal drauf: <b>' + (2 * hi) + ' + ' + hi + ' = ' + p + '</b>.';
+      case 4:  return 'Zweimal verdoppeln: <b>' + hi + ' → ' + (2 * hi) + ' → ' + p + '</b>.';
+      case 5:  return 'Mal 10, dann halbieren: <b>' + (10 * hi) + ' : 2 = ' + p + '</b>.';
+      case 6:  return 'Nimm die 5er-Reihe und leg einmal drauf: <b>' + (5 * hi) + ' + ' + hi + ' = ' + p + '</b>.';
+      case 7:  return 'Zerlege in 5 und 2: <b>' + (5 * hi) + ' + ' + (2 * hi) + ' = ' + p + '</b>.';
+      case 8:  return 'Dreimal verdoppeln: <b>' + hi + ' → ' + (2 * hi) + ' → ' + (4 * hi) + ' → ' + p + '</b>.';
+      case 9:  return 'Der 9er-Trick: mal 10, dann einmal weg: <b>' + (10 * hi) + ' − ' + hi + ' = ' + p + '</b>.';
+      case 10: return 'Mal 10 heißt: eine Null anhängen. <b>' + hi + ' → ' + p + '</b>.';
+    }
+    return '<b>' + a + ' × ' + b + ' = ' + p + '</b>';
+  }
+
+  /* Teilen heißt rückwärts malnehmen – und genau so wird es erklärt. */
+  function tipForDiv(p, b) {
+    var q = p / b;
+    if (b === 10) return 'Geteilt durch 10 heißt: eine Null weg. <b>' + p + ' → ' + q + '</b>.';
+    if (q === 1) return 'Etwas durch sich selbst geteilt ist immer <b>1</b>.';
+    var steps = [];
+    for (var i = 1; i <= q; i++) steps.push(i === q ? '<b>' + (i * b) + '</b>' : (i * b));
+    return 'Frag rückwärts: <b>' + b + ' × ? = ' + p + '</b>. Zähl die ' + b + 'er-Reihe hoch: ' +
+      steps.join(', ') + ' – das sind <b>' + q + '</b> Sprünge.';
+  }
+
+  function tipForTask(t) {
+    return t.kind === 'div' ? tipForDiv(t.p, t.b) : tipForMul(t.a, t.b);
+  }
+
+  /* ---------- Ton ---------- */
+
+  var audio = null;
+  function tone(freq, start, len, vol, type) {
+    if (!state.sound) return;
+    try {
+      if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+      if (audio.state === 'suspended') audio.resume();
+      var osc = audio.createOscillator(), gain = audio.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.value = freq;
+      var t0 = audio.currentTime + start;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + len);
+      osc.connect(gain); gain.connect(audio.destination);
+      osc.start(t0); osc.stop(t0 + len + 0.02);
+    } catch (e) {}
+  }
+
+  var SOUND = {
+    right: function (streak) {
+      var base = 660 + Math.min(streak, 8) * 30;
+      tone(base, 0, 0.12, 0.18);
+      tone(base * 1.5, 0.08, 0.16, 0.14);
+    },
+    step:  function () { tone(740, 0, 0.09, 0.13); tone(988, 0.06, 0.12, 0.1); },
+    wrong: function () { tone(300, 0, 0.16, 0.12, 'triangle'); tone(220, 0.1, 0.22, 0.1, 'triangle'); },
+    key:   function () { tone(520, 0, 0.05, 0.07, 'square'); },
+    combo: function () { [523, 659, 784, 1047].forEach(function (f, i) { tone(f, i * 0.07, 0.2, 0.14); }); },
+    win:   function () { [523, 659, 784, 1047, 1319].forEach(function (f, i) { tone(f, i * 0.09, 0.3, 0.16); }); }
+  };
+
+  /* ---------- Konfetti ---------- */
+
+  var canvas = $('fx'), ctx = canvas.getContext('2d'), parts = [], raf = null;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function sizeCanvas() {
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', sizeCanvas);
+  sizeCanvas();
+
+  var CONFETTI_COLORS = ['#f26430', '#2fb37f', '#f2c14e', '#2b87d3', '#b75bc9', '#d95f8b'];
+
+  function burst(x, y, count) {
+    if (reduced) return;
+    for (var i = 0; i < count; i++) {
+      var ang = Math.random() * Math.PI * 2;
+      var sp = 2 + Math.random() * 7;
+      parts.push({
+        x: x, y: y,
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp - 3,
+        s: 4 + Math.random() * 6,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.3,
+        life: 60 + rnd(40),
+        c: pick(CONFETTI_COLORS)
+      });
+    }
+    if (!raf) raf = requestAnimationFrame(tick);
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.vy += 0.22; p.vx *= 0.99;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      if (p.life <= 0 || p.y > window.innerHeight + 40) { parts.splice(i, 1); continue; }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.min(1, p.life / 25);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+      ctx.restore();
+    }
+    raf = parts.length ? requestAnimationFrame(tick) : null;
+    if (!raf) ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function burstAt(el, count) {
+    if (!el || el.hidden) return;
+    var r = el.getBoundingClientRect();
+    if (!r.width && !r.height) return;
+    burst(r.left + r.width / 2, r.top + r.height / 2, count);
+  }
+
+  /* ---------- Level & Tagesziel ---------- */
+
+  function levelInfo() {
+    var idx = 0;
+    for (var i = 0; i < LEVELS.length; i++) if (state.stars >= LEVELS[i].at) idx = i;
+    var next = LEVELS[idx + 1];
+    return {
+      num: idx + 1,
+      title: LEVELS[idx].title,
+      from: LEVELS[idx].at,
+      to: next ? next.at : LEVELS[idx].at,
+      isMax: !next
+    };
+  }
+
+  function todayStats() {
+    var d = state.days[today()];
+    if (!d) { d = { a: 0, c: 0 }; state.days[today()] = d; }
+    return d;
+  }
+
+  /* ---------- Bildschirme ---------- */
+
+  var screens = {
+    home: $('screen-home'),
+    game: $('screen-game'),
+    result: $('screen-result'),
+    parents: $('screen-parents')
+  };
+
+  function show(name) {
+    Object.keys(screens).forEach(function (k) { screens[k].hidden = (k !== name); });
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- Startbildschirm ---------- */
+
+  function renderHome() {
+    var lvl = levelInfo();
+    $('level-num').textContent = lvl.num;
+    $('level-title').textContent = lvl.title;
+    var pct = lvl.isMax ? 100 : ((state.stars - lvl.from) / (lvl.to - lvl.from)) * 100;
+    $('xp-fill').style.width = clamp(pct, 0, 100) + '%';
+    $('xp-note').textContent = lvl.isMax
+      ? 'Höchste Stufe erreicht. Respekt!'
+      : 'Noch ' + (lvl.to - state.stars) + ' Sterne bis Stufe ' + (lvl.num + 1);
+
+    $('star-count').textContent = state.stars;
+    $('best-streak').textContent = state.bestStreak;
+
+    var d = todayStats();
+    $('goal-count').textContent = d.c;
+    var circ = 2 * Math.PI * 33;
+    $('goal-ring').style.strokeDashoffset = circ * (1 - clamp(d.c / DAILY_GOAL, 0, 1));
+
+    var unlocked = unlockedRows().slice().sort(function (a, b) { return a - b; });
+    $('reise-sub').textContent = unlocked.length >= 10
+      ? 'Alle Reihen – 10 Aufgaben nach Maß'
+      : 'Reihen ' + unlocked.join(', ') + ' – 10 Aufgaben nach Maß';
+
+    var divRows = unlocked.filter(function (r) { return r > 1; });
+    var secure = secureDivCount();
+    $('teilen-sub').textContent = secure > 0
+      ? 'Teilen durch ' + divRows.join(', ') + ' – ' + secure + ' Aufgaben sitzen schon'
+      : '48 : 8 = ? – die Umkehrung des Malnehmens';
+
+    $('halb-sub').textContent = state.halbSolved > 0
+      ? state.halbSolved + ' Aufgabe' + (state.halbSolved === 1 ? '' : 'n') + ' geschafft – z. B. 84 : 6'
+      : 'Große Aufgaben wie 84 : 6 in zwei Häppchen zerlegen';
+
+    var shaky = shakyTasks();
+    $('hard-sub').textContent = shaky.length
+      ? shaky.length + ' Aufgabe' + (shaky.length === 1 ? '' : 'n') + ' wollen noch geübt werden'
+      : 'Noch nichts Kniffliges – üb erst eine Runde';
+    document.querySelector('[data-mode="schwer"]').disabled = shaky.length < 3;
+
+    /* Reihen-Raster */
+    var grid = $('rows-grid');
+    grid.innerHTML = '';
+    for (var r = 1; r <= 10; r++) {
+      var score = rowScore(r);
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'row-card';
+      btn.style.setProperty('--c', 'var(--row-' + r + ')');
+      btn.dataset.row = r;
+      btn.dataset.mastered = rowMastered(r) ? 'true' : 'false';
+      btn.setAttribute('aria-label', 'Die ' + r + 'er-Reihe üben, ' + Math.round(score * 100) + ' Prozent sicher');
+      var medal = rowMastered(r) ? '👑' : score >= 0.7 ? '🥇' : score >= 0.45 ? '🥈' : score >= 0.2 ? '🥉' : '';
+      btn.innerHTML =
+        '<span class="fill" style="height:' + Math.round(score * 100) + '%"></span>' +
+        '<span class="num">' + r + '<small>er</small></span>' +
+        (medal ? '<span class="medal">' + medal + '</span>' : '');
+      grid.appendChild(btn);
+    }
+
+    /* Abzeichen */
+    var wrap = $('badges');
+    wrap.innerHTML = '';
+    var earned = 0;
+    BADGES.forEach(function (b) {
+      var has = !!state.badges[b.id];
+      if (has) earned++;
+      var el = document.createElement('span');
+      el.className = 'badge';
+      el.dataset.earned = has ? 'true' : 'false';
+      el.innerHTML = '<span class="sym">' + b.sym + '</span>' + b.name;
+      wrap.appendChild(el);
+    });
+    $('badge-count').textContent = earned + ' von ' + BADGES.length;
+
+    $('btn-sound').setAttribute('aria-pressed', state.sound ? 'true' : 'false');
+    $('sound-icon').textContent = state.sound ? '♪' : '✕';
+  }
+
+  /* =============================================================
+     Runde
+     ============================================================= */
+
+  var round = null;
+  var input = '';
+  var phase = 'ask';        /* ask | fix | wait */
+  var lastKey = null;
+
+  function startRound(config) {
+    round = {
+      type: config.type,
+      row: config.row || null,
+      label: config.label,
+      queue: config.queue || null,
+      pool: config.pool || null,
+      target: config.target || ROUND_LENGTH,
+      asked: 0,
+      correct: 0,
+      stars: 0,
+      streak: 0,
+      best: 0,
+      wrong: [],
+      retry: [],
+      current: null,
+      halb: null,
+      usedTip: false,
+      shownAt: 0,
+      endsAt: 0,
+      timer: null
+    };
+    $('round-label').textContent = config.label;
+    show('game');
+
+    if (config.type === 'blitz') {
+      round.endsAt = Date.now() + BLITZ_SECONDS * 1000;
+      $('progress-fill').classList.add('is-time');
+      $('progress-fill').style.width = '100%';
+      round.timer = setInterval(function () {
+        if (!round) return;
+        var left = round.endsAt - Date.now();
+        $('progress-fill').style.width = clamp((left / (BLITZ_SECONDS * 1000)) * 100, 0, 100) + '%';
+        if (left <= 0) endRound();
+      }, 200);
+    } else {
+      $('progress-fill').classList.remove('is-time');
+      $('progress-fill').style.width = '0%';
+    }
+    nextQuestion();
+  }
+
+  function nextQuestion() {
+    if (!round) return;
+
+    if (round.type === 'halb') {
+      if (round.asked >= round.target) { endRound(); return; }
+      startHalbTask();
+      return;
+    }
+
+    if (round.type === 'blitz') {
+      if (Date.now() >= round.endsAt) { endRound(); return; }
+    } else if (round.asked >= round.target) {
+      if (round.retry.length) { askTask(round.retry.shift(), true); return; }
+      endRound();
+      return;
+    }
+
+    var t;
+    if (round.queue && round.queue.length) t = round.queue.shift();
+    else if (round.queue) { endRound(); return; }
+    else t = pickTask(round.pool, lastKey);
+
+    askTask(t, false);
+  }
+
+  function askTask(t, isBonus) {
+    round.current = t;
+    round.current.bonus = !!isBonus;
+    lastKey = taskKey(t);
+    round.usedTip = false;
+    round.shownAt = performance.now();
+    input = '';
+    phase = 'ask';
+
+    var colorRow = t.kind === 'div' ? t.b : Math.max(t.a, t.b);
+    document.documentElement.style.setProperty('--q-color', 'var(--row-' + colorRow + ')');
+
+    $('worksheet').hidden = true;
+    $('choices').hidden = true;
+    $('pad-wrap').hidden = false;
+    $('question').hidden = false;
+
+    $('q-a').textContent = t.kind === 'div' ? t.p : t.a;
+    $('q-op').textContent = t.kind === 'div' ? ':' : '×';
+    $('q-b').textContent = t.b;
+    setAnswerDisplay();
+    setMood('idle');
+    $('feedback').textContent = isBonus ? 'Zeig es noch einmal!' : ' ';
+    $('feedback').className = 'feedback';
+    $('helper').hidden = true;
+    $('btn-tip').classList.remove('is-gone');
+    $('btn-tip').textContent = 'Tipp zeigen';
+
+    if (round.type !== 'blitz') {
+      $('progress-fill').style.width = clamp((round.asked / round.target) * 100, 0, 100) + '%';
+    }
+    updateStreakChip();
+  }
+
+  function setAnswerDisplay() {
+    if (round && round.type === 'halb') { renderHalb(); return; }
+    var el = $('answer-display');
+    el.textContent = input === '' ? '?' : input;
+    el.className = 'q-answer' + (input === '' ? ' is-empty' : '');
+  }
+
+  function setMood(m) {
+    var el = $('mascot');
+    el.dataset.mood = 'idle';
+    void el.offsetWidth;   /* Neustart der Animation erzwingen */
+    el.dataset.mood = m;
+  }
+
+  function updateStreakChip() {
+    var chip = $('streak-chip');
+    $('streak-num').textContent = round ? round.streak : 0;
+    chip.className = 'streak-chip' + (round && round.streak >= 10 ? ' is-blaze' : round && round.streak >= 3 ? ' is-hot' : '');
+  }
+
+  function showHelper(t) {
+    $('helper-tip').innerHTML = tipForTask(t);
+    var dots = $('helper-dots');
+    var total = t.kind === 'div' ? t.p : t.a * t.b;
+    var perRow = t.b;
+    dots.style.gridTemplateColumns = 'repeat(' + perRow + ', auto)';
+    dots.innerHTML = new Array(total + 1).join('<i></i>');
+    $('helper').hidden = false;
+  }
+
+  function press(k) {
+    if (!round || phase === 'wait') return;
+    SOUND.key();
+    if (k === 'del') { input = input.slice(0, -1); setAnswerDisplay(); return; }
+    if (k === 'ok') { submit(); return; }
+    if (input.length >= 3) return;
+    if (input === '0') input = '';
+    input += k;
+    setAnswerDisplay();
+  }
+
+  function submit() {
+    if (!round || input === '' || phase === 'wait') return;
+    var value = parseInt(input, 10);
+
+    if (round.type === 'halb') { submitHalb(value); return; }
+
+    var t = round.current;
+
+    if (phase === 'fix') {
+      if (value === t.answer) {
+        $('answer-display').className = 'q-answer is-right';
+        $('feedback').textContent = 'Genau – merk dir das!';
+        $('feedback').className = 'feedback is-right';
+        setMood('happy');
+        SOUND.right(0);
+        phase = 'wait';
+        setTimeout(nextQuestion, 850);
+      } else {
+        input = '';
+        setAnswerDisplay();
+        shakeQuestion();
+      }
+      return;
+    }
+
+    var ms = performance.now() - round.shownAt;
+    var f = taskStats(t);
+    f.last = Date.now();
+    var day = todayStats();
+    day.a++;
+
+    if (value === t.answer) onRight(t, f, ms, day);
+    else onWrong(t, f);
+    save();
+  }
+
+  function shakeQuestion() {
+    var el = round && round.type === 'halb' ? $('worksheet') : $('question');
+    el.classList.add('is-shake');
+    setTimeout(function () { el.classList.remove('is-shake'); }, 420);
+  }
+
+  function onRight(t, f, ms, day) {
+    f.right++;
+    day.c++;
+    if (!t.bonus) { round.correct++; round.asked++; }
+    round.streak++;
+    round.best = Math.max(round.best, round.streak);
+    state.bestStreak = Math.max(state.bestStreak, round.streak);
+
+    var fast = ms < 3000;
+    if (fast) state.fastAnswers++;
+    if (!f.bestMs || ms < f.bestMs) f.bestMs = Math.round(ms);
+
+    var gained;
+    if (round.usedTip) {
+      gained = 5;
+    } else {
+      gained = 10 + (ms < 2500 ? 6 : ms < 4500 ? 3 : 0);
+      /* Aufstieg im Karteikasten nur ohne Hilfe */
+      if (f.box < MAX_BOX && (ms < 6000 || f.box < 2)) f.box++;
+      /* Tauschaufgabe profitiert mit: 7×8 stützt 8×7 */
+      if (t.kind === 'mul' && t.a !== t.b) {
+        var partner = taskStats(mulTask(t.b, t.a));
+        if (partner.box < f.box - 1) partner.box = f.box - 1;
+      }
+    }
+
+    var comboMsg = '';
+    if (round.streak > 0 && round.streak % 5 === 0) {
+      gained += 15;
+      comboMsg = ' +15 Kombo!';
+      SOUND.combo();
+      burstAt($('streak-chip'), 26);
+    } else {
+      SOUND.right(round.streak);
+    }
+
+    state.stars += gained;
+    round.stars += gained;
+
+    $('answer-display').className = 'q-answer is-right';
+    var praise = round.streak >= 4 && !comboMsg ? pick(PRAISE_STREAK) : pick(PRAISE_RIGHT);
+    $('feedback').textContent = praise + ' +' + gained + ' ⭐' + comboMsg;
+    $('feedback').className = 'feedback is-right';
+    setMood('happy');
+    burstAt($('question'), comboMsg ? 34 : fast ? 18 : 12);
+    updateStreakChip();
+
+    phase = 'wait';
+    setTimeout(nextQuestion, comboMsg ? 1000 : 700);
+  }
+
+  function onWrong(t, f) {
+    f.wrong++;
+    f.box = Math.max(0, f.box - 2);
+    if (!t.bonus) round.asked++;
+    round.streak = 0;
+    if (!round.wrong.some(function (w) { return taskKey(w) === taskKey(t); })) {
+      round.wrong.push(t);
+      if (round.type !== 'blitz') round.retry.push(t);
+    }
+    SOUND.wrong();
+    setMood('oops');
+    updateStreakChip();
+
+    $('answer-display').className = 'q-answer is-wrong';
+    shakeQuestion();
+
+    if (round.type === 'blitz') {
+      $('feedback').textContent = taskLabel(t) + ' = ' + t.answer;
+      $('feedback').className = 'feedback is-wrong';
+      phase = 'wait';
+      setTimeout(nextQuestion, 1200);
+      return;
+    }
+
+    $('feedback').textContent = 'Fast! ' + taskLabel(t) + ' = ' + t.answer;
+    $('feedback').className = 'feedback is-wrong';
+    showHelper(t);
+    $('btn-tip').classList.add('is-gone');
+
+    /* Aktiv abrufen statt nur lesen: die richtige Zahl wird eingetippt. */
+    phase = 'fix';
+    input = '';
+    setTimeout(function () {
+      if (phase !== 'fix') return;
+      setAnswerDisplay();
+      $('feedback').textContent = 'Tippe die ' + t.answer + ' ein.';
+    }, 1400);
+  }
+
+  /* =============================================================
+     Halbschriftlich teilen
+     84 : 6  →  84 = 60 + 24  →  60 : 6 = 10  →  24 : 6 = 4  →  10 + 4 = 14
+     ============================================================= */
+
+  /* Alle Aufgaben, die sich sauber in Zehner- und Einerteil zerlegen
+     lassen und klein genug für den vierten Schuljahrgang bleiben. */
+  var HALB_TASKS = (function () {
+    var out = [];
+    for (var d = 2; d <= 9; d++) {
+      for (var z = 1; z <= 3; z++) {
+        for (var e = 2; e <= 9; e++) {
+          var q = z * 10 + e;
+          var dividend = d * q;
+          if (dividend > 200) continue;
+          if (d * e > 90) continue;
+          out.push({ d: d, q: q, z: z, e: e, dividend: dividend });
+        }
+      }
+    }
+    return out;
+  })();
+
+  /* Der Einstieg bleibt klein: erst einstellige Zehner und kleine Teiler,
+     dann größere Dividenden. Die Methode ist neu, nicht das Rechnen. */
+  function halbPool() {
+    var solved = state.halbSolved;
+    var pool = HALB_TASKS.filter(function (t) {
+      if (solved < 6)  return t.z === 1 && t.d <= 5 && t.dividend <= 70;
+      if (solved < 16) return t.z <= 2 && t.dividend <= 120;
+      return true;
+    });
+    return pool.length ? pool : HALB_TASKS;
+  }
+
+  var HALB_PROMPTS = [
+    'Zerlege {dividend} so, dass beide Teile durch {d} teilbar sind.',
+    'Wie oft passt die {d} in {tensPart}?',
+    'Und wie oft passt die {d} in {onesPart}?',
+    'Zähl die beiden Ergebnisse zusammen.'
+  ];
+
+  /* Drei Zerlegungen, von denen genau eine aufgeht. Ein Teil, der nicht
+     durch den Teiler teilbar ist, macht die Zerlegung unbrauchbar – der
+     andere Teil ist dann automatisch auch nicht teilbar.
+     Bei Teiler 2 und 5 geht jede Zehnerzahl auf, deshalb reichen dort
+     glatte Zehner als Ablenker nicht aus. */
+  function halbChoices(t) {
+    var opts = [[t.tensPart, t.onesPart]];
+    var cands = [];
+    for (var x = 2; x <= t.dividend - 2; x++) {
+      if (x % t.d === 0) continue;
+      /* Je runder die Zahl, desto verführerischer der Ablenker */
+      var score = x % 10 === 0 ? 0 : x % 5 === 0 ? 1 : x % 2 === 0 ? 2 : 3;
+      cands.push({ x: x, score: score, r: Math.random() });
+    }
+    cands.sort(function (a, b) { return a.score - b.score || a.r - b.r; });
+
+    /* Die naheliegendste Falle zuerst: die glatte Zehnerzahl direkt
+       unter dem Dividenden, etwa 190 bei 198 : 6. */
+    var trap = Math.floor(t.dividend / 10) * 10;
+    if (trap < t.dividend && trap % t.d !== 0) {
+      cands = cands.filter(function (c) { return c.x !== trap; });
+      cands.unshift({ x: trap });
+    }
+
+    for (var i = 0; i < cands.length && opts.length < 3; i++) {
+      opts.push([cands[i].x, t.dividend - cands[i].x]);
+    }
+    return shuffle(opts);
+  }
+
+  function startHalbTask() {
+    var pool = halbPool();
+    var base;
+    do { base = pick(pool); } while (pool.length > 1 && lastKey === 'h' + base.d + '/' + base.q);
+    lastKey = 'h' + base.d + '/' + base.q;
+
+    var t = {
+      d: base.d,
+      q: base.q,
+      dividend: base.dividend,
+      tensPart: base.d * base.z * 10,
+      onesPart: base.d * base.e,
+      tensQ: base.z * 10,
+      onesQ: base.e,
+      step: 0,
+      tries: 0
+    };
+    t.choices = halbChoices(t);
+    round.halb = t;
+    round.current = null;
+    round.shownAt = performance.now();
+    input = '';
+    phase = 'ask';
+
+    document.documentElement.style.setProperty('--q-color', 'var(--row-' + t.d + ')');
+    $('question').hidden = true;
+    $('helper').hidden = true;
+    $('btn-tip').classList.add('is-gone');
+    $('worksheet').hidden = false;
+    $('feedback').textContent = ' ';
+    $('feedback').className = 'feedback';
+    setMood('idle');
+    $('progress-fill').style.width = clamp((round.asked / round.target) * 100, 0, 100) + '%';
+    updateStreakChip();
+    renderHalb();
+  }
+
+  function renderHalb() {
+    var t = round.halb;
+    if (!t) return;
+
+    $('ws-dividend').textContent = t.dividend;
+    $('ws-divisor').textContent = t.d;
+    var res = $('ws-result');
+    res.textContent = t.step > 3 ? t.q : '?';
+    res.className = 'res' + (t.step > 3 ? ' is-done' : '');
+
+    var cur = input === '' ? '?' : input;
+    var lines = [];
+
+    lines.push({
+      cls: t.step === 0 ? 'is-active' : 'is-done',
+      html: t.dividend + ' = ' + (t.step > 0
+        ? '<span class="val">' + t.tensPart + ' + ' + t.onesPart + '</span>'
+        : '<span class="cursor">?</span>')
+    });
+
+    if (t.step >= 1) lines.push({
+      cls: t.step === 1 ? 'is-active' : 'is-done',
+      html: t.tensPart + ' : ' + t.d + ' = ' + (t.step > 1
+        ? '<span class="val">' + t.tensQ + '</span>'
+        : '<span class="cursor">' + cur + '</span>')
+    });
+
+    if (t.step >= 2) lines.push({
+      cls: t.step === 2 ? 'is-active' : 'is-done',
+      html: t.onesPart + ' : ' + t.d + ' = ' + (t.step > 2
+        ? '<span class="val">' + t.onesQ + '</span>'
+        : '<span class="cursor">' + cur + '</span>')
+    });
+
+    if (t.step >= 3) lines.push({
+      cls: 'is-sum ' + (t.step === 3 ? 'is-active' : 'is-done'),
+      html: t.tensQ + ' + ' + t.onesQ + ' = ' + (t.step > 3
+        ? '<span class="val">' + t.q + '</span>'
+        : '<span class="cursor">' + cur + '</span>')
+    });
+
+    $('ws-steps').innerHTML = lines.map(function (l) {
+      return '<li class="ws-line ' + l.cls + '">' + l.html + '</li>';
+    }).join('');
+
+    $('ws-prompt').textContent = (t.step > 3
+      ? 'Fertig! Genau so zerlegt man große Geteilt-Aufgaben.'
+      : HALB_PROMPTS[t.step])
+      .replace('{dividend}', t.dividend)
+      .replace('{d}', t.d)
+      .replace('{tensPart}', t.tensPart)
+      .replace('{onesPart}', t.onesPart);
+
+    /* Schritt 1 wird ausgewählt, die anderen werden eingetippt. */
+    var choosing = t.step === 0;
+    $('choices').hidden = !choosing;
+    $('pad-wrap').hidden = choosing;
+    if (choosing && !$('choices').dataset.for) renderChoices(t);
+  }
+
+  function renderChoices(t) {
+    var box = $('choices');
+    box.dataset.for = t.dividend + '/' + t.d;
+    box.innerHTML = t.choices.map(function (o, i) {
+      return '<button type="button" class="choice" data-idx="' + i + '">' +
+        t.dividend + ' = ' + o[0] + ' + ' + o[1] + '</button>';
+    }).join('');
+  }
+
+  function halbAward(points) {
+    state.stars += points;
+    round.stars += points;
+  }
+
+  function chooseSplit(idx, btn) {
+    var t = round.halb;
+    if (!t || t.step !== 0 || phase === 'wait') return;
+    var opt = t.choices[idx];
+
+    if (opt[0] === t.tensPart) {
+      btn.classList.add('is-right');
+      setMood('happy');
+      SOUND.step();
+      halbAward(t.tries === 0 ? 8 : 4);
+      $('feedback').textContent = t.tries === 0
+        ? 'Genau – beide Teile passen zur ' + t.d + 'er-Reihe.'
+        : 'Richtig!';
+      $('feedback').className = 'feedback is-right';
+      phase = 'wait';
+      setTimeout(function () {
+        if (!round || !round.halb) return;
+        $('choices').dataset.for = '';
+        round.halb.step = 1;
+        round.halb.tries = 0;
+        input = '';
+        phase = 'ask';
+        $('feedback').textContent = ' ';
+        $('feedback').className = 'feedback';
+        renderHalb();
+      }, 900);
+    } else {
+      btn.classList.add('is-wrong');
+      btn.disabled = true;
+      t.tries++;
+      SOUND.wrong();
+      setMood('oops');
+      $('feedback').textContent = opt[0] + ' : ' + t.d + ' geht nicht glatt auf. Versuch es noch mal.';
+      $('feedback').className = 'feedback is-wrong';
+    }
+  }
+
+  function submitHalb(value) {
+    var t = round.halb;
+    if (!t) return;
+    var expect = t.step === 1 ? t.tensQ : t.step === 2 ? t.onesQ : t.q;
+
+    if (phase === 'fix') {
+      if (value === expect) advanceHalb(0);
+      else { input = ''; renderHalb(); shakeQuestion(); }
+      return;
+    }
+
+    if (value === expect) {
+      SOUND.step();
+      advanceHalb(t.step === 3 ? 10 : 8);
+      return;
+    }
+
+    /* Falsch: erst den Hinweis, dann selbst eintippen. */
+    t.tries++;
+    SOUND.wrong();
+    setMood('oops');
+    round.streak = 0;
+    updateStreakChip();
+    shakeQuestion();
+
+    if (t.step === 3) {
+      $('feedback').textContent = 'Fast! ' + t.tensQ + ' + ' + t.onesQ + ' = ' + expect;
+    } else {
+      var part = t.step === 1 ? t.tensPart : t.onesPart;
+      $('feedback').innerHTML = 'Denk rückwärts: ' + t.d + ' × ' + expect + ' = ' + part + '.';
+    }
+    $('feedback').className = 'feedback is-wrong';
+
+    /* Die Einer-Teilaufgabe ist eine echte 1x1-Umkehrung – die zählt. */
+    if (t.step === 2) {
+      var f = taskStats(divTask(t.onesPart, t.d));
+      f.wrong++;
+      f.box = Math.max(0, f.box - 2);
+      f.last = Date.now();
+    }
+
+    phase = 'fix';
+    input = '';
+    setTimeout(function () {
+      if (phase !== 'fix') return;
+      renderHalb();
+      $('feedback').textContent = 'Tippe die ' + expect + ' ein.';
+    }, 1500);
+  }
+
+  function advanceHalb(points) {
+    var t = round.halb;
+    var day = todayStats();
+    day.a++;
+    day.c++;
+
+    if (points) halbAward(points);
+
+    if (t.step === 2 && t.tries === 0) {
+      var f = taskStats(divTask(t.onesPart, t.d));
+      f.right++;
+      f.last = Date.now();
+      if (f.box < MAX_BOX) f.box++;
+    }
+
+    setMood('happy');
+    $('feedback').textContent = points ? 'Richtig! +' + points + ' ⭐' : 'Genau – merk dir das!';
+    $('feedback').className = 'feedback is-right';
+
+    t.step++;
+    t.tries = 0;
+    input = '';
+    phase = 'wait';
+    renderHalb();
+
+    if (t.step > 3) {
+      /* Aufgabe komplett gelöst */
+      state.halbSolved++;
+      round.correct++;
+      round.asked++;
+      round.streak++;
+      round.best = Math.max(round.best, round.streak);
+      state.bestStreak = Math.max(state.bestStreak, round.streak);
+      updateStreakChip();
+      SOUND.win();
+      burstAt($('worksheet'), 30);
+      $('feedback').textContent = t.dividend + ' : ' + t.d + ' = ' + t.q + ' – geschafft!';
+      save();
+      setTimeout(nextQuestion, 1600);
+      return;
+    }
+
+    save();
+    setTimeout(function () {
+      if (!round || !round.halb) return;
+      phase = 'ask';
+      $('feedback').textContent = ' ';
+      $('feedback').className = 'feedback';
+      renderHalb();
+    }, 800);
+  }
+
+  /* =============================================================
+     Rundenende
+     ============================================================= */
+
+  function endRound() {
+    if (!round) return;
+    if (round.timer) { clearInterval(round.timer); round.timer = null; }
+    var r = round;
+    round = null;
+    phase = 'wait';
+
+    state.rounds++;
+    if (r.type === 'teilen') state.divRounds++;
+    var perfect = r.wrong.length === 0 && r.correct > 0;
+    if (perfect) state.perfectRounds++;
+    if (r.type === 'blitz') state.bestBlitz = Math.max(state.bestBlitz, r.correct);
+
+    var news = checkBadges();
+    var lvl = levelInfo();
+    if (lvl.num > (state.levelSeen || 1)) {
+      state.levelSeen = lvl.num;
+      news.unshift({ sym: '🚀', text: 'Stufe ' + lvl.num + ' erreicht: ' + lvl.title + '!' });
+    }
+
+    $('result-kicker').textContent = r.label;
+    $('result-title').textContent = perfect ? 'Fehlerfrei! Wahnsinn!' :
+      r.correct >= r.asked * 0.7 ? 'Stark gemacht!' : 'Gut geübt!';
+    $('result-stars').textContent = r.stars;
+    $('result-correct').textContent = r.correct;
+    $('result-total').textContent = r.type === 'blitz' ? r.asked : r.target;
+    $('result-streak').textContent = r.best;
+
+    var newsWrap = $('result-news');
+    newsWrap.innerHTML = '';
+    news.forEach(function (n) {
+      var el = document.createElement('div');
+      el.className = 'news-item';
+      el.innerHTML = '<span class="sym">' + n.sym + '</span><span>' + n.text + '</span>';
+      newsWrap.appendChild(el);
+    });
+
+    var review = $('result-review');
+    if (r.wrong.length) {
+      review.innerHTML = 'Diese Aufgaben kommen bald wieder: ' + r.wrong.map(function (w) {
+        return '<b>' + taskLabel(w) + '</b>';
+      }).join(', ');
+    } else {
+      review.textContent = '';
+    }
+
+    $('btn-again').dataset.mode = r.type;
+    $('btn-again').dataset.row = r.row || '';
+
+    save();
+    show('result');
+    if (r.correct > 0) {
+      SOUND.win();
+      setTimeout(function () { burstAt($('result-stars'), 60); }, 150);
+    }
+  }
+
+  function checkBadges() {
+    var d = todayStats();
+    var tests = {
+      start:    state.rounds >= 1,
+      serie10:  state.bestStreak >= 10,
+      serie25:  state.bestStreak >= 25,
+      perfekt:  state.perfectRounds >= 1,
+      blitz15:  state.bestBlitz >= 15,
+      schnell:  state.fastAnswers >= 25,
+      reihe1:   masteredRows() >= 1,
+      reihe5:   masteredRows() >= 5,
+      meister:  masteredRows() >= 10,
+      teilen1:  state.divRounds >= 1,
+      teilen50: secureDivCount() >= 50,
+      halb5:    state.halbSolved >= 5,
+      halb25:   state.halbSolved >= 25,
+      tag:      d.c >= DAILY_GOAL,
+      woche:    Object.keys(state.days).filter(function (k) { return state.days[k].a > 0; }).length >= 5,
+      sterne:   state.stars >= 500
+    };
+    var fresh = [];
+    BADGES.forEach(function (b) {
+      if (tests[b.id] && !state.badges[b.id]) {
+        state.badges[b.id] = today();
+        fresh.push({ sym: b.sym, text: 'Neues Abzeichen: ' + b.name });
+      }
+    });
+
+    var unlocked = unlockedRows();
+    var known = state.unlockedCount || STAGES[0].length;
+    if (unlocked.length > known) {
+      fresh.push({ sym: '🔓', text: 'Neue Reihe freigeschaltet: ' + unlocked.slice(known).join(' und ') + '!' });
+    }
+    state.unlockedCount = unlocked.length;
+    return fresh;
+  }
+
+  /* ---------- Rundenstarts ---------- */
+
+  function startByMode(mode, row) {
+    if (mode === 'reihe' && row) {
+      var q = [];
+      for (var b = 1; b <= 10; b++) {
+        q.push(Math.random() < 0.5 ? mulTask(row, b) : mulTask(b, row));
+      }
+      shuffle(q);
+      startRound({ type: 'reihe', row: row, label: 'Die ' + row + 'er-Reihe', queue: q, target: 10 });
+      return;
+    }
+    if (mode === 'schwer') {
+      var shaky = shakyTasks().slice(0, 10).map(function (s) { return s.t; });
+      if (shaky.length < 3) { renderHome(); return; }
+      shuffle(shaky);
+      startRound({ type: 'schwer', label: 'Knifflige Aufgaben', queue: shaky, target: shaky.length });
+      return;
+    }
+    if (mode === 'blitz') {
+      startRound({ type: 'blitz', label: 'Blitzrunde', pool: mulPool(unlockedRows()), target: 999 });
+      return;
+    }
+    if (mode === 'teilen') {
+      startRound({ type: 'teilen', label: 'Geteilt-Rätsel', pool: divPool(unlockedRows()), target: ROUND_LENGTH });
+      return;
+    }
+    if (mode === 'halb') {
+      startRound({ type: 'halb', label: 'Halbschriftlich teilen', target: HALB_LENGTH });
+      return;
+    }
+    startRound({ type: 'reise', label: 'Lernreise', pool: mulPool(unlockedRows()), target: ROUND_LENGTH });
+  }
+
+  /* ---------- Elternbereich ---------- */
+
+  function renderParents() {
+    /* Malnehmen: 10 × 10 */
+    var heat = $('heat');
+    heat.innerHTML = '';
+    heat.appendChild(headCell('×'));
+    for (var c = 1; c <= 10; c++) heat.appendChild(headCell(c));
+    for (var a = 1; a <= 10; a++) {
+      heat.appendChild(headCell(a));
+      for (var b = 1; b <= 10; b++) {
+        var f = state.facts[a + 'x' + b];
+        heat.appendChild(cell(f, a + ' × ' + b + ' = ' + (a * b), a * b));
+      }
+    }
+
+    /* Teilen: Teiler 2…10 × Ergebnis 1…10 */
+    var hd = $('heat-div');
+    hd.innerHTML = '';
+    hd.appendChild(headCell(':'));
+    for (var q = 1; q <= 10; q++) hd.appendChild(headCell(q));
+    for (var dv = 2; dv <= 10; dv++) {
+      hd.appendChild(headCell(dv));
+      for (var q2 = 1; q2 <= 10; q2++) {
+        var p = dv * q2;
+        var df = state.divFacts[p + ':' + dv];
+        hd.appendChild(cell(df, p + ' : ' + dv + ' = ' + q2, p));
+      }
+    }
+
+    var mulRight = 0, mulWrong = 0, mulSecure = 0, mulSeen = 0;
+    Object.keys(state.facts).forEach(function (k) {
+      var f = state.facts[k];
+      mulRight += f.right; mulWrong += f.wrong;
+      if (f.right + f.wrong > 0) mulSeen++;
+      if (f.box >= 4) mulSecure++;
+    });
+    var divRight = 0, divWrong = 0;
+    Object.keys(state.divFacts).forEach(function (k) {
+      var f = state.divFacts[k];
+      divRight += f.right; divWrong += f.wrong;
+    });
+
+    var right = mulRight + divRight, wrong = mulWrong + divWrong;
+    var quote = right + wrong ? Math.round((right / (right + wrong)) * 100) : 0;
+    var shaky = shakyTasks().slice(0, 5).map(function (s) { return taskLabel(s.t); });
+
+    $('stats').innerHTML =
+      stat(mulSecure + ' / 100', 'Malaufgaben sitzen sicher', mulSeen + ' schon geübt') +
+      stat(secureDivCount() + ' / 90', 'Geteilt-Aufgaben sitzen sicher') +
+      stat(quote + ' %', 'richtig beantwortet', right + ' richtig, ' + wrong + ' falsch') +
+      stat(masteredRows() + ' / 10', 'Reihen gemeistert') +
+      stat(String(state.halbSolved), 'halbschriftlich gelöst') +
+      stat(String(state.rounds), 'Runden gespielt',
+        shaky.length ? 'Übt gerade: ' + shaky.join(', ') : '');
+
+    var cal = $('calendar');
+    cal.innerHTML = '';
+    for (var i = 27; i >= 0; i--) {
+      var dt = new Date();
+      dt.setDate(dt.getDate() - i);
+      var k2 = dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');
+      var el = document.createElement('span');
+      el.dataset.active = state.days[k2] && state.days[k2].a > 0 ? 'true' : 'false';
+      el.textContent = dt.getDate();
+      el.title = k2 + (state.days[k2] ? ': ' + state.days[k2].c + ' richtig von ' + state.days[k2].a : ': nicht geübt');
+      cal.appendChild(el);
+    }
+  }
+
+  function headCell(text) {
+    var el = document.createElement('span');
+    el.className = 'head';
+    el.textContent = text;
+    return el;
+  }
+
+  function cell(f, title, label) {
+    var el = document.createElement('span');
+    el.className = 'cell';
+    el.dataset.box = f ? f.box : 0;
+    if (f && f.wrong > 0 && f.box <= 2) el.dataset.shaky = 'true';
+    el.title = title + (f ? ' – ' + f.right + ' richtig, ' + f.wrong + ' falsch, Fach ' + f.box : ' – noch nicht geübt');
+    el.textContent = label;
+    return el;
+  }
+
+  function stat(big, label, detail) {
+    return '<div class="stat"><strong>' + big + '</strong><span>' + label + '</span>' +
+      (detail ? '<span class="detail">' + detail + '</span>' : '') + '</div>';
+  }
+
+  /* ---------- Bedienung ---------- */
+
+  document.querySelectorAll('.mode').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (btn.disabled) return;
+      startByMode(btn.dataset.mode);
+    });
+  });
+
+  $('rows-grid').addEventListener('click', function (e) {
+    var card = e.target.closest('.row-card');
+    if (card) startByMode('reihe', parseInt(card.dataset.row, 10));
+  });
+
+  $('pad').addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-key]');
+    if (btn) press(btn.dataset.key);
+  });
+
+  $('choices').addEventListener('click', function (e) {
+    var btn = e.target.closest('.choice');
+    if (btn && !btn.disabled) chooseSplit(parseInt(btn.dataset.idx, 10), btn);
+  });
+
+  $('btn-tip').addEventListener('click', function () {
+    if (!round || !round.current || phase !== 'ask') return;
+    round.usedTip = true;
+    showHelper(round.current);
+    $('btn-tip').textContent = 'Tipp ist da';
+  });
+
+  function quitRound() {
+    if (round && round.timer) clearInterval(round.timer);
+    round = null;
+    phase = 'wait';
+    $('choices').dataset.for = '';
+    save();
+    renderHome();
+    show('home');
+  }
+
+  $('btn-quit').addEventListener('click', quitRound);
+
+  $('btn-again').addEventListener('click', function () {
+    var mode = $('btn-again').dataset.mode;
+    var row = parseInt($('btn-again').dataset.row, 10);
+    $('choices').dataset.for = '';
+    startByMode(mode, row || null);
+  });
+
+  $('btn-home').addEventListener('click', function () { renderHome(); show('home'); });
+  $('btn-parents').addEventListener('click', function () { renderParents(); show('parents'); });
+  $('btn-back').addEventListener('click', function () { renderHome(); show('home'); });
+
+  $('btn-sound').addEventListener('click', function () {
+    state.sound = !state.sound;
+    save();
+    $('btn-sound').setAttribute('aria-pressed', state.sound ? 'true' : 'false');
+    $('sound-icon').textContent = state.sound ? '♪' : '✕';
+    if (state.sound) SOUND.key();
+  });
+
+  $('btn-reset').addEventListener('click', function () {
+    if (!window.confirm('Wirklich den gesamten Fortschritt löschen? Sterne, Abzeichen und beide Karteikästen sind dann weg.')) return;
+    state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    save();
+    renderParents();
+    renderHome();
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (screens.game.hidden) {
+      if (e.key === 'Escape' && !screens.parents.hidden) { renderHome(); show('home'); }
+      return;
+    }
+    if (round && round.type === 'halb' && round.halb && round.halb.step === 0) {
+      /* Zerlegung auswählen: 1, 2, 3 */
+      if (e.key >= '1' && e.key <= '3') {
+        var btns = $('choices').querySelectorAll('.choice');
+        var b = btns[parseInt(e.key, 10) - 1];
+        if (b && !b.disabled) { chooseSplit(parseInt(b.dataset.idx, 10), b); e.preventDefault(); }
+      }
+      if (e.key === 'Escape') quitRound();
+      return;
+    }
+    if (e.key >= '0' && e.key <= '9') { press(e.key); e.preventDefault(); }
+    else if (e.key === 'Backspace') { press('del'); e.preventDefault(); }
+    else if (e.key === 'Enter' || e.key === ' ') { press('ok'); e.preventDefault(); }
+    else if (e.key === 'Escape') quitRound();
+  });
+
+  /* ---------- Start ---------- */
+
+  function boot() {
+    if (state.unlockedCount === undefined) state.unlockedCount = unlockedRows().length;
+    renderHome();
+    show('home');
+    save();
+  }
+
+  if (window.claude && window.claude.hot && window.claude.hot.ready) {
+    window.claude.hot.ready(boot);
+  } else {
+    boot();
+  }
+})();
+
+</script>
+</body>
+</html>
