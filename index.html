@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zahlendrache 1x1</title>
 <style>
+/* ============================================================
+   Schriften, selbst gehostet – keine Anfrage an Dritte.
+   Baloo 2 und Nunito, lateinischer Zeichensatz, SIL Open Font
+   License 1.1 (Lizenztexte in fonts/).
+   ============================================================ */
+
 @font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}
 @font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}
 @font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
@@ -901,7 +907,7 @@ button { font-family: inherit; color: inherit; }
 .level-card {
   --c: var(--ink-soft);
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr;
   align-items: start;
   gap: 12px;
   text-align: left;
@@ -932,8 +938,9 @@ button { font-family: inherit; color: inherit; }
   font-weight: 700;
 }
 
+.lc-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
 .lc-now {
-  align-self: center;
   font-size: .66rem;
   font-weight: 800;
   letter-spacing: .08em;
@@ -980,7 +987,6 @@ button { font-family: inherit; color: inherit; }
 .news-item .lc-chev { margin-left: auto; font-size: 1.3rem; line-height: 1; color: var(--accent); }
 
 .lc-tip {
-  align-self: center;
   font-size: .66rem;
   font-weight: 800;
   letter-spacing: .08em;
@@ -1749,17 +1755,16 @@ button { font-family: inherit; color: inherit; }
     $('levels').innerHTML = LEVEL_ORDER.map(function (id) {
       var c = DIFFICULTY[id];
       var current = state.level === id;
+      var badge = current ? '<span class="lc-now">jetzt</span>'
+                : c.recommended ? '<span class="lc-tip">empfohlen</span>' : '';
       return '<button type="button" class="level-card" data-level="' + id + '"' +
         ' data-current="' + current + '" style="--c: ' + c.color + '">' +
         '<span class="lc-sym">' + c.sym + '</span>' +
         '<span class="lc-body">' +
-          '<strong>' + c.name + '</strong>' +
+          '<span class="lc-head"><strong>' + c.name + '</strong>' + badge + '</span>' +
           '<small>' + c.blurb + '</small>' +
           '<em>' + c.detail + '</em>' +
         '</span>' +
-        (current ? '<span class="lc-now">jetzt</span>'
-                 : c.recommended ? '<span class="lc-tip">empfohlen</span>'
-                 : '<span></span>') +
         '</button>';
     }).join('');
   }
