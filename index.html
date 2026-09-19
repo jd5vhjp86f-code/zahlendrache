@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zahlendrache 1x1</title>
 <style>
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/nunito-latin-400-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/nunito-latin-600-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/nunito-latin-700-normal.woff2) format('woff2')}
+@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}
+
 /* ============================================================
    Zahlendrache – das kleine 1x1
    Farbwelt: warmes Petrol als Grund, Mandarine als Akzent,
@@ -846,21 +854,174 @@ button { font-family: inherit; color: inherit; }
 .heat-div .cell { color: var(--ink-soft); font-size: .6rem; }
 .heat-div .cell[data-box="4"], .heat-div .cell[data-box="5"] { color: #fff; }
 
-</style>
-<style>/* Schriften lokal gehostet (SIL OFL 1.1), keine Verbindung zu Google */
-@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}
-@font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}
-@font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/nunito-latin-400-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/nunito-latin-600-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/nunito-latin-700-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}
+/* ============================================================
+   Stufenwahl: einmal am Anfang, danach jederzeit über den Chip
+   ============================================================ */
+
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding-block: 8px;
+}
+
+.welcome-dragon { width: 96px; height: 96px; }
+
+.welcome h1 {
+  margin: 0;
+  font-size: clamp(1.4rem, 6vw, 1.85rem);
+  line-height: 1.2;
+  max-width: 21ch;
+}
+
+.welcome-sub {
+  margin: 0;
+  color: var(--ink-soft);
+  font-weight: 600;
+  max-width: 34ch;
+}
+
+.welcome-note {
+  margin: 0;
+  font-size: .8rem;
+  color: var(--ink-faint);
+  font-weight: 600;
+  max-width: 38ch;
+}
+
+.levels {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  margin-block: 4px;
+}
+
+.level-card {
+  --c: var(--ink-soft);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: 12px;
+  text-align: left;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 14px 16px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform .1s ease, box-shadow .1s ease, border-color .1s ease;
+}
+.level-card:hover { border-color: var(--c); }
+.level-card:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
+.level-card[data-current="true"] {
+  border-color: var(--c);
+  box-shadow: 0 3px 0 var(--c);
+}
+
+.lc-sym { font-size: 1.7rem; line-height: 1.1; }
+
+.level-card .lc-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.level-card strong { font-family: var(--font-display); font-size: 1.15rem; color: var(--c); }
+.level-card small { font-size: .86rem; color: var(--ink); font-weight: 600; line-height: 1.35; }
+.level-card em {
+  font-style: normal;
+  font-size: .74rem;
+  color: var(--ink-soft);
+  font-weight: 700;
+}
+
+.lc-now {
+  align-self: center;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #fff;
+  background: var(--c);
+  border-radius: 99px;
+  padding: 3px 9px;
+}
+
+/* Chip auf dem Startbildschirm */
+.level-chip {
+  --c: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: 99px;
+  padding: 7px 14px 7px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .12s ease;
+}
+.level-chip:hover { border-color: var(--c); }
+.level-chip .lc-sym { font-size: 1.25rem; }
+.level-chip .lc-txt { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.25; }
+.level-chip strong { font-family: var(--font-display); font-size: .98rem; color: var(--c); }
+.level-chip small { font-size: .74rem; color: var(--ink-soft); font-weight: 600; }
+.level-chip .lc-chev { font-size: 1.4rem; color: var(--ink-faint); line-height: 1; }
+
+/* Empfehlung auf dem Ergebnisbildschirm ist anklickbar */
+.news-item.is-action {
+  width: 100%;
+  border: 2px solid var(--accent);
+  font: inherit;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: transform .1s ease;
+}
+.news-item.is-action:active { transform: scale(.98); }
+.news-item .lc-chev { margin-left: auto; font-size: 1.3rem; line-height: 1; color: var(--accent); }
+
+.lc-tip {
+  align-self: center;
+  font-size: .66rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--c);
+  border: 2px solid var(--c);
+  border-radius: 99px;
+  padding: 2px 8px;
+}
+
 </style>
 </head>
 <body>
 <canvas id="fx" aria-hidden="true"></canvas>
 
 <div class="app">
+
+  <!-- ======================= STUFENWAHL ======================= -->
+  <section class="screen screen-center" id="screen-welcome" hidden>
+    <div class="welcome">
+      <svg class="welcome-dragon" viewBox="0 0 120 120" aria-hidden="true">
+        <path d="M26 34 L20 10 L44 24 Z" fill="var(--dragon-horn)"/>
+        <path d="M94 34 L100 10 L76 24 Z" fill="var(--dragon-horn)"/>
+        <ellipse cx="60" cy="66" rx="44" ry="40" fill="var(--dragon-skin)"/>
+        <ellipse cx="60" cy="86" rx="25" ry="17" fill="var(--dragon-belly)"/>
+        <circle cx="30" cy="76" r="7" fill="var(--dragon-cheek)"/>
+        <circle cx="90" cy="76" r="7" fill="var(--dragon-cheek)"/>
+        <path d="M34 58 Q44 48 54 58" stroke="#15343f" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <path d="M66 58 Q76 48 86 58" stroke="#15343f" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <ellipse cx="52" cy="81" rx="3.2" ry="2.6" fill="#15343f" opacity=".55"/>
+        <ellipse cx="68" cy="81" rx="3.2" ry="2.6" fill="#15343f" opacity=".55"/>
+        <path d="M46 88 Q60 106 74 88 Z" fill="#15343f" opacity=".8"/>
+      </svg>
+      <p class="eyebrow" id="welcome-kicker">Hallo!</p>
+      <h1 id="welcome-title">Wie gut kennst du das kleine 1&nbsp;&times;&nbsp;1 schon?</h1>
+      <p class="welcome-sub" id="welcome-sub">Such dir aus, wie es losgehen soll.</p>
+      <div class="levels" id="levels"></div>
+      <p class="welcome-note">Unsicher? Nimm „Einsteiger". Wechseln kannst du jederzeit – dein Fortschritt bleibt erhalten.</p>
+      <button class="link-btn" id="btn-level-back" type="button" hidden>Abbrechen</button>
+    </div>
+  </section>
 
   <!-- ======================= START ======================= -->
   <section class="screen" id="screen-home">
@@ -901,10 +1062,19 @@ button { font-family: inherit; color: inherit; }
         </svg>
         <div class="ring-label">
           <strong id="goal-count">0</strong>
-          <span>von 20 heute</span>
+          <span>von <span id="goal-target">20</span> heute</span>
         </div>
       </div>
     </div>
+
+    <button class="level-chip" id="btn-level" type="button" aria-label="Schwierigkeitsstufe ändern">
+      <span class="lc-sym" id="level-sym">🌱</span>
+      <span class="lc-txt">
+        <strong id="level-name">Einsteiger</strong>
+        <small id="level-detail"></small>
+      </span>
+      <span class="lc-chev" aria-hidden="true">&rsaquo;</span>
+    </button>
 
     <div class="star-strip">
       <span class="star-icon" aria-hidden="true">&#9733;</span>
@@ -922,7 +1092,7 @@ button { font-family: inherit; color: inherit; }
       </button>
       <button class="mode" type="button" data-mode="blitz">
         <span class="mode-title">Blitzrunde</span>
-        <span class="mode-sub">60 Sekunden, so viele wie möglich</span>
+        <span class="mode-sub" id="blitz-sub">60 Sekunden, so viele wie möglich</span>
       </button>
     </div>
 
@@ -1114,14 +1284,63 @@ button { font-family: inherit; color: inherit; }
 
   var STORAGE_KEY = 'zahlendrache.v1';
   var MAX_BOX = 5;
-  var ROUND_LENGTH = 10;
-  var HALB_LENGTH = 5;
-  var BLITZ_SECONDS = 60;
-  var DAILY_GOAL = 20;
 
-  /* Reihenfolge der Lernreise: erst die tragenden Reihen,
-     dann die, die darauf aufbauen, zuletzt 7 und 9. */
-  var STAGES = [[1, 2, 10], [5], [3, 4], [6, 8], [7, 9]];
+  /* Drei Schwierigkeitsstufen. Sie ändern die Reihenfolge, in der die
+     Reihen dazukommen, wie lang eine Runde ist, wie viel Bedenkzeit es
+     für den Tempobonus gibt und wie groß die halbschriftlichen Aufgaben
+     starten. Der Karteikasten bleibt davon unberührt – ein Wechsel
+     kostet keinen Fortschritt.
+
+     stages   Etappen der Lernreise, eine nach der anderen
+     unlockAt wie sicher die letzte Etappe sitzen muss (0…1)
+     round    Aufgaben pro Runde
+     halb     Aufgaben pro Runde beim halbschriftlichen Teilen
+     halbFrom kleinste Größenstufe, mit der begonnen wird (0…2)
+     halbMax  größte Größenstufe, die erreicht werden kann
+     blitz    Sekunden in der Blitzrunde
+     fast     Millisekunden für den großen und den kleinen Tempobonus
+     settle   bis hierher gilt eine Antwort als sicher genug fürs
+              nächste Karteikastenfach
+     goal     richtige Antworten als Tagesziel                        */
+  var DIFFICULTY = {
+    start: {
+      id: 'start', name: 'Ganz in Ruhe', sym: '🐢',
+      blurb: 'Eine Reihe nach der anderen. Kleine Runden, viel Zeit zum Nachdenken.',
+      short: 'Eine Reihe nach der anderen',
+      detail: 'Beginnt mit der 1er- und 2er-Reihe · 8 Aufgaben pro Runde · Blitzrunde 90 Sekunden',
+      color: 'var(--good)',
+      stages: [[1, 2], [10], [5], [3], [4], [6], [8], [7], [9]],
+      unlockAt: 0.5,
+      round: 8, halb: 4, halbFrom: 0, halbMax: 1,
+      blitz: 90, fast: [3200, 5500], settle: 9000, goal: 15
+    },
+    normal: {
+      id: 'normal', name: 'Einsteiger', sym: '🚀', recommended: true,
+      blurb: 'Mehrere Reihen gleichzeitig. Neue kommen dazu, sobald die alten sitzen.',
+      short: 'Neue Reihen, sobald die alten sitzen',
+      detail: 'Beginnt mit 1er, 2er und 10er · 10 Aufgaben pro Runde · Blitzrunde 60 Sekunden',
+      color: 'var(--accent)',
+      stages: [[1, 2, 10], [5], [3, 4], [6, 8], [7, 9]],
+      unlockAt: 0.6,
+      round: 10, halb: 5, halbFrom: 0, halbMax: 2,
+      blitz: 60, fast: [2500, 4500], settle: 6000, goal: 20
+    },
+    profi: {
+      id: 'profi', name: 'Profi', sym: '🐉',
+      blurb: 'Alle zehn Reihen von Anfang an. Längere Runden, weniger Bedenkzeit.',
+      short: 'Alle Reihen, längere Runden',
+      detail: 'Alle Reihen sofort · 12 Aufgaben pro Runde · Blitzrunde 45 Sekunden',
+      color: 'var(--info)',
+      stages: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
+      unlockAt: 0,
+      round: 12, halb: 6, halbFrom: 2, halbMax: 2,
+      blitz: 45, fast: [2000, 3500], settle: 4500, goal: 25
+    }
+  };
+
+  var LEVEL_ORDER = ['start', 'normal', 'profi'];
+
+  function diff() { return DIFFICULTY[state.level] || DIFFICULTY.normal; }
 
   var LEVELS = [
     { at: 0,    title: 'Zahlen-Küken' },
@@ -1180,7 +1399,9 @@ button { font-family: inherit; color: inherit; }
   /* ---------- Spielstand ---------- */
 
   var DEFAULT_STATE = {
-    version: 2,
+    version: 3,
+    level: null,        /* null = Stufe noch nicht gewählt */
+    levelHints: {},     /* schon gezeigte Wechsel-Empfehlungen */
     stars: 0,
     facts: {},          /* "7x8":  { box, right, wrong, last, bestMs } */
     divFacts: {},       /* "56:8": { box, right, wrong, last, bestMs } */
@@ -1274,12 +1495,13 @@ button { font-family: inherit; color: inherit; }
   /* Freigeschaltete Reihen der Lernreise: die nächste Etappe öffnet,
      sobald die aktuelle im Schnitt Fach 3 erreicht hat. */
   function unlockedRows() {
-    var rows = STAGES[0].slice();
-    for (var s = 1; s < STAGES.length; s++) {
-      var prev = STAGES[s - 1];
+    var cfg = diff();
+    var rows = cfg.stages[0].slice();
+    for (var s = 1; s < cfg.stages.length; s++) {
+      var prev = cfg.stages[s - 1];
       var avg = prev.reduce(function (acc, r) { return acc + rowScore(r); }, 0) / prev.length;
-      if (avg < 0.6) break;
-      rows = rows.concat(STAGES[s]);
+      if (avg < cfg.unlockAt) break;
+      rows = rows.concat(cfg.stages[s]);
     }
     return rows;
   }
@@ -1509,6 +1731,7 @@ button { font-family: inherit; color: inherit; }
   /* ---------- Bildschirme ---------- */
 
   var screens = {
+    welcome: $('screen-welcome'),
     home: $('screen-home'),
     game: $('screen-game'),
     result: $('screen-result'),
@@ -1518,6 +1741,52 @@ button { font-family: inherit; color: inherit; }
   function show(name) {
     Object.keys(screens).forEach(function (k) { screens[k].hidden = (k !== name); });
     window.scrollTo(0, 0);
+  }
+
+  /* ---------- Stufenwahl ---------- */
+
+  function renderLevels() {
+    $('levels').innerHTML = LEVEL_ORDER.map(function (id) {
+      var c = DIFFICULTY[id];
+      var current = state.level === id;
+      return '<button type="button" class="level-card" data-level="' + id + '"' +
+        ' data-current="' + current + '" style="--c: ' + c.color + '">' +
+        '<span class="lc-sym">' + c.sym + '</span>' +
+        '<span class="lc-body">' +
+          '<strong>' + c.name + '</strong>' +
+          '<small>' + c.blurb + '</small>' +
+          '<em>' + c.detail + '</em>' +
+        '</span>' +
+        (current ? '<span class="lc-now">jetzt</span>'
+                 : c.recommended ? '<span class="lc-tip">empfohlen</span>'
+                 : '<span></span>') +
+        '</button>';
+    }).join('');
+  }
+
+  function showLevelChooser(firstRun) {
+    renderLevels();
+    $('welcome-kicker').textContent = firstRun ? 'Hallo!' : 'Schwierigkeit';
+    $('welcome-title').innerHTML = firstRun
+      ? 'Wie gut kennst du das kleine 1&nbsp;&times;&nbsp;1 schon?'
+      : 'Stufe wechseln';
+    $('welcome-sub').textContent = firstRun
+      ? 'Such dir aus, wie es losgehen soll.'
+      : 'Dein Fortschritt, deine Sterne und deine Abzeichen bleiben.';
+    $('btn-level-back').hidden = !!firstRun;
+    show('welcome');
+  }
+
+  function applyLevel(id) {
+    if (!DIFFICULTY[id]) return;
+    state.level = id;
+    /* Die freigeschalteten Reihen ergeben sich neu aus den Etappen der
+       gewählten Stufe. Den Zähler mitziehen, damit nicht fälschlich
+       „neue Reihe freigeschaltet" gemeldet wird. */
+    state.unlockedCount = unlockedRows().length;
+    save();
+    renderHome();
+    show('home');
   }
 
   /* ---------- Startbildschirm ---------- */
@@ -1535,21 +1804,30 @@ button { font-family: inherit; color: inherit; }
     $('star-count').textContent = state.stars;
     $('best-streak').textContent = state.bestStreak;
 
+    var cfg = diff();
+    $('level-sym').textContent = cfg.sym;
+    $('level-name').textContent = cfg.name;
+    $('level-detail').textContent = cfg.short;
+    $('btn-level').style.setProperty('--c', cfg.color);
+    $('goal-target').textContent = cfg.goal;
+
     var d = todayStats();
     $('goal-count').textContent = d.c;
     var circ = 2 * Math.PI * 33;
-    $('goal-ring').style.strokeDashoffset = circ * (1 - clamp(d.c / DAILY_GOAL, 0, 1));
+    $('goal-ring').style.strokeDashoffset = circ * (1 - clamp(d.c / cfg.goal, 0, 1));
 
     var unlocked = unlockedRows().slice().sort(function (a, b) { return a - b; });
-    $('reise-sub').textContent = unlocked.length >= 10
-      ? 'Alle Reihen – 10 Aufgaben nach Maß'
-      : 'Reihen ' + unlocked.join(', ') + ' – 10 Aufgaben nach Maß';
+    $('reise-sub').textContent = (unlocked.length >= 10
+      ? 'Alle Reihen'
+      : 'Reihen ' + unlocked.join(', ')) + ' – ' + cfg.round + ' Aufgaben nach Maß';
 
     var divRows = unlocked.filter(function (r) { return r > 1; });
     var secure = secureDivCount();
     $('teilen-sub').textContent = secure > 0
       ? 'Teilen durch ' + divRows.join(', ') + ' – ' + secure + ' Aufgaben sitzen schon'
       : '48 : 8 = ? – die Umkehrung des Malnehmens';
+
+    $('blitz-sub').textContent = cfg.blitz + ' Sekunden, so viele wie möglich';
 
     $('halb-sub').textContent = state.halbSolved > 0
       ? state.halbSolved + ' Aufgabe' + (state.halbSolved === 1 ? '' : 'n') + ' geschafft – z. B. 84 : 6'
@@ -1616,7 +1894,7 @@ button { font-family: inherit; color: inherit; }
       label: config.label,
       queue: config.queue || null,
       pool: config.pool || null,
-      target: config.target || ROUND_LENGTH,
+      target: config.target || diff().round,
       asked: 0,
       correct: 0,
       stars: 0,
@@ -1635,13 +1913,14 @@ button { font-family: inherit; color: inherit; }
     show('game');
 
     if (config.type === 'blitz') {
-      round.endsAt = Date.now() + BLITZ_SECONDS * 1000;
+      var seconds = diff().blitz;
+      round.endsAt = Date.now() + seconds * 1000;
       $('progress-fill').classList.add('is-time');
       $('progress-fill').style.width = '100%';
       round.timer = setInterval(function () {
         if (!round) return;
         var left = round.endsAt - Date.now();
-        $('progress-fill').style.width = clamp((left / (BLITZ_SECONDS * 1000)) * 100, 0, 100) + '%';
+        $('progress-fill').style.width = clamp((left / (seconds * 1000)) * 100, 0, 100) + '%';
         if (left <= 0) endRound();
       }, 200);
     } else {
@@ -1809,9 +2088,10 @@ button { font-family: inherit; color: inherit; }
     if (round.usedTip) {
       gained = 5;
     } else {
-      gained = 10 + (ms < 2500 ? 6 : ms < 4500 ? 3 : 0);
+      var cfg = diff();
+      gained = 10 + (ms < cfg.fast[0] ? 6 : ms < cfg.fast[1] ? 3 : 0);
       /* Aufstieg im Karteikasten nur ohne Hilfe */
-      if (f.box < MAX_BOX && (ms < 6000 || f.box < 2)) f.box++;
+      if (f.box < MAX_BOX && (ms < cfg.settle || f.box < 2)) f.box++;
       /* Tauschaufgabe profitiert mit: 7×8 stützt 8×7 */
       if (t.kind === 'mul' && t.a !== t.b) {
         var partner = taskStats(mulTask(t.b, t.a));
@@ -1909,10 +2189,12 @@ button { font-family: inherit; color: inherit; }
   /* Der Einstieg bleibt klein: erst einstellige Zehner und kleine Teiler,
      dann größere Dividenden. Die Methode ist neu, nicht das Rechnen. */
   function halbPool() {
+    var cfg = diff();
     var solved = state.halbSolved;
+    var tier = clamp(cfg.halbFrom + (solved >= 6 ? 1 : 0) + (solved >= 16 ? 1 : 0), 0, cfg.halbMax);
     var pool = HALB_TASKS.filter(function (t) {
-      if (solved < 6)  return t.z === 1 && t.d <= 5 && t.dividend <= 70;
-      if (solved < 16) return t.z <= 2 && t.dividend <= 120;
+      if (tier === 0) return t.z === 1 && t.d <= 5 && t.dividend <= 70;
+      if (tier === 1) return t.z <= 2 && t.dividend <= 120;
       return true;
     });
     return pool.length ? pool : HALB_TASKS;
@@ -2222,7 +2504,7 @@ button { font-family: inherit; color: inherit; }
     if (perfect) state.perfectRounds++;
     if (r.type === 'blitz') state.bestBlitz = Math.max(state.bestBlitz, r.correct);
 
-    var news = checkBadges();
+    var news = checkBadges().concat(levelAdvice(r));
     var lvl = levelInfo();
     if (lvl.num > (state.levelSeen || 1)) {
       state.levelSeen = lvl.num;
@@ -2240,9 +2522,11 @@ button { font-family: inherit; color: inherit; }
     var newsWrap = $('result-news');
     newsWrap.innerHTML = '';
     news.forEach(function (n) {
-      var el = document.createElement('div');
+      var el = document.createElement(n.to ? 'button' : 'div');
       el.className = 'news-item';
-      el.innerHTML = '<span class="sym">' + n.sym + '</span><span>' + n.text + '</span>';
+      if (n.to) { el.type = 'button'; el.dataset.level = n.to; el.classList.add('is-action'); }
+      el.innerHTML = '<span class="sym">' + n.sym + '</span><span>' + n.text + '</span>' +
+        (n.to ? '<span class="lc-chev" aria-hidden="true">›</span>' : '');
       newsWrap.appendChild(el);
     });
 
@@ -2266,6 +2550,34 @@ button { font-family: inherit; color: inherit; }
     }
   }
 
+  /* Eine Stufe soll passen, nicht bremsen oder überfordern. Nach einer
+     Runde schaut das Spiel, ob die gewählte Stufe noch die richtige ist –
+     höchstens zweimal, damit es nicht nörgelt. */
+  function levelAdvice(r) {
+    var out = [];
+    var seen = state.levelHints || (state.levelHints = {});
+    function once(key, limit) {
+      if ((seen[key] || 0) >= limit) return false;
+      seen[key] = (seen[key] || 0) + 1;
+      return true;
+    }
+
+    function suggest(to, text) {
+      out.push({ sym: DIFFICULTY[to].sym, to: to, text: text.replace('{name}', '„' + DIFFICULTY[to].name + '"') });
+    }
+
+    if (state.level === 'start' && masteredRows() >= 5 && once('up1', 2)) {
+      suggest('normal', 'Fünf Reihen sitzen schon. Willst du auf {name} wechseln?');
+    } else if (state.level === 'normal' && masteredRows() >= 9 && once('up2', 2)) {
+      suggest('profi', 'Fast alles sitzt. Trau dich an {name}!');
+    } else if (state.level === 'profi' && r.asked >= 5 && r.correct / r.asked < 0.45 && once('down', 2)) {
+      suggest('normal', 'Das war happig. {name} gibt dir mehr Zeit – das ist kein Rückschritt.');
+    } else if (state.level === 'normal' && r.asked >= 6 && r.correct / r.asked < 0.35 && once('down2', 2)) {
+      suggest('start', 'Lieber kleinere Schritte? Bei {name} kommt eine Reihe nach der anderen.');
+    }
+    return out;
+  }
+
   function checkBadges() {
     var d = todayStats();
     var tests = {
@@ -2282,7 +2594,7 @@ button { font-family: inherit; color: inherit; }
       teilen50: secureDivCount() >= 50,
       halb5:    state.halbSolved >= 5,
       halb25:   state.halbSolved >= 25,
-      tag:      d.c >= DAILY_GOAL,
+      tag:      d.c >= diff().goal,
       woche:    Object.keys(state.days).filter(function (k) { return state.days[k].a > 0; }).length >= 5,
       sterne:   state.stars >= 500
     };
@@ -2295,7 +2607,7 @@ button { font-family: inherit; color: inherit; }
     });
 
     var unlocked = unlockedRows();
-    var known = state.unlockedCount || STAGES[0].length;
+    var known = state.unlockedCount || diff().stages[0].length;
     if (unlocked.length > known) {
       fresh.push({ sym: '🔓', text: 'Neue Reihe freigeschaltet: ' + unlocked.slice(known).join(' und ') + '!' });
     }
@@ -2327,14 +2639,14 @@ button { font-family: inherit; color: inherit; }
       return;
     }
     if (mode === 'teilen') {
-      startRound({ type: 'teilen', label: 'Geteilt-Rätsel', pool: divPool(unlockedRows()), target: ROUND_LENGTH });
+      startRound({ type: 'teilen', label: 'Geteilt-Rätsel', pool: divPool(unlockedRows()), target: diff().round });
       return;
     }
     if (mode === 'halb') {
-      startRound({ type: 'halb', label: 'Halbschriftlich teilen', target: HALB_LENGTH });
+      startRound({ type: 'halb', label: 'Halbschriftlich teilen', target: diff().halb });
       return;
     }
-    startRound({ type: 'reise', label: 'Lernreise', pool: mulPool(unlockedRows()), target: ROUND_LENGTH });
+    startRound({ type: 'reise', label: 'Lernreise', pool: mulPool(unlockedRows()), target: diff().round });
   }
 
   /* ---------- Elternbereich ---------- */
@@ -2391,7 +2703,9 @@ button { font-family: inherit; color: inherit; }
       stat(masteredRows() + ' / 10', 'Reihen gemeistert') +
       stat(String(state.halbSolved), 'halbschriftlich gelöst') +
       stat(String(state.rounds), 'Runden gespielt',
-        shaky.length ? 'Übt gerade: ' + shaky.join(', ') : '');
+        shaky.length ? 'Übt gerade: ' + shaky.join(', ') : '') +
+      stat(diff().name, 'Schwierigkeitsstufe',
+        'Tagesziel ' + diff().goal + ' · ' + diff().round + ' Aufgaben pro Runde');
 
     var cal = $('calendar');
     cal.innerHTML = '';
@@ -2480,6 +2794,19 @@ button { font-family: inherit; color: inherit; }
   });
 
   $('btn-home').addEventListener('click', function () { renderHome(); show('home'); });
+
+  $('btn-level').addEventListener('click', function () { showLevelChooser(false); });
+  $('btn-level-back').addEventListener('click', function () { renderHome(); show('home'); });
+
+  $('levels').addEventListener('click', function (e) {
+    var card = e.target.closest('.level-card');
+    if (card) applyLevel(card.dataset.level);
+  });
+
+  $('result-news').addEventListener('click', function (e) {
+    var item = e.target.closest('.news-item.is-action');
+    if (item) applyLevel(item.dataset.level);
+  });
   $('btn-parents').addEventListener('click', function () { renderParents(); show('parents'); });
   $('btn-back').addEventListener('click', function () { renderHome(); show('home'); });
 
@@ -2501,7 +2828,9 @@ button { font-family: inherit; color: inherit; }
 
   document.addEventListener('keydown', function (e) {
     if (screens.game.hidden) {
-      if (e.key === 'Escape' && !screens.parents.hidden) { renderHome(); show('home'); }
+      if (e.key !== 'Escape') return;
+      if (!screens.parents.hidden) { renderHome(); show('home'); }
+      else if (!screens.welcome.hidden && state.level) { renderHome(); show('home'); }
       return;
     }
     if (round && round.type === 'halb' && round.halb && round.halb.step === 0) {
@@ -2525,7 +2854,8 @@ button { font-family: inherit; color: inherit; }
   function boot() {
     if (state.unlockedCount === undefined) state.unlockedCount = unlockedRows().length;
     renderHome();
-    show('home');
+    if (state.level) show('home');
+    else showLevelChooser(true);
     save();
   }
 
