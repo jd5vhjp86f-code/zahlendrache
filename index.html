@@ -11,13 +11,13 @@
    License 1.1 (Lizenztexte in fonts/).
    ============================================================ */
 
-@font-face{font-family:'Baloo 2';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/baloo-2-latin-600-normal.woff2) format('woff2')}
-@font-face{font-family:'Baloo 2';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/baloo-2-latin-700-normal.woff2) format('woff2')}
-@font-face{font-family:'Baloo 2';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/baloo-2-latin-800-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:400;font-display:swap;src:url(fonts/nunito-latin-400-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:600;font-display:swap;src:url(fonts/nunito-latin-600-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:700;font-display:swap;src:url(fonts/nunito-latin-700-normal.woff2) format('woff2')}
-@font-face{font-family:'Nunito';font-style:normal;font-weight:800;font-display:swap;src:url(fonts/nunito-latin-800-normal.woff2) format('woff2')}
+@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/baloo-2-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/baloo-2-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Baloo 2'; font-style: normal; font-weight: 800; font-display: swap; src: url(fonts/baloo-2-latin-800-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 400; font-display: swap; src: url(fonts/nunito-latin-400-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 600; font-display: swap; src: url(fonts/nunito-latin-600-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 700; font-display: swap; src: url(fonts/nunito-latin-700-normal.woff2) format('woff2'); }
+@font-face { font-family: 'Nunito'; font-style: normal; font-weight: 800; font-display: swap; src: url(fonts/nunito-latin-800-normal.woff2) format('woff2'); }
 
 /* ============================================================
    Zahlendrache – das kleine 1x1
@@ -33,8 +33,8 @@
   --surface:       #ffffff;
   --surface-2:     #f7faf8;
   --ink:           #16303b;
-  --ink-soft:      #567680;
-  --ink-faint:     #8aa3ab;
+  --ink-soft:      #4e6b75;
+  --ink-faint:     #59696f;
   --line:          #d9e2df;
 
   --accent:        #f26430;
@@ -59,16 +59,27 @@
   --r-2: 16px;
   --r-3: 24px;
 
-  --row-1:  #7c6ce0;
-  --row-2:  #1fa97a;
-  --row-3:  #2b87d3;
-  --row-4:  #e07b39;
-  --row-5:  #d94f4f;
-  --row-6:  #17998f;
-  --row-7:  #b75bc9;
-  --row-8:  #c9911c;
-  --row-9:  #5c77d6;
-  --row-10: #d95f8b;
+  --row-1:  #7364d0;
+  --row-2:  #18845f;
+  --row-3:  #2779be;
+  --row-4:  #af602c;
+  --row-5:  #ca4949;
+  --row-6:  #14827a;
+  --row-7:  #a753b7;
+  --row-8:  #976d15;
+  --row-9:  #5670c9;
+  --row-10: #b85176;
+
+  /* Farbe als Fläche darf leuchten; dieselbe Farbe als Schrift auf
+     hellem Grund braucht mehr Tiefe, sonst ist sie nicht lesbar.
+     Deshalb je ein eigener Ton fürs Schriftliche (≥ 4.6:1 auf Weiß). */
+  --accent-text: #b84c25;
+  /* Schrift auf leuchtender Fläche: Weiß reicht dort nur für große
+     Schrift, und im Dunkelmodus sind die Flächen noch heller. Ein
+     dunkler Ton trägt in beiden Themes – über 6:1 auf allen vier. */
+  --auf-bunt: rgba(0, 0, 0, .82);
+  --good-text:   #18855c;
+  --info-text:   #2779be;
 
   --font-display: "Baloo 2", "Trebuchet MS", system-ui, sans-serif;
   --font-body: "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -83,7 +94,7 @@
     --surface-2:   #1d3b48;
     --ink:         #eaf3f1;
     --ink-soft:    #a2bcc3;
-    --ink-faint:   #6d8b94;
+    --ink-faint:   #8aa5ad;
     --line:        #274a58;
     --accent:      #ff7d4d;
     --accent-deep: #ff9a72;
@@ -94,6 +105,20 @@
     --info:        #5cb0f0;
     --info-deep:   #7cc4fb;
     --info-soft:   #14303f;
+    --accent-text: #ff9a72;
+    --good-text:   #3fc795;
+    --info-text:   #7cc4fb;
+    /* Auf dunklem Grund müssen die Reihenfarben heller sein. */
+    --row-1:  #988be7;
+    --row-2:  #21aa7b;
+    --row-3:  #519ddb;
+    --row-4:  #e07c3b;
+    --row-5:  #e27777;
+    --row-6:  #35a69e;
+    --row-7:  #c57ad3;
+    --row-8:  #c9911c;
+    --row-9:  #7e94df;
+    --row-10: #de759b;
     --shadow-key:  rgba(0, 0, 0, .5);
     --shadow-soft: 0 2px 12px rgba(0, 0, 0, .3);
   }
@@ -107,7 +132,7 @@
   --surface-2:   #1d3b48;
   --ink:         #eaf3f1;
   --ink-soft:    #a2bcc3;
-  --ink-faint:   #6d8b94;
+  --ink-faint:   #8aa5ad;
   --line:        #274a58;
   --accent:      #ff7d4d;
   --accent-deep: #ff9a72;
@@ -118,6 +143,19 @@
   --info:        #5cb0f0;
   --info-deep:   #7cc4fb;
   --info-soft:   #14303f;
+  --accent-text: #ff9a72;
+  --good-text:   #3fc795;
+  --info-text:   #7cc4fb;
+  --row-1:  #988be7;
+  --row-2:  #21aa7b;
+  --row-3:  #519ddb;
+  --row-4:  #e07c3b;
+  --row-5:  #e27777;
+  --row-6:  #35a69e;
+  --row-7:  #c57ad3;
+  --row-8:  #c9911c;
+  --row-9:  #7e94df;
+  --row-10: #de759b;
   --shadow-key:  rgba(0, 0, 0, .5);
   --shadow-soft: 0 2px 12px rgba(0, 0, 0, .3);
 }
@@ -196,7 +234,7 @@ button { font-family: inherit; color: inherit; }
 .tagline { margin: 0; font-size: .8rem; color: var(--ink-soft); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 
 .icon-btn {
-  width: 42px; height: 42px;
+  width: 44px; height: 44px;
   flex: none;
   border: 2px solid var(--line);
   background: var(--surface);
@@ -226,7 +264,7 @@ button { font-family: inherit; color: inherit; }
 .status-level { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
 .eyebrow {
   font-size: .72rem; font-weight: 800; letter-spacing: .1em;
-  text-transform: uppercase; color: var(--accent);
+  text-transform: uppercase; color: var(--accent-text);
 }
 .status-level strong { font-family: var(--font-display); font-size: 1.25rem; line-height: 1.15; }
 
@@ -268,7 +306,7 @@ button { font-family: inherit; color: inherit; }
   padding-inline: 4px;
 }
 .star-strip strong { color: var(--ink); font-variant-numeric: tabular-nums; }
-.star-icon { color: var(--dragon-horn); font-size: 1.1em; }
+.star-icon { color: var(--warn); font-size: 1.1em; }
 .sep { color: var(--ink-faint); }
 
 /* ---------------- Spielmodi ---------------- */
@@ -297,15 +335,18 @@ button { font-family: inherit; color: inherit; }
   background: var(--accent);
   border-color: var(--accent-deep);
   box-shadow: 0 4px 0 var(--accent-deep);
-  color: #fff;
+  color: var(--auf-bunt);
   padding: 16px;
 }
 .mode-hero:hover { border-color: var(--accent-deep); }
 .mode-hero:active { box-shadow: 0 0 0 var(--accent-deep); transform: translateY(4px); }
-.mode-hero .mode-sub { color: rgba(255,255,255,.88); }
+/* Weiß auf leuchtendem Grund reicht nur für große Schrift. Die
+   kleinen Zeilen bekommen deshalb dunkle Schrift – auf Orange,
+   Blau und Violett jeweils über 5:1. */
+.mode-hero .mode-sub { color: rgba(0, 0, 0, .74); }
 .mode-kicker {
   font-size: .68rem; font-weight: 800; letter-spacing: .12em;
-  text-transform: uppercase; color: rgba(255,255,255,.8);
+  text-transform: uppercase; color: rgba(0, 0, 0, .68);
 }
 .mode-hero .mode-title { font-size: 1.4rem; }
 
@@ -391,7 +432,8 @@ button { font-family: inherit; color: inherit; }
 .link-btn {
   align-self: center;
   margin-top: auto;
-  padding: 10px 6px;
+  min-height: 44px;
+  padding: 10px 16px;
   background: none;
   border: 0;
   color: var(--ink-soft);
@@ -437,8 +479,8 @@ button { font-family: inherit; color: inherit; }
   justify-content: center;
   transition: background .2s ease, color .2s ease, transform .2s ease;
 }
-.streak-chip.is-hot { background: var(--accent); color: #fff; }
-.streak-chip.is-blaze { background: var(--accent); color: #fff; transform: scale(1.08); box-shadow: 0 0 0 4px var(--accent-soft); }
+.streak-chip.is-hot { background: var(--accent); color: var(--auf-bunt); }
+.streak-chip.is-blaze { background: var(--accent); color: var(--auf-bunt); transform: scale(1.08); box-shadow: 0 0 0 4px var(--accent-soft); }
 
 .stage {
   flex: 1 1 auto;
@@ -513,8 +555,8 @@ button { font-family: inherit; color: inherit; }
   color: var(--ink);
 }
 .q-answer.is-empty { color: var(--ink-faint); }
-.q-answer.is-right { color: var(--good); border-color: var(--good); }
-.q-answer.is-wrong { color: var(--accent); border-color: var(--accent); }
+.q-answer.is-right { color: var(--good-text); border-color: var(--good); }
+.q-answer.is-wrong { color: var(--accent-text); border-color: var(--accent); }
 
 .feedback {
   margin: 0;
@@ -523,8 +565,8 @@ button { font-family: inherit; color: inherit; }
   font-size: 1.02rem;
   color: var(--ink-soft);
 }
-.feedback.is-right { color: var(--good); }
-.feedback.is-wrong { color: var(--accent); }
+.feedback.is-right { color: var(--good-text); }
+.feedback.is-wrong { color: var(--accent-text); }
 
 .helper {
   background: var(--surface);
@@ -538,7 +580,7 @@ button { font-family: inherit; color: inherit; }
   align-items: center;
 }
 .helper-tip { margin: 0; font-size: .92rem; font-weight: 700; color: var(--ink); }
-.helper-tip b { color: var(--accent); }
+.helper-tip b { color: var(--accent-text); }
 
 .dots { display: grid; gap: 3px; justify-content: center; }
 .dots i {
@@ -560,12 +602,13 @@ button { font-family: inherit; color: inherit; }
   background: none;
   color: var(--ink-soft);
   border-radius: 99px;
-  padding: 6px 16px;
+  min-height: 44px;
+  padding: 6px 20px;
   font-weight: 700;
   font-size: .82rem;
   cursor: pointer;
 }
-.tip-btn:hover { border-color: var(--accent); color: var(--accent); }
+.tip-btn:hover { border-color: var(--accent); color: var(--accent-text); }
 .tip-btn.is-gone { visibility: hidden; }
 
 .pad {
@@ -592,7 +635,7 @@ button { font-family: inherit; color: inherit; }
   box-shadow: 0 0 0 var(--shadow-key);
 }
 .pad-util { background: var(--ground-2) !important; font-size: 1.3rem !important; }
-.pad-ok { background: var(--good) !important; color: #fff !important; font-size: 1.25rem !important; }
+.pad-ok { background: var(--good) !important; color: var(--auf-bunt) !important; font-size: 1.25rem !important; }
 
 /* ---------------- Ergebnis ---------------- */
 
@@ -613,7 +656,7 @@ button { font-family: inherit; color: inherit; }
   font-family: var(--font-display);
   font-size: 2.6rem;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--accent-text);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -657,7 +700,7 @@ button { font-family: inherit; color: inherit; }
   background: var(--surface);
   border-radius: var(--r-2);
   padding: 13px 18px;
-  font-size: 1.05rem;
+  font-size: 1.2rem;
   cursor: pointer;
   box-shadow: 0 3px 0 var(--line);
   transition: transform .1s ease, box-shadow .1s ease;
@@ -665,7 +708,7 @@ button { font-family: inherit; color: inherit; }
 .btn:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--auf-bunt);
   border-color: var(--accent-deep);
   box-shadow: 0 4px 0 var(--accent-deep);
 }
@@ -737,7 +780,7 @@ button { font-family: inherit; color: inherit; }
   background: var(--ground-2);
   color: var(--ink-faint);
 }
-.calendar span[data-active="true"] { background: var(--good); color: #fff; }
+.calendar span[data-active="true"] { background: var(--good); color: var(--auf-bunt); }
 
 .danger { margin-top: auto; display: flex; justify-content: center; padding-top: 12px; }
 
@@ -782,7 +825,7 @@ button { font-family: inherit; color: inherit; }
   font-size: clamp(1.7rem, 8vw, 2.2rem);
   font-weight: 800;
   font-variant-numeric: tabular-nums;
-  color: var(--info);
+  color: var(--info-text);
 }
 .ws-head .res {
   display: inline-block;
@@ -790,7 +833,7 @@ button { font-family: inherit; color: inherit; }
   color: var(--ink-faint);
   border-bottom: 5px solid var(--info);
 }
-.ws-head .res.is-done { color: var(--good); border-color: var(--good); }
+.ws-head .res.is-done { color: var(--good-text); border-color: var(--good); }
 
 .ws-prompt {
   margin: 0;
@@ -825,13 +868,13 @@ button { font-family: inherit; color: inherit; }
   transition: background .2s ease, color .2s ease;
 }
 .ws-line.is-done { color: var(--ink); }
-.ws-line.is-done .val { color: var(--good); }
+.ws-line.is-done .val { color: var(--good-text); }
 .ws-line.is-active { background: var(--info-soft); color: var(--ink); }
 .ws-line .cursor {
   display: inline-block;
   min-width: 2.2ch;
   text-align: center;
-  color: var(--info);
+  color: var(--info-text);
   border-bottom: 4px solid var(--info);
 }
 .ws-line.is-sum { border-top: 2px dashed var(--line); border-radius: 0 0 var(--r-1) var(--r-1); }
@@ -853,12 +896,12 @@ button { font-family: inherit; color: inherit; }
 }
 .choice:hover { border-color: var(--info); }
 .choice:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
-.choice.is-wrong { border-color: var(--accent); color: var(--accent); opacity: .55; box-shadow: none; }
+.choice.is-wrong { border-color: var(--accent); color: var(--accent-text); opacity: .7; box-shadow: none; }
 .choice.is-right { border-color: var(--good); background: var(--good-soft); box-shadow: 0 3px 0 var(--good); }
 
 .heat-div { grid-template-columns: repeat(11, minmax(26px, 1fr)); }
 .heat-div .cell { color: var(--ink-soft); font-size: .6rem; }
-.heat-div .cell[data-box="4"], .heat-div .cell[data-box="5"] { color: #fff; }
+.heat-div .cell[data-box="4"], .heat-div .cell[data-box="5"] { color: var(--auf-bunt); }
 
 /* ============================================================
    Stufenwahl: einmal am Anfang, danach jederzeit über den Chip
@@ -929,7 +972,7 @@ button { font-family: inherit; color: inherit; }
 .lc-sym { font-size: 1.7rem; line-height: 1.1; }
 
 .level-card .lc-body { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-.level-card strong { font-family: var(--font-display); font-size: 1.15rem; color: var(--c); }
+.level-card strong { font-family: var(--font-display); font-size: 1.15rem; color: var(--c-text, var(--c)); }
 .level-card small { font-size: .86rem; color: var(--ink); font-weight: 600; line-height: 1.35; }
 .level-card em {
   font-style: normal;
@@ -945,7 +988,7 @@ button { font-family: inherit; color: inherit; }
   font-weight: 800;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--auf-bunt);
   background: var(--c);
   border-radius: 99px;
   padding: 3px 9px;
@@ -969,7 +1012,7 @@ button { font-family: inherit; color: inherit; }
 .level-chip:hover { border-color: var(--c); }
 .level-chip .lc-sym { font-size: 1.25rem; }
 .level-chip .lc-txt { display: flex; flex-direction: column; flex: 1; min-width: 0; line-height: 1.25; }
-.level-chip strong { font-family: var(--font-display); font-size: .98rem; color: var(--c); }
+.level-chip strong { font-family: var(--font-display); font-size: .98rem; color: var(--c-text, var(--c)); }
 .level-chip small { font-size: .74rem; color: var(--ink-soft); font-weight: 600; }
 .level-chip .lc-chev { font-size: 1.4rem; color: var(--ink-faint); line-height: 1; }
 
@@ -984,25 +1027,200 @@ button { font-family: inherit; color: inherit; }
   transition: transform .1s ease;
 }
 .news-item.is-action:active { transform: scale(.98); }
-.news-item .lc-chev { margin-left: auto; font-size: 1.3rem; line-height: 1; color: var(--accent); }
+.news-item .lc-chev { margin-left: auto; font-size: 1.3rem; line-height: 1; color: var(--accent-text); }
 
 .lc-tip {
   font-size: .66rem;
   font-weight: 800;
   letter-spacing: .08em;
   text-transform: uppercase;
-  color: var(--c);
+  color: var(--c-text, var(--c));
   border: 2px solid var(--c);
   border-radius: 99px;
   padding: 2px 8px;
 }
+
+/* ============================================================
+   Modul „Längen“ – Violett als dritte Welt neben Orange
+   (Malnehmen) und Blau (Teilen).
+   ============================================================ */
+
+:root {
+  --laenge:      #7c6ce0;
+  --laenge-deep: #6354c4;
+  --laenge-soft: #ece9fb;
+  --laenge-text: #685abc;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --laenge:      #9b8cf0;
+    --laenge-deep: #b3a6f7;
+    --laenge-soft: #241f3d;
+    --laenge-text: #9b8cf0;
+  }
+}
+:root[data-theme="dark"] {
+  --laenge:      #9b8cf0;
+  --laenge-deep: #b3a6f7;
+  --laenge-soft: #241f3d;
+  --laenge-text: #9b8cf0;
+}
+
+.mode-hero-mess {
+  background: var(--laenge);
+  border-color: var(--laenge-deep);
+  box-shadow: 0 4px 0 var(--laenge-deep);
+}
+.mode-hero-mess:hover { border-color: var(--laenge-deep); }
+.mode-hero-mess:active { box-shadow: 0 0 0 var(--laenge-deep); }
+
+.btn-mess {
+  background: var(--laenge);
+  color: var(--auf-bunt);
+  border-color: var(--laenge-deep);
+  box-shadow: 0 4px 0 var(--laenge-deep);
+}
+.btn-mess:active { box-shadow: 0 0 0 var(--laenge-deep); transform: translateY(4px); }
+
+/* ---------- Stufenwahl ---------- */
+
+.stufen-liste { display: grid; gap: 10px; }
+
+.stufe-karte {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 13px 15px;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform .1s ease, box-shadow .1s ease, border-color .1s ease;
+}
+.stufe-karte:hover { border-color: var(--laenge); }
+.stufe-karte:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
+.stufe-karte[disabled] { opacity: .5; cursor: default; box-shadow: none; }
+
+.stufe-nummer {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--laenge-soft);
+  color: var(--laenge-text);
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.stufe-karte[disabled] .stufe-nummer { background: var(--ground-2); color: var(--ink-faint); }
+.stufe-text { display: flex; flex-direction: column; min-width: 0; }
+.stufe-text strong { font-family: var(--font-display); font-size: 1.05rem; }
+.stufe-text small { font-size: .82rem; color: var(--ink-soft); font-weight: 600; }
+.stufe-marke {
+  font-size: .64rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint); border: 2px solid var(--line); border-radius: 99px; padding: 2px 8px;
+}
+
+/* ---------- Aufgabenansicht ---------- */
+
+.laengen-frage {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 5.5vw, 1.6rem);
+  font-weight: 700;
+  line-height: 1.3;
+  text-wrap: balance;
+  max-width: 22ch;
+}
+
+.laengen-antwort { display: flex; flex-direction: column; gap: 8px; width: 100%; align-items: center; }
+
+/* Eingabefelder mit fester Einheit dahinter */
+.feld-reihe { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; }
+
+.feld {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  border: 3px solid var(--line);
+  border-radius: var(--r-2);
+  background: var(--surface);
+  padding: 6px 12px;
+  min-width: 108px;
+  justify-content: center;
+  cursor: pointer;
+}
+.feld[data-aktiv="true"] { border-color: var(--laenge); box-shadow: 0 0 0 4px var(--laenge-soft); }
+.feld .wert {
+  font-family: var(--font-display);
+  font-size: 1.9rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  min-width: 2ch;
+  text-align: right;
+}
+.feld .wert.is-leer { color: var(--ink-faint); }
+.feld .einheit { font-weight: 800; color: var(--ink-soft); font-size: 1rem; }
+.feld.is-richtig { border-color: var(--good); }
+.feld.is-richtig .wert { color: var(--good-text); }
+.feld.is-falsch { border-color: var(--accent); }
+.feld.is-falsch .wert { color: var(--accent-text); }
+
+/* Auswahlknöpfe */
+.wahl-liste { display: grid; gap: 8px; width: 100%; }
+.wahl-liste.eng { grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); }
+
+.wahl {
+  border: 2px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  border-radius: var(--r-2);
+  padding: 14px 12px;
+  min-height: 48px;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 0 var(--line);
+  transition: transform .1s ease, box-shadow .1s ease;
+}
+.wahl:hover { border-color: var(--laenge); }
+.wahl:active { transform: translateY(3px); box-shadow: 0 0 0 var(--line); }
+.wahl.is-richtig { border-color: var(--good); background: var(--good-soft); box-shadow: 0 3px 0 var(--good); }
+.wahl.is-falsch { border-color: var(--accent); color: var(--accent-text); opacity: .75; box-shadow: none; }
+.wahl[disabled] { cursor: default; }
+
+/* ---------- Erklärung ---------- */
+
+.laengen-hilfe { width: 100%; max-width: 400px; align-items: stretch; text-align: center; }
+.laengen-loesung {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--good-text);
+}
+.laengen-bild-rahmen { display: flex; justify-content: center; }
+.laengen-bild { width: 100%; height: auto; max-width: 380px; }
+
+/* ---------- Tastenfeld mit Komma ---------- */
+
+.pad-laengen { grid-template-columns: repeat(3, 1fr); }
+.pad-laengen .pad-breit { grid-column: 1 / -1; }
+.pad-laengen button { padding: 12px 0; font-size: 1.45rem; }
+#laengen-komma.is-gone { visibility: hidden; }
+
+.laengen-weiter-bereich { width: 100%; max-width: 400px; }
+.laengen-weiter-bereich .btn { width: 100%; }
 
 </style>
 </head>
 <body>
 <canvas id="fx" aria-hidden="true"></canvas>
 
-<div class="app">
+<main class="app">
 
   <!-- ======================= STUFENWAHL ======================= -->
   <section class="screen screen-center" id="screen-welcome" hidden>
@@ -1118,6 +1336,15 @@ button { font-family: inherit; color: inherit; }
       </button>
     </div>
 
+    <h2 class="section-title">Messen</h2>
+    <div class="modes">
+      <button class="mode mode-hero mode-hero-mess" type="button" data-mode="laengen">
+        <span class="mode-kicker">Neu</span>
+        <span class="mode-title">Längen</span>
+        <span class="mode-sub" id="laengen-sub">Schätzen, ablesen und umrechnen</span>
+      </button>
+    </div>
+
     <h2 class="section-title">Extra</h2>
     <div class="modes">
       <button class="mode" type="button" data-mode="schwer">
@@ -1136,7 +1363,7 @@ button { font-family: inherit; color: inherit; }
   <section class="screen" id="screen-game" hidden>
     <header class="gamebar">
       <button class="icon-btn" id="btn-quit" type="button" title="Runde beenden">&#10005;</button>
-      <div class="progress" role="progressbar" aria-label="Fortschritt in der Runde">
+      <div class="progress" role="progressbar" aria-label="Fortschritt in der Runde" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
         <div class="progress-fill" id="progress-fill"></div>
       </div>
       <div class="streak-chip" id="streak-chip"><span class="flame" aria-hidden="true">&#9650;</span><span id="streak-num">0</span></div>
@@ -1177,7 +1404,7 @@ button { font-family: inherit; color: inherit; }
         <span class="q-answer" id="answer-display" aria-live="polite">?</span>
       </div>
 
-      <p class="feedback" id="feedback">&nbsp;</p>
+      <p class="feedback" id="feedback" role="status" aria-live="polite">&nbsp;</p>
 
       <div class="worksheet" id="worksheet" hidden>
         <p class="ws-head">
@@ -1235,6 +1462,83 @@ button { font-family: inherit; color: inherit; }
     </div>
   </section>
 
+  <!-- ======================= LÄNGEN: STUFENWAHL ======================= -->
+  <section class="screen" id="screen-laengen-menue" hidden>
+    <header class="topbar">
+      <div class="brand">
+        <div>
+          <h1>Längen</h1>
+          <p class="tagline">Messen und umrechnen</p>
+        </div>
+      </div>
+      <button class="icon-btn" id="btn-laengen-heim" type="button" title="Zurück">&#8592;</button>
+    </header>
+    <p class="lead">Such dir eine Stufe aus. Eine Runde sind 10 Aufgaben – ohne Uhr, ohne Hetze.</p>
+    <div class="stufen-liste" id="laengen-stufen"></div>
+  </section>
+
+  <!-- ======================= LÄNGEN: SPIEL ======================= -->
+  <section class="screen" id="screen-laengen-spiel" hidden>
+    <header class="gamebar">
+      <button class="icon-btn" id="btn-laengen-quit" type="button" title="Runde beenden">&#10005;</button>
+      <div class="progress" role="progressbar" aria-label="Fortschritt in der Runde" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+        <div class="progress-fill" id="laengen-fortschritt"></div>
+      </div>
+      <div class="streak-chip" id="laengen-serie"><span aria-hidden="true">&#9650;</span><span id="laengen-serie-zahl">0</span></div>
+    </header>
+
+    <div class="stage">
+      <div class="mascot" id="laengen-drache" data-mood="idle"></div>
+      <p class="round-label" id="laengen-stufe-label">Längen</p>
+      <p class="laengen-frage" id="laengen-frage"></p>
+      <div class="laengen-antwort" id="laengen-antwort"></div>
+      <p class="feedback" id="laengen-feedback" role="status" aria-live="polite">&nbsp;</p>
+      <div class="helper laengen-hilfe" id="laengen-hilfe" role="status" aria-live="polite" hidden>
+        <p class="laengen-loesung" id="laengen-loesung"></p>
+        <p class="helper-tip" id="laengen-hinweis"></p>
+        <div class="laengen-bild-rahmen" id="laengen-bild"></div>
+      </div>
+      <div class="laengen-weiter-bereich" id="laengen-weiter-bereich"></div>
+    </div>
+
+    <div class="pad-wrap" id="laengen-pad-wrap">
+      <div class="pad pad-laengen" id="laengen-pad">
+        <button type="button" data-key="1">1</button>
+        <button type="button" data-key="2">2</button>
+        <button type="button" data-key="3">3</button>
+        <button type="button" data-key="4">4</button>
+        <button type="button" data-key="5">5</button>
+        <button type="button" data-key="6">6</button>
+        <button type="button" data-key="7">7</button>
+        <button type="button" data-key="8">8</button>
+        <button type="button" data-key="9">9</button>
+        <button type="button" data-key="," class="pad-util" id="laengen-komma">,</button>
+        <button type="button" data-key="0">0</button>
+        <button type="button" data-key="del" class="pad-util">&#9003;</button>
+        <button type="button" data-key="ok" class="pad-ok pad-breit">OK</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= LÄNGEN: ERGEBNIS ======================= -->
+  <section class="screen screen-center" id="screen-laengen-ergebnis" hidden>
+    <div class="result-card">
+      <p class="eyebrow" id="laengen-erg-stufe">Längen</p>
+      <h2 id="laengen-erg-titel">Runde geschafft!</h2>
+      <div class="result-stars"><span class="star-icon" aria-hidden="true">&#9733;</span><span id="laengen-erg-sterne">0</span></div>
+      <div class="result-grid">
+        <div><strong id="laengen-erg-richtig">0</strong><span>richtig</span></div>
+        <div><strong id="laengen-erg-gesamt">10</strong><span>Aufgaben</span></div>
+        <div><strong id="laengen-erg-serie">0</strong><span>beste Serie</span></div>
+      </div>
+      <div class="result-review" id="laengen-erg-rueckblick"></div>
+      <div class="result-actions">
+        <button class="btn btn-mess" id="btn-laengen-nochmal" type="button">Noch eine Runde</button>
+        <button class="btn" id="btn-laengen-stufen" type="button">Andere Stufe</button>
+      </div>
+    </div>
+  </section>
+
   <!-- ======================= ELTERN ======================= -->
   <section class="screen" id="screen-parents" hidden>
     <header class="topbar">
@@ -1271,50 +1575,62 @@ button { font-family: inherit; color: inherit; }
     </div>
   </section>
 
-</div>
+</main>
 <script>
+/* ===== spiel/helfer.js ===== */
 /* =============================================================
-   Zahlendrache – kleines 1x1, Umkehraufgaben, halbschriftlich teilen
-
-   Lernlogik: Leitner-Karteikasten mit fünf Fächern. Jede Aufgabe
-   steigt bei einer sicheren Antwort ein Fach auf und rutscht bei
-   einem Fehler zwei Fächer zurück. Die Auswahl der nächsten
-   Aufgabe gewichtet niedrige Fächer und lange nicht Geübtes.
-   Mal- und Geteilt-Aufgaben haben getrennte Karteikästen, denn
-   7×8 zu können heißt noch nicht, 56:8 zu können.
+   Zahlendrache – kleine Helfer, die überall gebraucht werden
    ============================================================= */
-(function () {
+(function (root) {
   'use strict';
+  var Z = root.Zahlendrache = root.Zahlendrache || {};
 
-  /* ---------- Konstanten ---------- */
+  var $ = function (id) { return document.getElementById(id); };
+  var rnd = function (n) { return Math.floor(Math.random() * n); };
+  var pick = function (arr) { return arr[rnd(arr.length)]; };
+  var clamp = function (v, lo, hi) { return Math.max(lo, Math.min(hi, v)); };
 
-  var STORAGE_KEY = 'zahlendrache.v1';
-  var MAX_BOX = 5;
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  }
 
-  /* Drei Schwierigkeitsstufen. Sie ändern die Reihenfolge, in der die
-     Reihen dazukommen, wie lang eine Runde ist, wie viel Bedenkzeit es
-     für den Tempobonus gibt und wie groß die halbschriftlichen Aufgaben
-     starten. Der Karteikasten bleibt davon unberührt – ein Wechsel
-     kostet keinen Fortschritt.
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = rnd(i + 1);
+      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+    }
+    return arr;
+  }
 
-     stages   Etappen der Lernreise, eine nach der anderen
-     unlockAt wie sicher die letzte Etappe sitzen muss (0…1)
-     round    Aufgaben pro Runde
-     halb     Aufgaben pro Runde beim halbschriftlichen Teilen
-     halbFrom kleinste Größenstufe, mit der begonnen wird (0…2)
-     halbMax  größte Größenstufe, die erreicht werden kann
-     blitz    Sekunden in der Blitzrunde
-     fast     Millisekunden für den großen und den kleinen Tempobonus
-     settle   bis hierher gilt eine Antwort als sicher genug fürs
-              nächste Karteikastenfach
-     goal     richtige Antworten als Tagesziel                        */
+  /* Blendet alle Bildschirme aus und einen ein. Beide Module – das
+     1x1-Spiel und das Längen-Modul – gehen hierüber, sonst bliebe
+     beim Wechseln ein Bildschirm des anderen stehen. */
+  function zeigeBildschirm(id) {
+    var alle = document.querySelectorAll('.screen');
+    for (var i = 0; i < alle.length; i++) alle[i].hidden = (alle[i].id !== id);
+    window.scrollTo(0, 0);
+  }
+
+  Z.helfer = { $: $, rnd: rnd, pick: pick, clamp: clamp, today: today,
+               shuffle: shuffle, zeigeBildschirm: zeigeBildschirm };
+}(typeof globalThis !== 'undefined' ? globalThis : this));
+
+/* ===== spiel/daten.js ===== */
+/* =============================================================
+   Zahlendrache – Schwierigkeitsstufen, Level, Abzeichen, Lob
+   ============================================================= */
+(function (root) {
+  'use strict';
+  var Z = root.Zahlendrache = root.Zahlendrache || {};
+
   var DIFFICULTY = {
     start: {
       id: 'start', name: 'Ganz in Ruhe', sym: '🐢',
       blurb: 'Eine Reihe nach der anderen. Kleine Runden, viel Zeit zum Nachdenken.',
       short: 'Eine Reihe nach der anderen',
       detail: 'Beginnt mit der 1er- und 2er-Reihe · 8 Aufgaben pro Runde · Blitzrunde 90 Sekunden',
-      color: 'var(--good)',
+      color: 'var(--good)', colorText: 'var(--good-text)',
       stages: [[1, 2], [10], [5], [3], [4], [6], [8], [7], [9]],
       unlockAt: 0.5,
       round: 8, halb: 4, halbFrom: 0, halbMax: 1,
@@ -1325,7 +1641,7 @@ button { font-family: inherit; color: inherit; }
       blurb: 'Mehrere Reihen gleichzeitig. Neue kommen dazu, sobald die alten sitzen.',
       short: 'Neue Reihen, sobald die alten sitzen',
       detail: 'Beginnt mit 1er, 2er und 10er · 10 Aufgaben pro Runde · Blitzrunde 60 Sekunden',
-      color: 'var(--accent)',
+      color: 'var(--accent)', colorText: 'var(--accent-text)',
       stages: [[1, 2, 10], [5], [3, 4], [6, 8], [7, 9]],
       unlockAt: 0.6,
       round: 10, halb: 5, halbFrom: 0, halbMax: 2,
@@ -1336,7 +1652,7 @@ button { font-family: inherit; color: inherit; }
       blurb: 'Alle zehn Reihen von Anfang an. Längere Runden, weniger Bedenkzeit.',
       short: 'Alle Reihen, längere Runden',
       detail: 'Alle Reihen sofort · 12 Aufgaben pro Runde · Blitzrunde 45 Sekunden',
-      color: 'var(--info)',
+      color: 'var(--info)', colorText: 'var(--info-text)',
       stages: [[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]],
       unlockAt: 0,
       round: 12, halb: 6, halbFrom: 2, halbMax: 2,
@@ -1345,8 +1661,6 @@ button { font-family: inherit; color: inherit; }
   };
 
   var LEVEL_ORDER = ['start', 'normal', 'profi'];
-
-  function diff() { return DIFFICULTY[state.level] || DIFFICULTY.normal; }
 
   var LEVELS = [
     { at: 0,    title: 'Zahlen-Küken' },
@@ -1382,25 +1696,1954 @@ button { font-family: inherit; color: inherit; }
   var PRAISE_RIGHT = ['Richtig!', 'Sitzt!', 'Genau!', 'Super!', 'Stark!', 'Perfekt!', 'Klasse!', 'Volltreffer!'];
   var PRAISE_STREAK = ['Serie läuft!', 'Weiter so!', 'Du bist im Flow!', 'Unaufhaltsam!'];
 
-  /* ---------- kleine Helfer ---------- */
+  Z.daten = { DIFFICULTY: DIFFICULTY, LEVEL_ORDER: LEVEL_ORDER, LEVELS: LEVELS, BADGES: BADGES,
+    PRAISE_RIGHT: PRAISE_RIGHT, PRAISE_STREAK: PRAISE_STREAK };
+}(typeof globalThis !== 'undefined' ? globalThis : this));
 
-  var $ = function (id) { return document.getElementById(id); };
-  var rnd = function (n) { return Math.floor(Math.random() * n); };
-  var pick = function (arr) { return arr[rnd(arr.length)]; };
-  var clamp = function (v, lo, hi) { return Math.max(lo, Math.min(hi, v)); };
+/* ===== spiel/effekte.js ===== */
+/* =============================================================
+   Zahlendrache – Ton und Konfetti
 
-  function today() {
-    var d = new Date();
-    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+   Beides ist Beiwerk: Wenn der Browser keinen Ton kann oder das
+   Kind weniger Bewegung eingestellt hat, läuft das Spiel ohne.
+   Die einzige Verbindung zum Spielstand ist der Ton-Schalter, der
+   von außen gesetzt wird – deshalb liegt das hier eigenständig.
+   ============================================================= */
+(function (root) {
+  'use strict';
+  var Z = root.Zahlendrache = root.Zahlendrache || {};
+
+  var tonAn = true;
+
+  /* ---------- Ton ---------- */
+
+  var audio = null;
+  function tone(freq, start, len, vol, type) {
+    if (!tonAn) return;
+    try {
+      if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
+      if (audio.state === 'suspended') audio.resume();
+      var osc = audio.createOscillator(), gain = audio.createGain();
+      osc.type = type || 'sine';
+      osc.frequency.value = freq;
+      var t0 = audio.currentTime + start;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.015);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + len);
+      osc.connect(gain); gain.connect(audio.destination);
+      osc.start(t0); osc.stop(t0 + len + 0.02);
+    } catch (e) {}
   }
 
-  function shuffle(arr) {
-    for (var i = arr.length - 1; i > 0; i--) {
-      var j = rnd(i + 1);
-      var t = arr[i]; arr[i] = arr[j]; arr[j] = t;
+  var SOUND = {
+    right: function (streak) {
+      var base = 660 + Math.min(streak, 8) * 30;
+      tone(base, 0, 0.12, 0.18);
+      tone(base * 1.5, 0.08, 0.16, 0.14);
+    },
+    step:  function () { tone(740, 0, 0.09, 0.13); tone(988, 0.06, 0.12, 0.1); },
+    wrong: function () { tone(300, 0, 0.16, 0.12, 'triangle'); tone(220, 0.1, 0.22, 0.1, 'triangle'); },
+    key:   function () { tone(520, 0, 0.05, 0.07, 'square'); },
+    combo: function () { [523, 659, 784, 1047].forEach(function (f, i) { tone(f, i * 0.07, 0.2, 0.14); }); },
+    win:   function () { [523, 659, 784, 1047, 1319].forEach(function (f, i) { tone(f, i * 0.09, 0.3, 0.16); }); }
+  };
+
+  /* ---------- Konfetti ---------- */
+
+  var canvas = Z.helfer.$('fx'), ctx = canvas.getContext('2d'), parts = [], raf = null;
+  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function sizeCanvas() {
+    var dpr = window.devicePixelRatio || 1;
+    canvas.width = window.innerWidth * dpr;
+    canvas.height = window.innerHeight * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener('resize', sizeCanvas);
+  sizeCanvas();
+
+  var CONFETTI_COLORS = ['#f26430', '#2fb37f', '#f2c14e', '#2b87d3', '#b75bc9', '#d95f8b'];
+
+  function burst(x, y, count) {
+    if (reduced) return;
+    for (var i = 0; i < count; i++) {
+      var ang = Math.random() * Math.PI * 2;
+      var sp = 2 + Math.random() * 7;
+      parts.push({
+        x: x, y: y,
+        vx: Math.cos(ang) * sp,
+        vy: Math.sin(ang) * sp - 3,
+        s: 4 + Math.random() * 6,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.3,
+        life: 60 + Z.helfer.rnd(40),
+        c: Z.helfer.pick(CONFETTI_COLORS)
+      });
     }
-    return arr;
+    if (!raf) raf = requestAnimationFrame(tick);
   }
+
+  function tick() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = parts.length - 1; i >= 0; i--) {
+      var p = parts[i];
+      p.vy += 0.22; p.vx *= 0.99;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
+      if (p.life <= 0 || p.y > window.innerHeight + 40) { parts.splice(i, 1); continue; }
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.min(1, p.life / 25);
+      ctx.fillStyle = p.c;
+      ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
+      ctx.restore();
+    }
+    raf = parts.length ? requestAnimationFrame(tick) : null;
+    if (!raf) ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  function burstAt(el, count) {
+    if (!el || el.hidden) return;
+    var r = el.getBoundingClientRect();
+    if (!r.width && !r.height) return;
+    burst(r.left + r.width / 2, r.top + r.height / 2, count);
+  }
+
+  Z.effekte = {
+    ton: function (an) { tonAn = !!an; },
+    SOUND: SOUND,
+    burst: burst,
+    burstAt: burstAt
+  };
+}(typeof globalThis !== 'undefined' ? globalThis : this));
+
+/* ===== spiel/tipps.js ===== */
+/* =============================================================
+   Zahlendrache – Rechentricks fürs kleine 1x1 und die Umkehraufgaben
+   ============================================================= */
+(function (root) {
+  'use strict';
+  var Z = root.Zahlendrache = root.Zahlendrache || {};
+
+  function tipForMul(a, b) {
+    var lo = Math.min(a, b), hi = Math.max(a, b), p = a * b;
+    if (a === b) return 'Eine Quadratzahl: <b>' + a + ' × ' + a + ' = ' + p + '</b>. Die lohnt sich auswendig!';
+    switch (lo) {
+      case 1:  return 'Mal 1 ändert nichts: <b>' + hi + '</b> bleibt <b>' + hi + '</b>.';
+      case 2:  return 'Mal 2 heißt verdoppeln: <b>' + hi + ' + ' + hi + ' = ' + p + '</b>.';
+      case 3:  return 'Verdopple und leg einmal drauf: <b>' + (2 * hi) + ' + ' + hi + ' = ' + p + '</b>.';
+      case 4:  return 'Zweimal verdoppeln: <b>' + hi + ' → ' + (2 * hi) + ' → ' + p + '</b>.';
+      case 5:  return 'Mal 10, dann halbieren: <b>' + (10 * hi) + ' : 2 = ' + p + '</b>.';
+      case 6:  return 'Nimm die 5er-Reihe und leg einmal drauf: <b>' + (5 * hi) + ' + ' + hi + ' = ' + p + '</b>.';
+      case 7:  return 'Zerlege in 5 und 2: <b>' + (5 * hi) + ' + ' + (2 * hi) + ' = ' + p + '</b>.';
+      case 8:  return 'Dreimal verdoppeln: <b>' + hi + ' → ' + (2 * hi) + ' → ' + (4 * hi) + ' → ' + p + '</b>.';
+      case 9:  return 'Der 9er-Trick: mal 10, dann einmal weg: <b>' + (10 * hi) + ' − ' + hi + ' = ' + p + '</b>.';
+      case 10: return 'Mal 10 heißt: eine Null anhängen. <b>' + hi + ' → ' + p + '</b>.';
+    }
+    return '<b>' + a + ' × ' + b + ' = ' + p + '</b>';
+  }
+
+  /* Teilen heißt rückwärts malnehmen – und genau so wird es erklärt. */
+  function tipForDiv(p, b) {
+    var q = p / b;
+    if (b === 10) return 'Geteilt durch 10 heißt: eine Null weg. <b>' + p + ' → ' + q + '</b>.';
+    if (q === 1) return 'Etwas durch sich selbst geteilt ist immer <b>1</b>.';
+    var steps = [];
+    for (var i = 1; i <= q; i++) steps.push(i === q ? '<b>' + (i * b) + '</b>' : (i * b));
+    return 'Frag rückwärts: <b>' + b + ' × ? = ' + p + '</b>. Zähl die ' + b + 'er-Reihe hoch: ' +
+      steps.join(', ') + ' – das sind <b>' + q + '</b> Sprünge.';
+  }
+
+  Z.tipps = { tipForMul: tipForMul, tipForDiv: tipForDiv };
+}(typeof globalThis !== 'undefined' ? globalThis : this));
+
+/* ===== laengen/core.js ===== */
+/* =============================================================
+   Zahlendrache – Modul „Längen“: Kern
+
+   Grundsatz: Alle Längen werden intern als GANZE ZAHL in
+   Millimetern geführt. Vergleich und Auswertung laufen nie über
+   Gleitkommazahlen, sonst wäre 1,1 m + 2,2 m ≠ 3,3 m.
+   Kommazahlen gibt es nur an zwei Stellen: beim Einlesen einer
+   Eingabe und beim Anzeigen.
+   ============================================================= */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else {
+    var Z = root.Zahlendrache = root.Zahlendrache || {};
+    (Z.laengen = Z.laengen || {}).core = api;
+  }
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  /* ---------- Einheiten ---------- */
+
+  var EINHEITEN = {
+    mm: { kurz: 'mm', name: 'Millimeter', faktor: 1 },
+    cm: { kurz: 'cm', name: 'Zentimeter', faktor: 10 },
+    dm: { kurz: 'dm', name: 'Dezimeter',  faktor: 100 },
+    m:  { kurz: 'm',  name: 'Meter',      faktor: 1000 },
+    km: { kurz: 'km', name: 'Kilometer',  faktor: 1000000 }
+  };
+
+  /* Von klein nach groß – die Reihenfolge der Umrechnungstreppe. */
+  var LEITER = ['mm', 'cm', 'dm', 'm', 'km'];
+  var LEITER_OHNE_DM = ['mm', 'cm', 'm', 'km'];
+
+  /* Nachkommastellen, wie sie in Klasse 4 eingeführt werden:
+     das Komma trennt eine Einheit von der nächstkleineren.
+     m → cm (2 Stellen), km → m (3), cm → mm (1), dm → cm (1). */
+  var KOMMA_STELLEN = { km: 3, m: 2, dm: 1, cm: 1, mm: 0 };
+
+  function istEinheit(e) {
+    return Object.prototype.hasOwnProperty.call(EINHEITEN, e);
+  }
+
+  function pruefeEinheit(e) {
+    if (!istEinheit(e)) throw new Error('Unbekannte Einheit: ' + e);
+    return EINHEITEN[e];
+  }
+
+  /* Umrechnungszahl zwischen zwei Einheiten, immer ≥ 1.
+     faktorZwischen('m', 'cm') === 100 */
+  function faktorZwischen(von, nach) {
+    var a = pruefeEinheit(von).faktor, b = pruefeEinheit(nach).faktor;
+    return a >= b ? a / b : b / a;
+  }
+
+  /* ---------- Umrechnen ---------- */
+
+  function toMm(wert, einheit) {
+    var f = pruefeEinheit(einheit).faktor;
+    if (typeof wert !== 'number' || !isFinite(wert)) {
+      throw new Error('Kein gültiger Zahlenwert: ' + wert);
+    }
+    /* Runden fängt die Ungenauigkeit von 1.45 * 1000 ab. */
+    return Math.round(wert * f);
+  }
+
+  function fromMm(mm, einheit) {
+    var f = pruefeEinheit(einheit).faktor;
+    return mm / f;
+  }
+
+  /* Summe einer gemischten Angabe: [[3,'m'],[45,'cm']] → 3450 */
+  function gemischtZuMm(teile) {
+    return teile.reduce(function (summe, t) {
+      return summe + toMm(t[0], t[1]);
+    }, 0);
+  }
+
+  /* Zerlegt Millimeter in die gewünschten Einheiten, größte zuerst.
+     zerlege(3450, ['m','cm']) → [{wert:3,einheit:'m'},{wert:45,einheit:'cm'}]
+
+     Geht die kleinste Einheit nicht glatt auf, entstünde hier eine
+     Kommazahl – und die darf vor der Einführung im Unterricht
+     nirgends auftauchen. Deshalb bricht die Funktion dann ab,
+     statt still etwas wie „3 m 45,5 cm“ zu liefern. Wer Reste
+     erwartet, nimmt 'mm' als kleinste Einheit dazu. */
+  function zerlege(mm, einheiten) {
+    var kleinste = einheiten.reduce(function (a, b) {
+      return pruefeEinheit(a).faktor <= pruefeEinheit(b).faktor ? a : b;
+    });
+    if (mm % EINHEITEN[kleinste].faktor !== 0) {
+      throw new Error('Rest beim Zerlegen: ' + mm + ' mm geht in ' + kleinste + ' nicht auf');
+    }
+    var rest = mm;
+    var sortiert = einheiten.slice().sort(function (a, b) {
+      return pruefeEinheit(b).faktor - pruefeEinheit(a).faktor;
+    });
+    return sortiert.map(function (e, i) {
+      var f = EINHEITEN[e].faktor;
+      var wert = i === sortiert.length - 1 ? rest / f : Math.floor(rest / f);
+      rest -= wert * f;
+      return { wert: wert, einheit: e };
+    });
+  }
+
+  /* ---------- Eingabe einlesen ---------- */
+
+  /* Nimmt, was ein Kind tippt, und sagt freundlich, was daran nicht
+     geht. „1,5“, „1.5“ und „1,50“ ergeben denselben Wert.
+     Rückgabe: { ok: true, wert } oder { ok: false, grund, einheit? } */
+  function parseEingabe(text) {
+    if (text === null || text === undefined) return { ok: false, grund: 'leer' };
+
+    /* Alle Arten von Leerzeichen raus, auch geschützte. */
+    var s = String(text).replace(/[\s  ]/g, '');
+    if (s === '') return { ok: false, grund: 'leer' };
+
+    /* Hat das Kind die Einheit mitgetippt? Das ist kein Unsinn,
+       sondern mitgedacht – dafür gibt es einen eigenen Grund. */
+    var mitEinheit = s.match(/^(.*?)(mm|cm|dm|km|m)$/i);
+    if (mitEinheit) {
+      var innen = parseEingabe(mitEinheit[1]);
+      return innen.ok
+        ? { ok: false, grund: 'einheitMitgetippt', wert: innen.wert, einheit: mitEinheit[2].toLowerCase() }
+        : { ok: false, grund: 'keineZahl' };
+    }
+
+    if (/^-/.test(s)) return { ok: false, grund: 'negativ' };
+    if ((s.match(/[.,]/g) || []).length > 1) return { ok: false, grund: 'mehrereKommas' };
+    if (!/^\d*[.,]?\d*$/.test(s)) return { ok: false, grund: 'keineZahl' };
+    if (/^[.,]/.test(s) || /[.,]$/.test(s)) return { ok: false, grund: 'kommaAmRand' };
+
+    var wert = Number(s.replace(',', '.'));
+    if (!isFinite(wert)) return { ok: false, grund: 'keineZahl' };
+    return { ok: true, wert: wert };
+  }
+
+  /* Eingabetext direkt in Millimeter, mit fester Einheit. */
+  function parseLaenge(text, einheit) {
+    var e = parseEingabe(text);
+    if (!e.ok) return e;
+    return { ok: true, mm: toMm(e.wert, einheit), wert: e.wert };
+  }
+
+  /* ---------- Anzeigen ---------- */
+
+  function zahlDeutsch(n, stellen) {
+    var s = stellen === undefined ? String(n) : n.toFixed(stellen);
+    return s.replace('.', ',');
+  }
+
+  /* art 'einfach'  → „245 cm“        opt.einheit
+     art 'komma'    → „2,45 m“        opt.einheit, opt.stellen (optional)
+     art 'gemischt' → „2 m 45 cm“     opt.einheiten                        */
+  function formatLaenge(mm, art, opt) {
+    opt = opt || {};
+    if (art === 'einfach') {
+      return zahlDeutsch(fromMm(mm, opt.einheit)) + ' ' + pruefeEinheit(opt.einheit).kurz;
+    }
+    if (art === 'komma') {
+      var stellen = opt.stellen === undefined ? KOMMA_STELLEN[opt.einheit] : opt.stellen;
+      return zahlDeutsch(fromMm(mm, opt.einheit), stellen) + ' ' + pruefeEinheit(opt.einheit).kurz;
+    }
+    if (art === 'gemischt') {
+      /* „0 m 5 cm“ liest kein Kind gern – Nullteile fallen weg.
+         Bleibt nichts übrig, steht eine Null in der kleinsten Einheit. */
+      var alle = zerlege(mm, opt.einheiten);
+      var teile = alle.filter(function (t) { return t.wert !== 0; });
+      if (!teile.length) teile = [alle[alle.length - 1]];
+      return teile.map(function (t) {
+        return zahlDeutsch(t.wert) + ' ' + EINHEITEN[t.einheit].kurz;
+      }).join(' ');
+    }
+    throw new Error('Unbekannte Schreibweise: ' + art);
+  }
+
+  /* ---------- Zufall mit Startwert ---------- */
+
+  /* Gleicher Startwert, gleiche Aufgabenfolge – damit Tests
+     reproduzierbar sind und ein Fehler wiederholbar bleibt. */
+  function zufall(startwert) {
+    var s = (startwert === undefined ? Date.now() : startwert) >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) | 0;
+      var t = Math.imul(s ^ (s >>> 15), 1 | s);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function ganzzahl(rng, min, max) {
+    return min + Math.floor(rng() * (max - min + 1));
+  }
+
+  function waehle(rng, liste) {
+    return liste[Math.floor(rng() * liste.length)];
+  }
+
+  function mische(rng, liste) {
+    var a = liste.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rng() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  return {
+    EINHEITEN: EINHEITEN,
+    LEITER: LEITER,
+    LEITER_OHNE_DM: LEITER_OHNE_DM,
+    KOMMA_STELLEN: KOMMA_STELLEN,
+    istEinheit: istEinheit,
+    faktorZwischen: faktorZwischen,
+    toMm: toMm,
+    fromMm: fromMm,
+    gemischtZuMm: gemischtZuMm,
+    zerlege: zerlege,
+    parseEingabe: parseEingabe,
+    parseLaenge: parseLaenge,
+    zahlDeutsch: zahlDeutsch,
+    formatLaenge: formatLaenge,
+    zufall: zufall,
+    ganzzahl: ganzzahl,
+    waehle: waehle,
+    mische: mische
+  };
+}));
+
+/* ===== laengen/texte.js ===== */
+/* =============================================================
+   Zahlendrache – Modul „Längen“: alle Texte
+
+   Diese Datei darf bearbeitet werden, ohne den Code zu kennen.
+   Es zählen nur zwei Regeln:
+     1. Anführungszeichen am Zeilenanfang und -ende stehen lassen.
+     2. Platzhalter in geschweiften Klammern nicht umbenennen.
+        Sie werden beim Anzeigen durch Zahlen ersetzt.
+
+   Verfügbare Platzhalter je Fehlertyp stehen als Kommentar dabei.
+   Sprache: kurze Sätze, Du-Form, keine Fachwörter außer denen aus
+   dem Unterricht (Maßzahl, Einheit, Stellenwerttafel).
+   ============================================================= */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else {
+    var Z = root.Zahlendrache = root.Zahlendrache || {};
+    (Z.laengen = Z.laengen || {}).texte = api;
+  }
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  /* Nie „Falsch!“ – der Einstieg bleibt freundlich. */
+  var EINSTIEG = [
+    'Fast!',
+    'Das ist knifflig!',
+    'Knapp daneben!',
+    'Da war ein Stolperstein.',
+    'Fast geschafft!'
+  ];
+
+  var LOB = ['Genau!', 'Richtig!', 'Sitzt!', 'Stark!', 'Super!', 'Klasse!'];
+
+  /* Stützpunktvorstellungen: jede Einheit hängt an etwas Vertrautem.
+     Werden in Erklärungen immer wieder genannt. */
+  var STUETZPUNKTE = {
+    mm: { kurz: '1 mm ist etwa so dick wie eine Bankkarte.',
+          lang: 'Ein Millimeter ist ungefähr die Dicke einer Bankkarte oder die Breite eines Strichs.' },
+    cm: { kurz: '1 cm ist etwa so breit wie dein kleiner Finger.',
+          lang: 'Ein Zentimeter ist ungefähr so breit wie dein kleiner Finger.' },
+    dm: { kurz: '1 dm ist etwa eine Handbreite ohne Daumen.',
+          lang: 'Ein Dezimeter ist ungefähr so breit wie deine Hand ohne den Daumen.' },
+    m:  { kurz: '1 m ist ein großer Schritt.',
+          lang: 'Ein Meter ist ungefähr ein großer Schritt – oder die Höhe einer Türklinke.' },
+    km: { kurz: '1 km sind etwa 15 Minuten zu Fuß.',
+          lang: 'Einen Kilometer gehst du in ungefähr 15 Minuten – das sind zweieinhalb Runden auf der Sportplatzbahn.' }
+  };
+
+  /* Bestätigung bei richtiger Antwort, nur ab und zu gezeigt. */
+  var MERKSATZ = {
+    'km-m':  '1 km = 1000 m.',
+    'm-dm':  '1 m = 10 dm.',
+    'm-cm':  '1 m = 100 cm.',
+    'dm-cm': '1 dm = 10 cm.',
+    'cm-mm': '1 cm = 10 mm.'
+  };
+
+
+  /* ---------- Gegenstände für Stufe 1 ----------
+     wert + einheit ergeben die realistische Länge. Alle Zahlen sind
+     gerundet und werden im Satz mit „etwa“ genannt – das Modul
+     behauptet keine genauen Maße.
+     Neue Gegenstände dürfen ergänzt werden: Satz mit {wert} und
+     einer Lücke ___ für die Einheit, dazu die passende Frage. */
+  var GEGENSTAENDE = [
+    { name: 'eine Bankkarte',      satz: 'Eine Bankkarte ist etwa {wert} ___ dick.',        frage: 'Wie dick ist eine Bankkarte?',        wert: 1,   einheit: 'mm' },
+    { name: 'eine Münze',          satz: 'Eine Münze ist etwa {wert} ___ dick.',            frage: 'Wie dick ist eine Münze?',            wert: 2,   einheit: 'mm' },
+    { name: 'eine Ameise',         satz: 'Eine Ameise ist etwa {wert} ___ lang.',           frage: 'Wie lang ist eine Ameise?',           wert: 5,   einheit: 'mm' },
+    { name: 'eine Bleistiftmine',  satz: 'Eine Bleistiftmine ist etwa {wert} ___ dick.',    frage: 'Wie dick ist eine Bleistiftmine?',    wert: 2,   einheit: 'mm' },
+
+    { name: 'ein Radiergummi',     satz: 'Ein Radiergummi ist etwa {wert} ___ lang.',       frage: 'Wie lang ist ein Radiergummi?',       wert: 4,   einheit: 'cm' },
+    { name: 'ein Daumen',          satz: 'Ein Daumen ist etwa {wert} ___ breit.',           frage: 'Wie breit ist ein Daumen?',           wert: 2,   einheit: 'cm' },
+    { name: 'ein Bleistift',       satz: 'Ein Bleistift ist etwa {wert} ___ lang.',         frage: 'Wie lang ist ein Bleistift?',         wert: 18,  einheit: 'cm' },
+    { name: 'ein Schulheft',       satz: 'Ein Schulheft ist etwa {wert} ___ lang.',         frage: 'Wie lang ist ein Schulheft?',         wert: 30,  einheit: 'cm' },
+    { name: 'ein Lineal',          satz: 'Ein Lineal ist etwa {wert} ___ lang.',            frage: 'Wie lang ist ein Lineal?',            wert: 30,  einheit: 'cm' },
+    { name: 'ein Turnschuh',       satz: 'Ein Turnschuh ist etwa {wert} ___ lang.',         frage: 'Wie lang ist ein Turnschuh?',         wert: 24,  einheit: 'cm' },
+
+    { name: 'eine Hand',           satz: 'Eine Hand ist etwa {wert} ___ breit.',            frage: 'Wie breit ist eine Kinderhand?',      wert: 1,   einheit: 'dm' },
+    { name: 'ein Schuhkarton',     satz: 'Ein Schuhkarton ist etwa {wert} ___ lang.',       frage: 'Wie lang ist ein Schuhkarton?',       wert: 3,   einheit: 'dm' },
+
+    { name: 'eine Zimmertür',      satz: 'Eine Zimmertür ist etwa {wert} ___ hoch.',        frage: 'Wie hoch ist eine Zimmertür?',        wert: 2,   einheit: 'm' },
+    { name: 'ein Bett',            satz: 'Ein Bett ist etwa {wert} ___ lang.',              frage: 'Wie lang ist ein Bett?',              wert: 2,   einheit: 'm' },
+    { name: 'ein Auto',            satz: 'Ein Auto ist etwa {wert} ___ lang.',              frage: 'Wie lang ist ein Auto?',              wert: 4,   einheit: 'm' },
+    { name: 'ein Klassenzimmer',   satz: 'Ein Klassenzimmer ist etwa {wert} ___ breit.',    frage: 'Wie breit ist ein Klassenzimmer?',    wert: 7,   einheit: 'm' },
+    { name: 'ein Schwimmbecken',   satz: 'Ein Schwimmbecken ist etwa {wert} ___ lang.',     frage: 'Wie lang ist ein Schwimmbecken?',     wert: 25,  einheit: 'm' },
+    { name: 'ein Fußballfeld',     satz: 'Ein Fußballfeld ist etwa {wert} ___ lang.',       frage: 'Wie lang ist ein Fußballfeld?',       wert: 100, einheit: 'm' },
+    { name: 'die Elbphilharmonie', satz: 'Die Elbphilharmonie ist etwa {wert} ___ hoch.',   frage: 'Wie hoch ist die Elbphilharmonie?',   wert: 110, einheit: 'm' },
+
+    { name: 'der Schulweg',        satz: 'Ein Schulweg ist etwa {wert} ___ lang.',          frage: 'Wie lang ist ein Schulweg?',          wert: 2,   einheit: 'km' },
+    { name: 'eine Alsterrunde',    satz: 'Eine Runde um die Binnen- und Außenalster ist etwa {wert} ___ lang.', frage: 'Wie lang ist eine Alsterrunde?', wert: 7, einheit: 'km' },
+    { name: 'ein Marathon',        satz: 'Ein Marathonlauf ist etwa {wert} ___ lang.',      frage: 'Wie lang ist ein Marathonlauf?',      wert: 42,  einheit: 'km' }
+  ];
+
+  /* ---------- Vergleichsdinge für „Etwa 1 m lang ist …“ ---------- */
+  var VERGLEICHE = [
+    { text: 'ein Strich im Heft',            mm: 1 },
+    { text: 'die Dicke einer Bankkarte',     mm: 1 },
+    { text: 'ein Fingernagel',               mm: 10 },
+    { text: 'die Breite deines kleinen Fingers', mm: 10 },
+    { text: 'eine Hand ohne Daumen',         mm: 100 },
+    { text: 'ein Schuh',                     mm: 250 },
+    { text: 'ein großer Schritt',            mm: 1000 },
+    { text: 'die Höhe einer Türklinke',      mm: 1000 },
+    { text: 'ein Fußballfeld',               mm: 100000 },
+    { text: 'ein Weg von 15 Minuten zu Fuß', mm: 1000000 },
+    { text: 'zweieinhalb Runden auf der Sportplatzbahn', mm: 1000000 }
+  ];
+
+  /* ---------- Hinweise zu den Denkfehlern ----------
+     bild: welche Grafik dazu gezeigt wird
+           'treppe' | 'stellenwert' | 'lineal' | 'balken' | null   */
+  var FEHLER = {
+
+    /* {von} {nach} Einheiten · {faktor} richtige Umrechnungszahl
+       {falscherFaktor} benutzte Zahl · {aufgabe} {loesung} */
+    FAKTOR: {
+      bild: 'treppe',
+      hinweis: 'Zwischen {von} und {nach} ist die Zahl {faktor}, nicht {falscherFaktor}. ' +
+               '1 {von} = {faktor} {nach}, also {aufgabe} = {loesung}.'
+    },
+
+    /* {groessere} {kleinere} Einheiten · {aufgabe} {loesung} */
+    RICHTUNG: {
+      bild: 'treppe',
+      hinweis: '{groessere} sind größer als {kleinere}. Dann brauchst du weniger davon – ' +
+               'die Zahl wird kleiner. {aufgabe} = {loesung}.'
+    },
+
+    /* {haupt} {hauptEinheit} {neben} {nebenEinheit} · {loesung} {mitNull} */
+    NULL_VERGESSEN: {
+      bild: 'stellenwert',
+      hinweis: '{neben} {nebenEinheit} brauchen eine 0 davor: ' +
+               '{haupt} {hauptEinheit} {neben} {nebenEinheit} = {mitNull} = {loesung}.'
+    },
+
+    /* {aufgabe} {loesung} {nachkomma} {zwischenEinheit} */
+    KOMMA_ALS_TRENNER: {
+      bild: 'stellenwert',
+      hinweis: 'Das Komma trennt nicht zwei Zahlen. Die Ziffer nach dem Komma steht auf dem ' +
+               'Platz der {zwischenEinheit}: {aufgabe} = {loesung}.'
+    },
+
+    /* {aufgabe} {loesung} */
+    KOMMA_NULL: {
+      bild: 'stellenwert',
+      hinweis: 'Die 0 nach dem Komma hält einen Platz frei – sie darf nicht wegfallen. ' +
+               'Schau in der Stellenwerttafel: {aufgabe} = {loesung}.'
+    },
+
+    /* {linksOriginal} {rechtsOriginal} {linksUm} {rechtsUm} {zeichen} */
+    EINHEIT_IGNORIERT: {
+      bild: 'balken',
+      hinweis: 'Vergleiche erst in derselben Einheit: {linksOriginal} = {linksUm}. ' +
+               'Dann siehst du es: {linksUm} {zeichen} {rechtsUm}.'
+    },
+
+    /* {start} {ende} {loesung} {einheit} */
+    LINEAL_START: {
+      bild: 'lineal',
+      hinweis: 'Die Strecke fängt nicht bei 0 an, sondern bei {start}. ' +
+               'Von {start} bis {ende} sind es {loesung}.'
+    },
+
+    /* {gegenstand} {falscheEinheit} {stuetzpunkt} {loesung} */
+    GROESSENVORSTELLUNG: {
+      bild: 'treppe',
+      hinweis: '{stuetzpunkt} {gegenstand} ist viel {vergleich}. {loesung} passt.'
+    },
+
+    /* {rechnung} {loesung} */
+    RECHENFEHLER: {
+      bild: null,
+      hinweis: 'Umgerechnet hast du richtig! Nur beim Rechnen hat sich etwas verschoben: ' +
+               '{rechnung} = {loesung}.'
+    },
+
+    /* {aufgabe} {loesung} */
+    UNBEKANNT: {
+      bild: 'treppe',
+      hinweis: 'Schau dir die Treppe an: {aufgabe} = {loesung}.'
+    }
+  };
+
+  /* Rückmeldung, wenn die Eingabe gar keine Zahl war. */
+  var EINGABE = {
+    leer: 'Da fehlt noch eine Zahl.',
+    keineZahl: 'Tippe bitte nur Ziffern ein.',
+    mehrereKommas: 'Ein Komma reicht.',
+    kommaAmRand: 'Vor und hinter dem Komma muss eine Ziffer stehen.',
+    negativ: 'Eine Länge ist nie kleiner als null.',
+    einheitMitgetippt: 'Die Einheit steht schon da – tippe nur die Zahl.'
+  };
+
+  /* Setzt die Platzhalter ein. Unbekannte bleiben stehen, damit ein
+     Tippfehler in der Vorlage sofort auffällt statt still zu wirken. */
+  function fuelle(vorlage, werte) {
+    return String(vorlage).replace(/\{(\w+)\}/g, function (ganz, name) {
+      return Object.prototype.hasOwnProperty.call(werte || {}, name) ? werte[name] : ganz;
+    });
+  }
+
+  return {
+    GEGENSTAENDE: GEGENSTAENDE,
+    VERGLEICHE: VERGLEICHE,
+    EINSTIEG: EINSTIEG,
+    LOB: LOB,
+    STUETZPUNKTE: STUETZPUNKTE,
+    MERKSATZ: MERKSATZ,
+    FEHLER: FEHLER,
+    EINGABE: EINGABE,
+    fuelle: fuelle
+  };
+}));
+
+/* ===== laengen/diagnose.js ===== */
+/* =============================================================
+   Zahlendrache – Modul „Längen“: Fehlerdiagnose
+
+   diagnoseFehler(aufgabe, antwort)
+     → null, wenn die Antwort richtig ist
+     → { code, werte } sonst. `werte` sind die fertigen Platzhalter
+       für den Hinweistext aus texte.js.
+
+   Aufbau einer Aufgabe (Vertrag für Generatoren und Oberfläche):
+     {
+       stufe, typ,
+       antwortArt: 'zahl' | 'zweiZahlen' | 'auswahl' | 'vergleich',
+       frage,                     Text für das Kind
+       quelle,                    was gegeben ist (je nach typ)
+       ziel,                      was gesucht ist
+       loesungMm,                 Referenzlänge in Millimetern
+       loesung | loesungFelder,   erwartete Eingabe
+       optionen                   bei Auswahl: [{text, wert, richtig, fehler}]
+     }
+
+   Die Reihenfolge der Prüfungen ist Absicht: erst der Fehler mit
+   der richtigen Umrechnungszahl (Richtung verwechselt), dann der
+   mit der richtigen Richtung (Zahl verwechselt). Sonst würde ein
+   Denkfehler den anderen überdecken.
+   ============================================================= */
+(function (root, factory) {
+  var core = (typeof require === 'function' && typeof module === 'object')
+    ? require('./core.js') : root.Zahlendrache.laengen.core;
+  var api = factory(core);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else {
+    var Z = root.Zahlendrache = root.Zahlendrache || {};
+    (Z.laengen = Z.laengen || {}).diagnose = api;
+  }
+}(typeof globalThis !== 'undefined' ? globalThis : this, function (core) {
+  'use strict';
+
+  var E = core.EINHEITEN;
+  var MOEGLICHE_FAKTOREN = [1, 10, 100, 1000];
+
+  function name(e) { return E[e].name; }
+  function kurz(e) { return E[e].kurz; }
+  function mitEinheit(wert, e) { return core.zahlDeutsch(wert) + ' ' + kurz(e); }
+  function ziffernOhneNullen(s) { return String(s).replace(/0/g, ''); }
+
+  /* ---------- einzelne Erkenner ----------
+     Jeder bekommt die Aufgabe und die Zahl, die das Kind getippt
+     hat, und gibt einen Code samt Platzhaltern zurück oder nichts. */
+
+  /* Eine Einheit in eine andere, z. B. 3 km = ___ m */
+  function erkenneUmrechnung(von, nach, wert, antwort, aufgabeText, loesungText) {
+    /* Gleiche Einheit heißt: hier ist nichts umzurechnen. Ohne
+       diese Sperre würde eine vergessene Addition (150 statt 225)
+       als Richtungsfehler ausgelegt und das Kind bekäme einen
+       Hinweis über Meter und Zentimeter, der gar nichts erklärt. */
+    if (von === nach) return null;
+    var f = core.faktorZwischen(von, nach);
+    var malNehmen = E[von].faktor > E[nach].faktor;
+    var basis = { von: kurz(von), nach: kurz(nach), faktor: f,
+                  aufgabe: aufgabeText, loesung: loesungText };
+
+    /* Richtige Zahl, falsche Richtung */
+    var andersherum = malNehmen ? wert / f : wert * f;
+    if (antwort === andersherum) {
+      var groesser = malNehmen ? von : nach;
+      var kleiner = malNehmen ? nach : von;
+      return { code: 'RICHTUNG', werte: {
+        groessere: name(groesser), kleinere: name(kleiner),
+        aufgabe: aufgabeText, loesung: loesungText
+      } };
+    }
+
+    /* Richtige Richtung, falsche Zahl */
+    for (var i = 0; i < MOEGLICHE_FAKTOREN.length; i++) {
+      var f2 = MOEGLICHE_FAKTOREN[i];
+      if (f2 === f) continue;
+      var versuch = malNehmen ? wert * f2 : wert / f2;
+      if (antwort === versuch) {
+        basis.falscherFaktor = f2;
+        return { code: 'FAKTOR', werte: basis };
+      }
+    }
+    return null;
+  }
+
+  /* Gemischte Angabe in eine Einheit, z. B. 3 m 5 cm = ___ cm */
+  function erkenneGemischt(teile, zielEinheit, antwort, aufgabeText, loesungText) {
+    var aneinander = Number(teile.map(function (t) { return t[0]; }).join(''));
+    if (antwort === aneinander) {
+      var haupt = teile[0], neben = teile[teile.length - 1];
+      var stellen = String(core.faktorZwischen(haupt[1], neben[1])).length - 1;
+      var gefuellt = String(neben[0]);
+      while (gefuellt.length < stellen) gefuellt = '0' + gefuellt;
+      return { code: 'NULL_VERGESSEN', werte: {
+        haupt: haupt[0], hauptEinheit: kurz(haupt[1]),
+        neben: neben[0], nebenEinheit: kurz(neben[1]),
+        mitNull: haupt[0] + ' ' + kurz(haupt[1]) + ' ' + gefuellt + ' ' + kurz(neben[1]),
+        loesung: loesungText
+      } };
+    }
+    /* Der führende Teil mit der falschen Zahl umgerechnet */
+    var rest = core.gemischtZuMm(teile.slice(1)) / E[zielEinheit].faktor;
+    return erkenneUmrechnung(teile[0][1], zielEinheit, teile[0][0],
+      antwort - rest, aufgabeText, loesungText);
+  }
+
+  /* Kommazahl in eine Einheit, z. B. 1,05 m = ___ cm */
+  function erkenneKomma(wert, von, nach, antwort, aufgabeText, loesungText) {
+    var text = core.zahlDeutsch(wert);
+    var stueck = text.split(',');
+    if (stueck.length !== 2) return null;
+    var ganz = Number(stueck[0]);
+    var nachkomma = stueck[1];
+    var f = core.faktorZwischen(von, nach);
+
+    /* Ziffern hinter dem Komma als eigene Zahl gelesen: 1,5 m → 105 cm */
+    if (antwort === ganz * f + Number(nachkomma)) {
+      var zwischen = core.LEITER[core.LEITER.indexOf(von) - 1];
+      return { code: /^0/.test(nachkomma) ? 'KOMMA_NULL' : 'KOMMA_ALS_TRENNER', werte: {
+        aufgabe: aufgabeText, loesung: loesungText,
+        nachkomma: nachkomma, zwischenEinheit: zwischen ? name(zwischen) : kurz(nach)
+      } };
+    }
+
+    /* Null hinter dem Komma übersprungen: 1,05 m → 150 cm */
+    if (/^0/.test(nachkomma)) {
+      var ohneNull = ziffernOhneNullen(nachkomma);
+      var verschoben = ganz * f + Number(ohneNull) * (f / 10);
+      if (antwort === verschoben || antwort === Number(String(ganz) + ohneNull)) {
+        return { code: 'KOMMA_NULL', werte: { aufgabe: aufgabeText, loesung: loesungText } };
+      }
+    }
+    return null;
+  }
+
+  /* ---------- Haupteinstieg ---------- */
+
+  function diagnoseFehler(aufgabe, antwort) {
+    if (!aufgabe) throw new Error('Aufgabe fehlt');
+
+    if (aufgabe.antwortArt === 'auswahl' || aufgabe.antwortArt === 'vergleich') {
+      return diagnoseAuswahl(aufgabe, antwort);
+    }
+    if (aufgabe.antwortArt === 'zweiZahlen') {
+      return diagnoseFelder(aufgabe, antwort);
+    }
+    return diagnoseZahl(aufgabe, antwort);
+  }
+
+  function diagnoseAuswahl(aufgabe, index) {
+    var gewaehlt = aufgabe.optionen[index];
+    if (!gewaehlt) throw new Error('Keine Antwortmöglichkeit mit Nummer ' + index);
+    if (gewaehlt.richtig) return null;
+
+    /* Wenn die Antwortmöglichkeit eine Zahl ist, wird der Denkfehler
+       am Zahlenwert nachgewiesen statt einfach dem Etikett geglaubt. */
+    if (typeof gewaehlt.wert === 'number' && aufgabe.quelle && aufgabe.quelle.einheit) {
+      var geprueft = erkenneUmrechnung(
+        aufgabe.quelle.einheit, aufgabe.ziel.einheit, aufgabe.quelle.wert,
+        gewaehlt.wert, aufgabe.aufgabeText, aufgabe.loesungText);
+      if (geprueft) return geprueft;
+    }
+
+    if (gewaehlt.fehler === 'EINHEIT_IGNORIERT') {
+      return { code: 'EINHEIT_IGNORIERT', werte: gewaehlt.werte || {} };
+    }
+    return { code: gewaehlt.fehler || 'UNBEKANNT', werte: gewaehlt.werte || {} };
+  }
+
+  function diagnoseFelder(aufgabe, felder) {
+    var soll = aufgabe.loesungFelder;
+    if (felder.length === soll.length && felder.every(function (w, i) { return w === soll[i]; })) {
+      return null;
+    }
+    /* Null in der kleineren Einheit verschluckt: 2050 m → „2 km 5 m“ */
+    if (felder[0] === soll[0] && ziffernOhneNullen(soll[1]) === String(felder[1])) {
+      return { code: 'NULL_VERGESSEN', werte: {
+        haupt: soll[0], hauptEinheit: kurz(aufgabe.ziel.einheiten[0]),
+        neben: felder[1], nebenEinheit: kurz(aufgabe.ziel.einheiten[1]),
+        mitNull: aufgabe.loesungText, loesung: aufgabe.loesungText
+      } };
+    }
+    var umgerechnet = erkenneUmrechnung(
+      aufgabe.quelle.einheit, aufgabe.ziel.einheiten[0], aufgabe.quelle.wert,
+      felder[0], aufgabe.aufgabeText, aufgabe.loesungText);
+    if (umgerechnet) return umgerechnet;
+    return { code: 'UNBEKANNT', werte: { aufgabe: aufgabe.aufgabeText, loesung: aufgabe.loesungText } };
+  }
+
+  function diagnoseZahl(aufgabe, antwort) {
+    if (antwort === aufgabe.loesung) return null;
+    var q = aufgabe.quelle, z = aufgabe.ziel;
+    var at = aufgabe.aufgabeText, lt = aufgabe.loesungText;
+    var treffer = null;
+
+    if (aufgabe.typ === 'lineal') {
+      var ende = core.fromMm(q.endeMm, z.einheit);
+      if (antwort === ende) {
+        return { code: 'LINEAL_START', werte: {
+          start: mitEinheit(core.fromMm(q.startMm, z.einheit), z.einheit),
+          ende: mitEinheit(ende, z.einheit),
+          loesung: lt, einheit: kurz(z.einheit)
+        } };
+      }
+    }
+
+    if (aufgabe.typ === 'komma') {
+      treffer = erkenneKomma(q.wert, q.einheit, z.einheit, antwort, at, lt);
+      if (treffer) return treffer;
+    }
+
+    if (q && q.teile) {
+      treffer = erkenneGemischt(q.teile, z.einheit, antwort, at, lt);
+      if (treffer) return treffer;
+    } else if (q && typeof q.wert === 'number' && z && z.einheit) {
+      treffer = erkenneUmrechnung(q.einheit, z.einheit, q.wert, antwort, at, lt);
+      if (treffer) return treffer;
+    }
+
+    /* Richtig umgerechnet, beim Rechnen verrutscht. Nur behaupten,
+       wenn die Antwort in der Größenordnung der Lösung liegt –
+       sonst wäre „du hast richtig umgerechnet“ eine Unterstellung. */
+    if (aufgabe.typ === 'rechnen' &&
+        String(Math.abs(antwort)).length === String(Math.abs(aufgabe.loesung)).length) {
+      return { code: 'RECHENFEHLER', werte: { rechnung: aufgabe.rechenweg || at, loesung: lt } };
+    }
+
+    return { code: 'UNBEKANNT', werte: { aufgabe: at, loesung: lt } };
+  }
+
+  return { diagnoseFehler: diagnoseFehler };
+}));
+
+/* ===== laengen/generatoren.js ===== */
+/* =============================================================
+   Zahlendrache – Modul „Längen“: Aufgabengeneratoren, Stufen 1–3
+
+   Jeder Generator bekommt einen Zufallsgeber mit Startwert, damit
+   dieselbe Aufgabenfolge reproduzierbar ist. Die Wertebereiche
+   stehen in BEREICHE und werden von den Tests geprüft.
+
+   kommaFreigegeben ist standardmäßig an. Wird es abgeschaltet, darf
+   in keiner erzeugten Aufgabe eine Kommazahl vorkommen – auch nicht
+   in einer falschen Antwortmöglichkeit. Die Stufen 1–3 kommen
+   ohnehin ohne aus, betroffen sind Stufe 4 und 5.
+   ============================================================= */
+(function (root, factory) {
+  var istNode = typeof require === 'function' && typeof module === 'object';
+  var core = istNode ? require('./core.js') : root.Zahlendrache.laengen.core;
+  var texte = istNode ? require('./texte.js') : root.Zahlendrache.laengen.texte;
+  var api = factory(core, texte);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else {
+    var Z = root.Zahlendrache = root.Zahlendrache || {};
+    (Z.laengen = Z.laengen || {}).generatoren = api;
+  }
+}(typeof globalThis !== 'undefined' ? globalThis : this, function (core, texte) {
+  'use strict';
+
+  var E = core.EINHEITEN;
+
+  /* ---------- Wertebereiche je Stufe ---------- */
+
+  var BEREICHE = {
+    /* Stufe 2: benachbarte Einheiten, immer glatte Ergebnisse.
+       schritt > 1 heißt: der Ausgangswert ist ein Vielfaches davon,
+       damit beim Teilen nichts Krummes herauskommt. */
+    stufe2: [
+      { von: 'm',  nach: 'cm', min: 1, max: 10, schritt: 1 },
+      { von: 'cm', nach: 'mm', min: 1, max: 20, schritt: 1 },
+      { von: 'km', nach: 'm',  min: 1, max: 10, schritt: 1 },
+      { von: 'm',  nach: 'dm', min: 1, max: 10, schritt: 1, dm: true },
+      { von: 'dm', nach: 'cm', min: 1, max: 10, schritt: 1, dm: true },
+      { von: 'mm', nach: 'cm', min: 1, max: 10, schritt: 10 },
+      { von: 'cm', nach: 'm',  min: 1, max: 10, schritt: 100 },
+      { von: 'm',  nach: 'km', min: 1, max: 10, schritt: 1000 },
+      { von: 'cm', nach: 'dm', min: 1, max: 10, schritt: 10, dm: true },
+      { von: 'dm', nach: 'm',  min: 1, max: 10, schritt: 10, dm: true }
+    ],
+    /* Stufe 3: gemischte Angaben. nullenFalle heißt, dass der
+       kleinere Teil einstellig sein darf – genau dort fehlt die 0. */
+    stufe3: {
+      mCm:    { hauptMin: 1, hauptMax: 9, nebenMin: 1, nebenMax: 99 },
+      cmZuM:  { min: 101, max: 999 },
+      kmM:    { hauptMin: 1, hauptMax: 9, nebenMin: 1, nebenMax: 999 },
+      mZuKm:  { min: 1001, max: 9999 },
+      cmMm:   { hauptMin: 1, hauptMax: 9, nebenMin: 1, nebenMax: 9 },
+      dmCm:   { hauptMin: 1, hauptMax: 9, nebenMin: 1, nebenMax: 9 },
+      mDm:    { hauptMin: 1, hauptMax: 9, nebenMin: 1, nebenMax: 9 },
+      mDmCm:  { hauptMin: 1, hauptMax: 5, mittelMin: 1, mittelMax: 9, nebenMin: 1, nebenMax: 9 }
+    },
+    lineal: { maxCm: 15 }
+  };
+
+  function normalisiere(opt) {
+    opt = opt || {};
+    return {
+      rng: opt.rng || core.zufall(),
+      includeDm: opt.includeDm !== false,
+      /* Freigegeben, seit die Kommaschreibweise gewünscht ist.
+         Im Elternbereich abschaltbar; die Tests prüfen weiterhin,
+         dass im gesperrten Zustand nirgends ein Komma auftaucht. */
+      kommaFreigegeben: opt.kommaFreigegeben !== false
+    };
+  }
+
+  function leiter(opt) {
+    return opt.includeDm ? core.LEITER : core.LEITER_OHNE_DM;
+  }
+
+  function mitEinheit(wert, e) { return core.zahlDeutsch(wert) + ' ' + E[e].kurz; }
+
+  /* Steht am Satzanfang, also groß. */
+  function grossErster(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+
+  /* ---------- Stufe 1 ---------- */
+
+  /* „Ein Schulheft ist etwa 30 ___ lang.“ → mm / cm / m / km */
+  function einheitWaehlen(opt) {
+    var g = core.waehle(opt.rng, texte.GEGENSTAENDE.filter(function (x) {
+      return opt.includeDm || x.einheit !== 'dm';
+    }));
+    var andere = leiter(opt).filter(function (e) { return e !== g.einheit; });
+    var auswahl = core.mische(opt.rng, [g.einheit].concat(core.mische(opt.rng, andere).slice(0, 3)));
+
+    return {
+      stufe: 1, typ: 'einheitWaehlen', id: 'einheit-' + g.einheit,
+      antwortArt: 'auswahl',
+      frage: texte.fuelle(g.satz, { wert: g.wert }),
+      aufgabeText: g.name,
+      loesungText: mitEinheit(g.wert, g.einheit),
+      loesungMm: core.toMm(g.wert, g.einheit),
+      richtigeEinheit: g.einheit,
+      bild: 'treppe',
+      optionen: auswahl.map(function (e) {
+        return {
+          text: E[e].kurz,
+          einheit: e,
+          richtig: e === g.einheit,
+          fehler: 'GROESSENVORSTELLUNG',
+          werte: {
+            gegenstand: grossErster(g.name),
+            falscheEinheit: E[e].name,
+            stuetzpunkt: texte.STUETZPUNKTE[e].kurz,
+            vergleich: core.toMm(g.wert, e) > core.toMm(g.wert, g.einheit) ? 'kürzer' : 'länger',
+            loesung: mitEinheit(g.wert, g.einheit)
+          }
+        };
+      })
+    };
+  }
+
+  /* „Wie lang ist ein Bleistift?“ → 18 mm / 18 cm / 18 m */
+  function realistischeLaenge(opt) {
+    var g = core.waehle(opt.rng, texte.GEGENSTAENDE.filter(function (x) {
+      return opt.includeDm || x.einheit !== 'dm';
+    }));
+    var andere = leiter(opt).filter(function (e) { return e !== g.einheit; });
+    var auswahl = core.mische(opt.rng, [g.einheit].concat(core.mische(opt.rng, andere).slice(0, 2)));
+
+    return {
+      stufe: 1, typ: 'realistisch', id: 'realistisch-' + g.einheit,
+      antwortArt: 'auswahl',
+      frage: g.frage,
+      aufgabeText: g.name,
+      loesungText: mitEinheit(g.wert, g.einheit),
+      loesungMm: core.toMm(g.wert, g.einheit),
+      richtigeEinheit: g.einheit,
+      bild: 'treppe',
+      optionen: auswahl.map(function (e) {
+        return {
+          text: mitEinheit(g.wert, e),
+          einheit: e,
+          richtig: e === g.einheit,
+          fehler: 'GROESSENVORSTELLUNG',
+          werte: {
+            gegenstand: grossErster(g.name),
+            falscheEinheit: E[e].name,
+            stuetzpunkt: texte.STUETZPUNKTE[e].kurz,
+            vergleich: core.toMm(g.wert, e) > core.toMm(g.wert, g.einheit) ? 'kürzer' : 'länger',
+            loesung: mitEinheit(g.wert, g.einheit)
+          }
+        };
+      })
+    };
+  }
+
+  /* „Etwa 1 m lang ist …“ → ein großer Schritt / ein Fingernagel / … */
+  function stuetzpunktZuordnen(opt) {
+    var moeglich = leiter(opt).filter(function (e) {
+      return texte.VERGLEICHE.some(function (v) { return v.mm === E[e].faktor; });
+    });
+    var einheit = core.waehle(opt.rng, moeglich);
+    var ziel = E[einheit].faktor;
+
+    var passend = texte.VERGLEICHE.filter(function (v) { return v.mm === ziel; });
+    var richtig = core.waehle(opt.rng, passend);
+    /* Mindestens Faktor 10 Abstand – sonst wäre der Ablenker auch richtig. */
+    var daneben = core.mische(opt.rng, texte.VERGLEICHE.filter(function (v) {
+      return v.mm >= ziel * 10 || v.mm * 10 <= ziel;
+    })).slice(0, 2);
+
+    var alle = core.mische(opt.rng, [richtig].concat(daneben));
+    return {
+      stufe: 1, typ: 'stuetzpunkt', id: 'stuetzpunkt-' + einheit,
+      antwortArt: 'auswahl',
+      frage: 'Etwa 1 ' + E[einheit].kurz + ' lang ist …',
+      aufgabeText: '1 ' + E[einheit].kurz,
+      loesungText: richtig.text,
+      loesungMm: ziel,
+      bild: null,
+      optionen: alle.map(function (v) {
+        return {
+          text: v.text,
+          richtig: v === richtig,
+          fehler: 'GROESSENVORSTELLUNG',
+          werte: {
+            gegenstand: grossErster(v.text),
+            stuetzpunkt: texte.STUETZPUNKTE[einheit].lang,
+            vergleich: v.mm > ziel ? 'länger' : 'kürzer',
+            loesung: grossErster(richtig.text)
+          }
+        };
+      })
+    };
+  }
+
+  /* Lineal ablesen; ab Variante „verschoben“ beginnt die Strecke nicht bei 0. */
+  function linealAblesen(opt) {
+    var genau = core.ganzzahl(opt.rng, 1, 3) === 1 ? 'mm' : 'cm';
+    var verschoben = core.ganzzahl(opt.rng, 1, 2) === 1;
+    var maxCm = BEREICHE.lineal.maxCm;
+
+    var startCm = verschoben ? core.ganzzahl(opt.rng, 1, 5) : 0;
+    var laengeCm = core.ganzzahl(opt.rng, 2, maxCm - startCm - 1);
+    var startMm = startCm * 10;
+    var laengeMm = genau === 'mm'
+      ? laengeCm * 10 + core.ganzzahl(opt.rng, 1, 9)
+      : laengeCm * 10;
+    var endeMm = startMm + laengeMm;
+    var einheit = genau === 'mm' ? 'mm' : 'cm';
+    var loesung = core.fromMm(laengeMm, einheit);
+
+    return {
+      stufe: 1, typ: 'lineal', id: 'lineal-' + einheit + (verschoben ? '-verschoben' : ''),
+      antwortArt: 'zahl',
+      frage: 'Wie lang ist die Strecke?',
+      aufgabeText: 'Strecke von ' + core.formatLaenge(startMm, 'gemischt', { einheiten: ['cm', 'mm'] }) +
+                   ' bis ' + core.formatLaenge(endeMm, 'gemischt', { einheiten: ['cm', 'mm'] }),
+      loesungText: mitEinheit(loesung, einheit),
+      quelle: { startMm: startMm, endeMm: endeMm, maxCm: maxCm },
+      ziel: { einheit: einheit },
+      loesungMm: laengeMm,
+      loesung: loesung,
+      einheitHinweis: E[einheit].kurz,
+      bild: 'lineal'
+    };
+  }
+
+  /* ---------- Stufe 2 ---------- */
+
+  function umrechnen(opt) {
+    var paare = BEREICHE.stufe2.filter(function (p) { return opt.includeDm || !p.dm; });
+    var p = core.waehle(opt.rng, paare);
+    var wert = core.ganzzahl(opt.rng, p.min, p.max) * p.schritt;
+    var mm = core.toMm(wert, p.von);
+    var loesung = core.fromMm(mm, p.nach);
+
+    return {
+      stufe: 2, typ: 'umrechnen', id: 'um-' + p.von + '-' + p.nach,
+      antwortArt: 'zahl',
+      frage: mitEinheit(wert, p.von) + ' = ___ ' + E[p.nach].kurz,
+      aufgabeText: mitEinheit(wert, p.von),
+      loesungText: mitEinheit(loesung, p.nach),
+      quelle: { wert: wert, einheit: p.von },
+      ziel: { einheit: p.nach },
+      loesungMm: mm,
+      loesung: loesung,
+      einheitHinweis: E[p.nach].kurz,
+      bild: 'treppe'
+    };
+  }
+
+  /* ---------- Stufe 3 ---------- */
+
+  function gemischtZuEinheit(opt, bauteil) {
+    var b = BEREICHE.stufe3[bauteil.schluessel];
+    var haupt = core.ganzzahl(opt.rng, b.hauptMin, b.hauptMax);
+    var neben = core.ganzzahl(opt.rng, b.nebenMin, b.nebenMax);
+    var teile = [[haupt, bauteil.hauptEinheit], [neben, bauteil.nebenEinheit]];
+    var mm = core.gemischtZuMm(teile);
+    var loesung = core.fromMm(mm, bauteil.zielEinheit);
+    var text = mitEinheit(haupt, bauteil.hauptEinheit) + ' ' + mitEinheit(neben, bauteil.nebenEinheit);
+
+    return {
+      stufe: 3, typ: 'gemischtZuEinheit', id: 'gem-' + bauteil.schluessel,
+      antwortArt: 'zahl',
+      frage: text + ' = ___ ' + E[bauteil.zielEinheit].kurz,
+      aufgabeText: text,
+      loesungText: mitEinheit(loesung, bauteil.zielEinheit),
+      quelle: { teile: teile },
+      ziel: { einheit: bauteil.zielEinheit },
+      loesungMm: mm,
+      loesung: loesung,
+      einheitHinweis: E[bauteil.zielEinheit].kurz,
+      nullenFalle: neben < core.faktorZwischen(bauteil.hauptEinheit, bauteil.nebenEinheit) / 10,
+      bild: 'stellenwert'
+    };
+  }
+
+  function dreiEinheiten(opt) {
+    var b = BEREICHE.stufe3.mDmCm;
+    var teile = [
+      [core.ganzzahl(opt.rng, b.hauptMin, b.hauptMax), 'm'],
+      [core.ganzzahl(opt.rng, b.mittelMin, b.mittelMax), 'dm'],
+      [core.ganzzahl(opt.rng, b.nebenMin, b.nebenMax), 'cm']
+    ];
+    var mm = core.gemischtZuMm(teile);
+    var text = teile.map(function (t) { return mitEinheit(t[0], t[1]); }).join(' ');
+    return {
+      stufe: 3, typ: 'gemischtZuEinheit', id: 'gem-mDmCm',
+      antwortArt: 'zahl',
+      frage: text + ' = ___ cm',
+      aufgabeText: text,
+      loesungText: mitEinheit(core.fromMm(mm, 'cm'), 'cm'),
+      quelle: { teile: teile },
+      ziel: { einheit: 'cm' },
+      loesungMm: mm,
+      loesung: core.fromMm(mm, 'cm'),
+      einheitHinweis: 'cm',
+      bild: 'stellenwert'
+    };
+  }
+
+  function einheitZuGemischt(opt, bauteil) {
+    var b = BEREICHE.stufe3[bauteil.schluessel];
+    var wert;
+    do {
+      wert = core.ganzzahl(opt.rng, b.min, b.max);
+    } while (wert % core.faktorZwischen(bauteil.grossEinheit, bauteil.kleinEinheit) === 0);
+
+    var mm = core.toMm(wert, bauteil.kleinEinheit);
+    var teile = core.zerlege(mm, [bauteil.grossEinheit, bauteil.kleinEinheit]);
+    var loesungText = teile.map(function (t) { return mitEinheit(t.wert, t.einheit); }).join(' ');
+
+    return {
+      stufe: 3, typ: 'einheitZuGemischt', id: 'zerleg-' + bauteil.schluessel,
+      antwortArt: 'zweiZahlen',
+      frage: mitEinheit(wert, bauteil.kleinEinheit) + ' = ___ ' + E[bauteil.grossEinheit].kurz +
+             ' ___ ' + E[bauteil.kleinEinheit].kurz,
+      aufgabeText: mitEinheit(wert, bauteil.kleinEinheit),
+      loesungText: loesungText,
+      quelle: { wert: wert, einheit: bauteil.kleinEinheit },
+      ziel: { einheiten: [bauteil.grossEinheit, bauteil.kleinEinheit] },
+      loesungMm: mm,
+      loesungFelder: [teile[0].wert, teile[1].wert],
+      einheitenHinweis: [E[bauteil.grossEinheit].kurz, E[bauteil.kleinEinheit].kurz],
+      /* Falle beim Zerlegen: der kleinere Teil enthält eine 0,
+         die beim Abschreiben gern verschluckt wird (2050 m → 2 km 50 m). */
+      nullenFalle: teile[1].wert > 0 && /0/.test(String(teile[1].wert)),
+      bild: 'stellenwert'
+    };
+  }
+
+  /* ---------- Auswahl der Aufgabentypen je Stufe ---------- */
+
+  var TYPEN = {
+    1: [
+      { name: 'einheitWaehlen', bau: einheitWaehlen },
+      { name: 'realistisch',    bau: realistischeLaenge },
+      { name: 'stuetzpunkt',    bau: stuetzpunktZuordnen },
+      { name: 'lineal',         bau: linealAblesen }
+    ],
+    2: [
+      { name: 'umrechnen', bau: umrechnen }
+    ],
+    3: [
+      { name: 'mCm',   bau: function (o) { return gemischtZuEinheit(o, { schluessel: 'mCm',  hauptEinheit: 'm',  nebenEinheit: 'cm', zielEinheit: 'cm' }); } },
+      { name: 'kmM',   bau: function (o) { return gemischtZuEinheit(o, { schluessel: 'kmM',  hauptEinheit: 'km', nebenEinheit: 'm',  zielEinheit: 'm'  }); } },
+      { name: 'cmMm',  bau: function (o) { return gemischtZuEinheit(o, { schluessel: 'cmMm', hauptEinheit: 'cm', nebenEinheit: 'mm', zielEinheit: 'mm' }); } },
+      { name: 'cmZuM', bau: function (o) { return einheitZuGemischt(o, { schluessel: 'cmZuM', grossEinheit: 'm',  kleinEinheit: 'cm' }); } },
+      { name: 'mZuKm', bau: function (o) { return einheitZuGemischt(o, { schluessel: 'mZuKm', grossEinheit: 'km', kleinEinheit: 'm'  }); } },
+      { name: 'dmCm',  nurDm: true, bau: function (o) { return gemischtZuEinheit(o, { schluessel: 'dmCm', hauptEinheit: 'dm', nebenEinheit: 'cm', zielEinheit: 'cm' }); } },
+      { name: 'mDm',   nurDm: true, bau: function (o) { return gemischtZuEinheit(o, { schluessel: 'mDm',  hauptEinheit: 'm',  nebenEinheit: 'dm', zielEinheit: 'dm' }); } },
+      { name: 'mDmCm', nurDm: true, bau: dreiEinheiten }
+    ]
+  };
+
+  function erzeugeAufgabe(stufe, optionen) {
+    var opt = normalisiere(optionen);
+    var typen = (TYPEN[stufe] || []).filter(function (t) { return opt.includeDm || !t.nurDm; });
+    if (!typen.length) throw new Error('Für Stufe ' + stufe + ' gibt es noch keine Aufgaben');
+    return core.waehle(opt.rng, typen).bau(opt);
+  }
+
+  /* Eine Übungsrunde: 10 Aufgaben, ohne denselben Typ zweimal
+     hintereinander, damit es abwechslungsreich bleibt. */
+  function erzeugeRunde(stufe, anzahl, optionen) {
+    var opt = normalisiere(optionen);
+    var ziel = anzahl || 10;
+    var mehrereTypen = (TYPEN[stufe] || []).length > 1;
+    var runde = [];
+    var letzte = null;
+    var versuche = 0;
+    while (runde.length < ziel && versuche < ziel * 40) {
+      versuche++;
+      var a = erzeugeAufgabe(stufe, opt);
+      /* Bei mehreren Aufgabentypen nicht zweimal denselben Typ
+         hintereinander, sonst nur nicht zweimal dieselbe Aufgabe. */
+      var kennung = mehrereTypen ? a.typ : a.id;
+      if (kennung === letzte) continue;
+      letzte = kennung;
+      runde.push(a);
+    }
+    while (runde.length < ziel) runde.push(erzeugeAufgabe(stufe, opt));
+    return runde;
+  }
+
+  return {
+    BEREICHE: BEREICHE,
+    TYPEN: TYPEN,
+    erzeugeAufgabe: erzeugeAufgabe,
+    erzeugeRunde: erzeugeRunde
+  };
+}));
+
+/* ===== laengen/bilder.js ===== */
+/* =============================================================
+   Zahlendrache – Modul „Längen“: Erklärbilder als SVG
+
+   Jedes Bild bekommt einen Titel für Vorlesewerkzeuge und kommt
+   ohne Animation aus. Farben kommen aus den Token der App, damit
+   Hell- und Dunkelmodus ohne Zutun stimmen.
+   ============================================================= */
+(function (root, factory) {
+  var istNode = typeof require === 'function' && typeof module === 'object';
+  var core = istNode ? require('./core.js') : root.Zahlendrache.laengen.core;
+  var api = factory(core);
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else {
+    var Z = root.Zahlendrache = root.Zahlendrache || {};
+    (Z.laengen = Z.laengen || {}).bilder = api;
+  }
+}(typeof globalThis !== 'undefined' ? globalThis : this, function (core) {
+  'use strict';
+
+  var E = core.EINHEITEN;
+  var AKZENT = 'var(--laenge)';
+  var TINTE = 'var(--ink)';
+  var LEISE = 'var(--ink-soft)';
+  var LINIE = 'var(--line)';
+  var GRUND = 'var(--surface-2)';
+
+  function svg(breite, hoehe, titel, inhalt) {
+    return '<svg class="laengen-bild" viewBox="0 0 ' + breite + ' ' + hoehe + '" ' +
+      'role="img" aria-label="' + titel.replace(/"/g, '') + '">' +
+      '<title>' + titel + '</title>' + inhalt + '</svg>';
+  }
+
+  function txt(x, y, text, opt) {
+    opt = opt || {};
+    return '<text x="' + x + '" y="' + y + '" fill="' + (opt.farbe || TINTE) + '" ' +
+      'font-size="' + (opt.groesse || 13) + '" font-weight="' + (opt.dick || 700) + '" ' +
+      'text-anchor="' + (opt.anker || 'middle') + '" ' +
+      'font-family="Nunito, system-ui, sans-serif">' + text + '</text>';
+  }
+
+  /* ---------- Umrechnungstreppe ----------
+     Treppe runter heißt mal, Treppe hoch heißt geteilt durch.
+     Der betroffene Schritt wird hervorgehoben. */
+  function treppe(von, nach, includeDm) {
+    var leiter = (includeDm === false ? core.LEITER_OHNE_DM : core.LEITER).slice().reverse();
+    var n = leiter.length;
+    var bx = 46, by = 26, dx = (360 - bx) / (n - 1), dy = 30;
+    var hoehe = by + (n - 1) * dy + 46;
+    var vonI = leiter.indexOf(von), nachI = leiter.indexOf(nach);
+    var runter = vonI < nachI;   /* im Bild weiter unten = kleinere Einheit */
+    var a = Math.min(vonI, nachI), b = Math.max(vonI, nachI);
+    var teile = [];
+
+    for (var i = 0; i < n - 1; i++) {
+      var x1 = 8 + i * dx + bx, y1 = 16 + i * dy + by / 2;
+      var x2 = 8 + (i + 1) * dx, y2 = 16 + (i + 1) * dy + by / 2;
+      var aktiv = i >= a && i < b;
+      var f = core.faktorZwischen(leiter[i], leiter[i + 1]);
+      teile.push('<path d="M' + x1 + ' ' + y1 + ' L' + x2 + ' ' + y2 + '" stroke="' +
+        (aktiv ? AKZENT : LINIE) + '" stroke-width="' + (aktiv ? 3 : 2) + '" ' +
+        'stroke-linecap="round" fill="none"/>');
+      teile.push(txt((x1 + x2) / 2 + 12, (y1 + y2) / 2 - 4,
+        (runter ? '· ' : ': ') + f, { groesse: 12, farbe: aktiv ? AKZENT : LEISE }));
+    }
+
+    for (var j = 0; j < n; j++) {
+      var x = 8 + j * dx, y = 16 + j * dy;
+      var dabei = j >= a && j <= b;
+      teile.push('<rect x="' + x + '" y="' + y + '" width="' + bx + '" height="' + by +
+        '" rx="7" fill="' + (dabei ? AKZENT : GRUND) + '" stroke="' +
+        (dabei ? AKZENT : LINIE) + '" stroke-width="2"/>');
+      teile.push(txt(x + bx / 2, y + 18, E[leiter[j]].kurz,
+        { groesse: 14, dick: 800, farbe: dabei ? 'var(--auf-bunt)' : LEISE }));
+    }
+
+    /* Pfeilspitze am Ziel: ohne sie sagt das Bild nicht, wohin es geht. */
+    var zx = 8 + nachI * dx + bx / 2, zy = 16 + nachI * dy;
+    var nachUnten = nachI > vonI;
+    teile.push('<path d="M' + (zx - 7) + ' ' + (nachUnten ? zy - 12 : zy + by + 12) +
+      ' L' + zx + ' ' + (nachUnten ? zy - 3 : zy + by + 3) +
+      ' L' + (zx + 7) + ' ' + (nachUnten ? zy - 12 : zy + by + 12) +
+      ' Z" fill="' + AKZENT + '"/>');
+
+    teile.push(txt(184, hoehe - 10,
+      runter ? 'Treppe runter: mal nehmen.' : 'Treppe hoch: geteilt durch.',
+      { groesse: 12, dick: 700, farbe: LEISE }));
+
+    return svg(376, hoehe, 'Umrechnungstreppe von ' + E[von].name + ' zu ' + E[nach].name,
+      teile.join(''));
+  }
+
+  /* ---------- Stellenwerttafel ----------
+     Zeigt, warum 1,05 m und 1,5 m verschieden sind: jede Ziffer
+     hat ihren Platz, und die 0 hält ihn frei. */
+  var SPALTEN = [
+    { kopf: 'km',    faktor: 1000000 },
+    { kopf: '100 m', faktor: 100000 },
+    { kopf: '10 m',  faktor: 10000 },
+    { kopf: '1 m',   faktor: 1000 },
+    { kopf: 'dm',    faktor: 100 },
+    { kopf: 'cm',    faktor: 10 },
+    { kopf: 'mm',    faktor: 1 }
+  ];
+
+  function stellenwert(mm, opt) {
+    opt = opt || {};
+    var sichtbar = SPALTEN.filter(function (s) {
+      return s.faktor <= Math.max(mm, 1000) * 10;
+    });
+    if (sichtbar.length < 4) sichtbar = SPALTEN.slice(3);
+
+    var bx = 44, by = 34, x0 = 10, y0 = 34;
+    var breite = x0 * 2 + sichtbar.length * bx;
+    var teile = [];
+    var hervor = opt.hervorheben || [];
+
+    sichtbar.forEach(function (s, i) {
+      var x = x0 + i * bx;
+      var ziffer = Math.floor(mm / s.faktor) % 10;
+      if (s.faktor === 1000000) ziffer = Math.floor(mm / s.faktor);
+      var fuehrend = mm < s.faktor;
+      var markiert = hervor.indexOf(s.kopf) >= 0;
+
+      teile.push(txt(x + bx / 2, 22, s.kopf, { groesse: 11, dick: 800, farbe: LEISE }));
+      teile.push('<rect x="' + x + '" y="' + y0 + '" width="' + bx + '" height="' + by +
+        '" fill="' + (markiert ? AKZENT : GRUND) + '" stroke="' + LINIE + '" stroke-width="1.5"/>');
+      if (!fuehrend) {
+        teile.push(txt(x + bx / 2, y0 + 24, String(ziffer),
+          { groesse: 19, dick: 800, farbe: markiert ? 'var(--surface)' : TINTE }));
+      }
+    });
+
+    /* Das Komma steht hinter der Einheit, in der die Zahl geschrieben wird. */
+    if (opt.kommaNach) {
+      var k = sichtbar.findIndex(function (s) { return s.kopf === opt.kommaNach; });
+      if (k >= 0) {
+        var kx = x0 + (k + 1) * bx;
+        teile.push('<path d="M' + kx + ' ' + (y0 - 6) + ' L' + kx + ' ' + (y0 + by + 6) +
+          '" stroke="' + AKZENT + '" stroke-width="3"/>');
+        teile.push(txt(kx, y0 + by + 20, 'Komma', { groesse: 10, dick: 800, farbe: AKZENT }));
+      }
+    }
+
+    return svg(breite, y0 + by + (opt.kommaNach ? 28 : 12),
+      'Stellenwerttafel', teile.join(''));
+  }
+
+  /* ---------- Lineal ----------
+     Mit der Strecke darauf. Beginnt sie nicht bei null, zeigt ein
+     zweiter Marker, wo abgelesen werden muss. */
+  function lineal(startMm, endeMm, maxCm) {
+    var breite = 360, rand = 14, hoehe = 104;
+    var nutz = breite - rand * 2;
+    var proMm = nutz / (maxCm * 10);
+    var x = function (mm) { return rand + mm * proMm; };
+    var oben = 30, tief = 34;
+    var teile = [];
+
+    teile.push('<rect x="' + rand + '" y="' + oben + '" width="' + nutz + '" height="' + tief +
+      '" rx="4" fill="' + GRUND + '" stroke="' + LINIE + '" stroke-width="1.5"/>');
+
+    for (var mm = 0; mm <= maxCm * 10; mm++) {
+      var gross = mm % 10 === 0, halb = mm % 5 === 0;
+      var len = gross ? 14 : halb ? 9 : 5;
+      teile.push('<path d="M' + x(mm) + ' ' + oben + ' L' + x(mm) + ' ' + (oben + len) +
+        '" stroke="' + (gross ? LEISE : LINIE) + '" stroke-width="' + (gross ? 1.4 : 1) + '"/>');
+      if (gross) teile.push(txt(x(mm), oben + 28, String(mm / 10), { groesse: 10, dick: 700, farbe: LEISE }));
+    }
+
+    /* Die Strecke selbst */
+    teile.push('<rect x="' + x(startMm) + '" y="' + (oben - 16) + '" width="' +
+      Math.max(2, (endeMm - startMm) * proMm) + '" height="10" rx="5" fill="' + AKZENT + '"/>');
+    [startMm, endeMm].forEach(function (p) {
+      teile.push('<path d="M' + x(p) + ' ' + (oben - 20) + ' L' + x(p) + ' ' + (oben + tief) +
+        '" stroke="' + AKZENT + '" stroke-width="2" stroke-dasharray="3 3"/>');
+    });
+    if (startMm > 0) {
+      teile.push(txt(x(startMm), oben - 24, 'Anfang', { groesse: 10, dick: 800, farbe: AKZENT }));
+    }
+
+    return svg(breite, hoehe, 'Lineal mit einer Strecke von ' +
+      core.fromMm(startMm, 'cm') + ' bis ' + core.fromMm(endeMm, 'cm') + ' Zentimeter',
+      teile.join(''));
+  }
+
+  /* Wählt das Bild zu einem Fehlertyp. */
+  function zumFehler(art, aufgabe) {
+    if (art === 'lineal' && aufgabe.quelle && aufgabe.quelle.maxCm) {
+      return lineal(aufgabe.quelle.startMm, aufgabe.quelle.endeMm, aufgabe.quelle.maxCm);
+    }
+    if (art === 'stellenwert') {
+      return stellenwert(aufgabe.loesungMm, {});
+    }
+    if (art === 'treppe') {
+      var von = (aufgabe.quelle && aufgabe.quelle.einheit) ||
+                (aufgabe.quelle && aufgabe.quelle.teile && aufgabe.quelle.teile[0][1]);
+      var nach = (aufgabe.ziel && aufgabe.ziel.einheit) ||
+                 (aufgabe.ziel && aufgabe.ziel.einheiten && aufgabe.ziel.einheiten[0]);
+      if (von && nach && von !== nach) return treppe(von, nach);
+      return '';
+    }
+    return '';
+  }
+
+  return { treppe: treppe, stellenwert: stellenwert, lineal: lineal, zumFehler: zumFehler };
+}));
+
+/* ===== laengen/ui.js ===== */
+/* =============================================================
+   Zahlendrache – Modul „Längen“: Oberfläche
+
+   Hängt sich nicht in den Rundenmotor des 1x1-Spiels ein, sondern
+   bringt eigene Bildschirme mit. Gemeinsam genutzt werden nur die
+   Gestaltung, der Drache, Ton und Konfetti – und der gemeinsame
+   Bildschirmwechsel.
+
+   Der Ablauf bei einem Fehler folgt dem Plan, Abschnitt 5:
+   freundlicher Einstieg, richtige Lösung groß, kurze Begründung,
+   Bild dazu, und direkt danach eine Zwillingsaufgabe.
+   ============================================================= */
+(function (root) {
+  'use strict';
+  var Z = root.Zahlendrache = root.Zahlendrache || {};
+  var L = Z.laengen;
+  var core = L.core, texte = L.texte, gen = L.generatoren, bilder = L.bilder;
+  var diagnose = L.diagnose.diagnoseFehler;
+  var $ = Z.helfer.$, pick = Z.helfer.pick, clamp = Z.helfer.clamp;
+
+  var AUFGABEN_PRO_RUNDE = 10;
+
+  /* Stufennamen sind vorläufig beschreibend – die Drachennamen
+     sucht das Kind später selbst aus. */
+  var STUFEN = [
+    { nr: 1, name: 'Einheiten kennen',  kurz: 'Schätzen, zuordnen, Lineal ablesen', bereit: true },
+    { nr: 2, name: 'Umrechnen',         kurz: '3 m = 300 cm',                       bereit: true },
+    { nr: 3, name: 'Gemischte Angaben', kurz: '3 m 45 cm = 345 cm',                 bereit: true },
+    { nr: 4, name: 'Kommaschreibweise', kurz: '1,45 m = 145 cm',                    bereit: false },
+    { nr: 5, name: 'Vergleichen und rechnen', kurz: 'Größer, kleiner, plus, minus', bereit: false }
+  ];
+
+  /* ---------- Zustand einer laufenden Runde ---------- */
+
+  var runde = null;
+  var aufgabe = null;
+  var felder = [''];
+  var aktivesFeld = 0;
+  var phase = 'frage';     /* frage | erklaerung | warten */
+  var istZwilling = false;
+  var zwillingZaehler = 0;
+
+  function einstellungen() {
+    var s = (Z.einstellungen && Z.einstellungen()) || {};
+    return {
+      includeDm: s.includeDm !== false,
+      kommaFreigegeben: s.kommaFreigegeben !== false
+    };
+  }
+
+  /* ---------- Stufenwahl ---------- */
+
+  function start() {
+    zeigeStufen();
+  }
+
+  function zeigeStufen() {
+    var liste = $('laengen-stufen');
+    liste.innerHTML = '';
+    STUFEN.forEach(function (s) {
+      var knopf = document.createElement('button');
+      knopf.type = 'button';
+      knopf.className = 'stufe-karte';
+      knopf.dataset.stufe = s.nr;
+      if (!s.bereit) knopf.disabled = true;
+      knopf.innerHTML =
+        '<span class="stufe-nummer">' + s.nr + '</span>' +
+        '<span class="stufe-text"><strong>' + s.name + '</strong><small>' + s.kurz + '</small></span>' +
+        (s.bereit ? '<span class="stufe-marke">10 Aufgaben</span>'
+                  : '<span class="stufe-marke">kommt bald</span>');
+      liste.appendChild(knopf);
+    });
+    Z.helfer.zeigeBildschirm('screen-laengen-menue');
+  }
+
+  /* ---------- Runde ---------- */
+
+  function starteRunde(nr) {
+    var opt = einstellungen();
+    opt.rng = core.zufall();
+    runde = {
+      stufe: nr,
+      aufgaben: gen.erzeugeRunde(nr, AUFGABEN_PRO_RUNDE, opt),
+      index: 0,
+      richtig: 0,
+      serie: 0,
+      besteSerie: 0,
+      sterne: 0,
+      falsche: [],
+      opt: opt
+    };
+    /* Der Drache wird vom 1x1-Spiel geborgt, statt ihn zweimal zu zeichnen. */
+    var quelle = $('mascot');
+    if (quelle && !$('laengen-drache').firstChild) {
+      $('laengen-drache').innerHTML = quelle.innerHTML;
+    }
+    $('laengen-stufe-label').textContent = 'Stufe ' + nr + ' · ' + STUFEN[nr - 1].name;
+    Z.helfer.zeigeBildschirm('screen-laengen-spiel');
+    naechsteAufgabe();
+  }
+
+  function naechsteAufgabe() {
+    istZwilling = false;
+    zwillingZaehler = 0;
+    if (runde.index >= runde.aufgaben.length) { endeRunde(); return; }
+    zeigeAufgabe(runde.aufgaben[runde.index]);
+  }
+
+  /* Eine sehr ähnliche Aufgabe: gleicher Typ, gleiche Einheiten,
+     andere Zahlen. Damit der Erfolg gleich nach der Erklärung kommt. */
+  function zwillingZu(vorlage) {
+    for (var i = 0; i < 80; i++) {
+      var neu = gen.erzeugeAufgabe(vorlage.stufe, runde.opt);
+      if (neu.id === vorlage.id && neu.frage !== vorlage.frage) return neu;
+    }
+    return gen.erzeugeAufgabe(vorlage.stufe, runde.opt);
+  }
+
+  function zeigeAufgabe(a) {
+    aufgabe = a;
+    felder = a.antwortArt === 'zweiZahlen' ? ['', ''] : [''];
+    aktivesFeld = 0;
+    phase = 'frage';
+
+    $('laengen-frage').textContent = a.frage;
+    $('laengen-hilfe').hidden = true;
+    $('laengen-weiter-bereich').innerHTML = '';
+    $('laengen-feedback').textContent = istZwilling ? 'Jetzt du – dieselbe Art Aufgabe.' : ' ';
+    $('laengen-feedback').className = 'feedback';
+    stimmung('idle');
+    fortschritt();
+    serieAnzeigen();
+    zeichneAntwortbereich();
+  }
+
+  function fortschritt() {
+    var p = clamp((runde.index / runde.aufgaben.length) * 100, 0, 100);
+    $('laengen-fortschritt').style.width = p + '%';
+    $('laengen-fortschritt').parentElement.setAttribute('aria-valuenow', Math.round(p));
+  }
+
+  function serieAnzeigen() {
+    $('laengen-serie-zahl').textContent = runde.serie;
+    $('laengen-serie').className = 'streak-chip' +
+      (runde.serie >= 10 ? ' is-blaze' : runde.serie >= 3 ? ' is-hot' : '');
+  }
+
+  function stimmung(m) {
+    var el = $('laengen-drache');
+    el.dataset.mood = 'idle';
+    void el.offsetWidth;
+    el.dataset.mood = m;
+  }
+
+  /* ---------- Antwortbereich ---------- */
+
+  function zeichneAntwortbereich() {
+    var bereich = $('laengen-antwort');
+    var brauchtPad = aufgabe.antwortArt !== 'auswahl';
+    $('laengen-pad-wrap').hidden = !brauchtPad;
+
+    if (aufgabe.antwortArt === 'auswahl') {
+      bereich.innerHTML = '<div class="wahl-liste' +
+        (aufgabe.optionen.every(function (o) { return o.text.length <= 6; }) ? ' eng' : '') + '">' +
+        aufgabe.optionen.map(function (o, i) {
+          return '<button type="button" class="wahl" data-wahl="' + i + '">' + o.text + '</button>';
+        }).join('') + '</div>';
+      return;
+    }
+
+    var einheiten = aufgabe.antwortArt === 'zweiZahlen'
+      ? aufgabe.einheitenHinweis : [aufgabe.einheitHinweis];
+    bereich.innerHTML = '<div class="feld-reihe">' + einheiten.map(function (e, i) {
+      return '<span class="feld" data-feld="' + i + '" data-aktiv="' + (i === aktivesFeld) + '">' +
+        '<span class="wert' + (felder[i] === '' ? ' is-leer' : '') + '">' +
+        (felder[i] === '' ? '?' : felder[i]) + '</span>' +
+        '<span class="einheit">' + e + '</span></span>';
+    }).join('') + '</div>';
+
+    /* Die Komma-Taste taucht erst auf, wenn sie gebraucht wird. */
+    var brauchtKomma = runde.opt.kommaFreigegeben && aufgabe.stufe >= 4;
+    $('laengen-komma').classList.toggle('is-gone', !brauchtKomma);
+  }
+
+  function feldAnzeigen() {
+    var alle = $('laengen-antwort').querySelectorAll('.feld');
+    for (var i = 0; i < alle.length; i++) {
+      alle[i].dataset.aktiv = (i === aktivesFeld);
+      var w = alle[i].querySelector('.wert');
+      w.textContent = felder[i] === '' ? '?' : felder[i];
+      w.className = 'wert' + (felder[i] === '' ? ' is-leer' : '');
+    }
+  }
+
+  /* ---------- Eingabe ---------- */
+
+  function taste(k) {
+    if (!runde || phase !== 'frage' || aufgabe.antwortArt === 'auswahl') return;
+    Z.effekte.SOUND.key();
+
+    if (k === 'del') {
+      felder[aktivesFeld] = felder[aktivesFeld].slice(0, -1);
+    } else if (k === 'ok') {
+      /* Bei zwei Feldern springt OK erst ins zweite. */
+      if (felder.length === 2 && aktivesFeld === 0 && felder[0] !== '' && felder[1] === '') {
+        aktivesFeld = 1; feldAnzeigen(); return;
+      }
+      pruefeEingabe();
+      return;
+    } else if (k === ',') {
+      if (felder[aktivesFeld].indexOf(',') < 0 && felder[aktivesFeld] !== '') {
+        felder[aktivesFeld] += ',';
+      }
+    } else if (felder[aktivesFeld].replace(/\D/g, '').length < 5) {
+      if (felder[aktivesFeld] === '0') felder[aktivesFeld] = '';
+      felder[aktivesFeld] += k;
+    }
+    feldAnzeigen();
+  }
+
+  function pruefeEingabe() {
+    var werte = [];
+    for (var i = 0; i < felder.length; i++) {
+      var e = core.parseEingabe(felder[i]);
+      if (!e.ok) {
+        aktivesFeld = i;
+        feldAnzeigen();
+        $('laengen-feedback').textContent = texte.EINGABE[e.grund] || texte.EINGABE.keineZahl;
+        $('laengen-feedback').className = 'feedback is-wrong';
+        return;
+      }
+      werte.push(e.wert);
+    }
+    auswerten(aufgabe.antwortArt === 'zweiZahlen' ? werte : werte[0]);
+  }
+
+  function waehle(index) {
+    if (!runde || phase !== 'frage') return;
+    auswerten(index);
+  }
+
+  /* ---------- Auswerten ---------- */
+
+  function auswerten(antwort) {
+    var fehler = diagnose(aufgabe, antwort);
+    if (fehler === null) richtig(antwort);
+    else falsch(antwort, fehler);
+  }
+
+  function richtig(antwort) {
+    phase = 'warten';
+    runde.serie++;
+    runde.besteSerie = Math.max(runde.besteSerie, runde.serie);
+    var punkte = istZwilling ? 5 : 10;
+    runde.sterne += punkte;
+    if (!istZwilling) { runde.richtig++; runde.index++; }
+
+    markiere(antwort, true);
+    stimmung('happy');
+    Z.effekte.SOUND.right(runde.serie);
+    Z.effekte.burstAt($('laengen-frage'), 14);
+    serieAnzeigen();
+    fortschritt();
+
+    $('laengen-feedback').textContent = pick(texte.LOB) + ' +' + punkte + ' ⭐';
+    $('laengen-feedback').className = 'feedback is-right';
+
+    /* Ab und zu den Merksatz mitgeben, nicht jedes Mal. */
+    var schluessel = merksatzSchluessel(aufgabe);
+    if (schluessel && texte.MERKSATZ[schluessel] && Math.random() < 0.35) {
+      $('laengen-feedback').textContent += '  ' + texte.MERKSATZ[schluessel];
+    }
+    setTimeout(naechsteAufgabe, 900);
+  }
+
+  function merksatzSchluessel(a) {
+    var von = a.quelle && (a.quelle.einheit || (a.quelle.teile && a.quelle.teile[0][1]));
+    var nach = a.ziel && (a.ziel.einheit || (a.ziel.einheiten && a.ziel.einheiten[1]));
+    if (!von || !nach || von === nach) return null;
+    return core.EINHEITEN[von].faktor > core.EINHEITEN[nach].faktor
+      ? von + '-' + nach : nach + '-' + von;
+  }
+
+  function falsch(antwort, fehler) {
+    phase = 'erklaerung';
+    runde.serie = 0;
+    serieAnzeigen();
+    if (!istZwilling) {
+      runde.index++;
+      runde.falsche.push({ frage: aufgabe.frage, loesung: aufgabe.loesungText, code: fehler.code });
+    }
+    fortschritt();
+
+    markiere(antwort, false);
+    stimmung('oops');
+    Z.effekte.SOUND.wrong();
+
+    /* 1. freundlicher Einstieg */
+    $('laengen-feedback').textContent = pick(texte.EINSTIEG);
+    $('laengen-feedback').className = 'feedback is-wrong';
+
+    /* 2. richtige Lösung groß  3. Begründung  4. Bild */
+    var eintrag = texte.FEHLER[fehler.code] || texte.FEHLER.UNBEKANNT;
+    $('laengen-loesung').textContent = aufgabe.loesungText;
+    $('laengen-hinweis').innerHTML = texte.fuelle(eintrag.hinweis, ergaenzeWerte(fehler, antwort));
+    $('laengen-bild').innerHTML = bildZu(eintrag.bild, fehler, antwort);
+    $('laengen-hilfe').hidden = false;
+
+    /* 5. weiter zur Zwillingsaufgabe – der Knopf steht unter der
+       Erklärung, damit erst gelesen und dann getippt wird. Die eigene
+       Antwort bleibt sichtbar, damit der Vergleich möglich ist. */
+    $('laengen-pad-wrap').hidden = true;
+    $('laengen-weiter-bereich').innerHTML =
+      '<button type="button" class="btn btn-mess" id="laengen-weiter">Verstanden – weiter</button>';
+  }
+
+  /* Ergänzt fehlende Platzhalter, damit nie einer offen bleibt. */
+  function ergaenzeWerte(fehler, antwort) {
+    var w = {};
+    Object.keys(fehler.werte || {}).forEach(function (k) { w[k] = fehler.werte[k]; });
+    if (w.aufgabe === undefined) w.aufgabe = aufgabe.aufgabeText;
+    if (w.loesung === undefined) w.loesung = aufgabe.loesungText;
+    if (w.antwort === undefined) w.antwort = antwort;
+    return w;
+  }
+
+  function bildZu(art, fehler, antwort) {
+    if (fehler.code === 'GROESSENVORSTELLUNG' && aufgabe.richtigeEinheit) {
+      var gewaehlt = aufgabe.optionen[antwort];
+      if (gewaehlt && gewaehlt.einheit && gewaehlt.einheit !== aufgabe.richtigeEinheit) {
+        return bilder.treppe(gewaehlt.einheit, aufgabe.richtigeEinheit, runde.opt.includeDm);
+      }
+      return '';
+    }
+    if (!art) return '';
+    if (art === 'treppe' && aufgabe.quelle) {
+      var von = aufgabe.quelle.einheit || (aufgabe.quelle.teile && aufgabe.quelle.teile[0][1]);
+      var nach = (aufgabe.ziel.einheit) || (aufgabe.ziel.einheiten && aufgabe.ziel.einheiten[0]);
+      if (von && nach && von !== nach) return bilder.treppe(von, nach, runde.opt.includeDm);
+      return '';
+    }
+    return bilder.zumFehler(art, aufgabe);
+  }
+
+  function markiere(antwort, stimmt) {
+    if (aufgabe.antwortArt === 'auswahl') {
+      var knoepfe = $('laengen-antwort').querySelectorAll('.wahl');
+      for (var i = 0; i < knoepfe.length; i++) {
+        knoepfe[i].disabled = true;
+        if (aufgabe.optionen[i].richtig) knoepfe[i].classList.add('is-richtig');
+        else if (i === antwort) knoepfe[i].classList.add('is-falsch');
+      }
+      return;
+    }
+    var felderEl = $('laengen-antwort').querySelectorAll('.feld');
+    for (var j = 0; j < felderEl.length; j++) {
+      felderEl[j].classList.add(stimmt ? 'is-richtig' : 'is-falsch');
+    }
+  }
+
+  function weiter() {
+    if (phase !== 'erklaerung') return;
+    /* Höchstens zwei Zwillinge – sonst bliebe ein Kind, das den
+       Typ noch nicht kann, endlos bei derselben Aufgabe hängen. */
+    if (zwillingZaehler >= 2) { naechsteAufgabe(); return; }
+    zwillingZaehler++;
+    var vorlage = aufgabe;
+    zeigeAufgabe(zwillingZu(vorlage));
+    istZwilling = true;
+    $('laengen-feedback').textContent = 'Jetzt du – dieselbe Art Aufgabe.';
+  }
+
+  /* ---------- Rundenende ---------- */
+
+  function endeRunde() {
+    var r = runde;
+    phase = 'warten';
+    $('laengen-erg-stufe').textContent = 'Stufe ' + r.stufe + ' · ' + STUFEN[r.stufe - 1].name;
+    $('laengen-erg-titel').textContent = r.falsche.length === 0 ? 'Fehlerfrei! Wahnsinn!' :
+      r.richtig >= r.aufgaben.length * 0.7 ? 'Stark gemacht!' : 'Gut geübt!';
+    $('laengen-erg-sterne').textContent = r.sterne;
+    $('laengen-erg-richtig').textContent = r.richtig;
+    $('laengen-erg-gesamt').textContent = r.aufgaben.length;
+    $('laengen-erg-serie').textContent = r.besteSerie;
+
+    var rueck = $('laengen-erg-rueckblick');
+    if (r.falsche.length) {
+      rueck.innerHTML = 'Das üben wir weiter: ' +
+        r.falsche.map(function (f) { return '<b>' + f.loesung + '</b>'; }).join(', ');
+    } else {
+      rueck.textContent = '';
+    }
+    $('btn-laengen-nochmal').dataset.stufe = r.stufe;
+    Z.helfer.zeigeBildschirm('screen-laengen-ergebnis');
+    if (r.richtig > 0) {
+      Z.effekte.SOUND.win();
+      setTimeout(function () { Z.effekte.burstAt($('laengen-erg-sterne'), 50); }, 150);
+    }
+  }
+
+  /* ---------- Bedienung ---------- */
+
+  $('laengen-stufen').addEventListener('click', function (e) {
+    var k = e.target.closest('.stufe-karte');
+    if (k && !k.disabled) starteRunde(parseInt(k.dataset.stufe, 10));
+  });
+
+  $('laengen-antwort').addEventListener('click', function (e) {
+    var w = e.target.closest('.wahl');
+    if (w && !w.disabled) { waehle(parseInt(w.dataset.wahl, 10)); return; }
+    var f = e.target.closest('.feld');
+    if (f && phase === 'frage') { aktivesFeld = parseInt(f.dataset.feld, 10); feldAnzeigen(); }
+  });
+
+  $('laengen-weiter-bereich').addEventListener('click', function (e) {
+    if (e.target.closest('#laengen-weiter')) weiter();
+  });
+
+  $('laengen-pad').addEventListener('click', function (e) {
+    var b = e.target.closest('button[data-key]');
+    if (b) taste(b.dataset.key);
+  });
+
+  $('btn-laengen-heim').addEventListener('click', function () { Z.zeigeStartbildschirm(); });
+  $('btn-laengen-quit').addEventListener('click', function () { runde = null; zeigeStufen(); });
+  $('btn-laengen-stufen').addEventListener('click', zeigeStufen);
+  $('btn-laengen-nochmal').addEventListener('click', function () {
+    starteRunde(parseInt($('btn-laengen-nochmal').dataset.stufe, 10));
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if ($('screen-laengen-spiel').hidden) return;
+    if (phase === 'erklaerung') {
+      if (e.key === 'Enter' || e.key === ' ') { weiter(); e.preventDefault(); }
+      else if (e.key === 'Escape') { runde = null; zeigeStufen(); }
+      return;
+    }
+    if (aufgabe && aufgabe.antwortArt === 'auswahl') {
+      var n = parseInt(e.key, 10);
+      if (n >= 1 && n <= aufgabe.optionen.length) { waehle(n - 1); e.preventDefault(); }
+      else if (e.key === 'Escape') { runde = null; zeigeStufen(); }
+      return;
+    }
+    if (e.key >= '0' && e.key <= '9') { taste(e.key); e.preventDefault(); }
+    else if (e.key === ',' || e.key === '.') { taste(','); e.preventDefault(); }
+    else if (e.key === 'Backspace') { taste('del'); e.preventDefault(); }
+    else if (e.key === 'Enter') { taste('ok'); e.preventDefault(); }
+    else if (e.key === 'Tab' && felder.length === 2) {
+      aktivesFeld = 1 - aktivesFeld; feldAnzeigen(); e.preventDefault();
+    } else if (e.key === 'Escape') { runde = null; zeigeStufen(); }
+  });
+
+  L.ui = { start: start, STUFEN: STUFEN };
+}(typeof globalThis !== 'undefined' ? globalThis : this));
+
+/* ===== app.js ===== */
+/* =============================================================
+   Zahlendrache – kleines 1x1, Umkehraufgaben, halbschriftlich teilen
+
+   Lernlogik: Leitner-Karteikasten mit fünf Fächern. Jede Aufgabe
+   steigt bei einer sicheren Antwort ein Fach auf und rutscht bei
+   einem Fehler zwei Fächer zurück. Die Auswahl der nächsten
+   Aufgabe gewichtet niedrige Fächer und lange nicht Geübtes.
+   Mal- und Geteilt-Aufgaben haben getrennte Karteikästen, denn
+   7×8 zu können heißt noch nicht, 56:8 zu können.
+   ============================================================= */
+(function () {
+  'use strict';
+
+  /* Die ausgelagerten Teile liegen unter einem gemeinsamen Namen.
+     Hier werden sie einmal kurz gemacht, damit der restliche Code
+     unverändert weiterlesen kann wie vorher. */
+  var Z = (typeof globalThis !== 'undefined' ? globalThis : window).Zahlendrache;
+  var $ = Z.helfer.$, rnd = Z.helfer.rnd, pick = Z.helfer.pick,
+      clamp = Z.helfer.clamp, today = Z.helfer.today, shuffle = Z.helfer.shuffle;
+  var DIFFICULTY = Z.daten.DIFFICULTY, LEVEL_ORDER = Z.daten.LEVEL_ORDER,
+      LEVELS = Z.daten.LEVELS, BADGES = Z.daten.BADGES,
+      PRAISE_RIGHT = Z.daten.PRAISE_RIGHT, PRAISE_STREAK = Z.daten.PRAISE_STREAK;
+  var SOUND = Z.effekte.SOUND, burstAt = Z.effekte.burstAt;
+  var tipForMul = Z.tipps.tipForMul, tipForDiv = Z.tipps.tipForDiv;
+
+  /* ---------- Konstanten ---------- */
+
+  var STORAGE_KEY = 'zahlendrache.v1';
+  var MAX_BOX = 5;
+
+  /* Drei Schwierigkeitsstufen. Sie ändern die Reihenfolge, in der die
+     Reihen dazukommen, wie lang eine Runde ist, wie viel Bedenkzeit es
+     für den Tempobonus gibt und wie groß die halbschriftlichen Aufgaben
+     starten. Der Karteikasten bleibt davon unberührt – ein Wechsel
+     kostet keinen Fortschritt.
+
+     stages   Etappen der Lernreise, eine nach der anderen
+     unlockAt wie sicher die letzte Etappe sitzen muss (0…1)
+     round    Aufgaben pro Runde
+     halb     Aufgaben pro Runde beim halbschriftlichen Teilen
+     halbFrom kleinste Größenstufe, mit der begonnen wird (0…2)
+     halbMax  größte Größenstufe, die erreicht werden kann
+     blitz    Sekunden in der Blitzrunde
+     fast     Millisekunden für den großen und den kleinen Tempobonus
+     settle   bis hierher gilt eine Antwort als sicher genug fürs
+              nächste Karteikastenfach
+     goal     richtige Antworten als Tagesziel                        */
+  function diff() { return DIFFICULTY[state.level] || DIFFICULTY.normal; }
+
+  /* ---------- kleine Helfer ---------- */
 
   /* ---------- Spielstand ---------- */
 
@@ -1586,132 +3829,13 @@ button { font-family: inherit; color: inherit; }
 
   /* ---------- Rechentricks ---------- */
 
-  function tipForMul(a, b) {
-    var lo = Math.min(a, b), hi = Math.max(a, b), p = a * b;
-    if (a === b) return 'Eine Quadratzahl: <b>' + a + ' × ' + a + ' = ' + p + '</b>. Die lohnt sich auswendig!';
-    switch (lo) {
-      case 1:  return 'Mal 1 ändert nichts: <b>' + hi + '</b> bleibt <b>' + hi + '</b>.';
-      case 2:  return 'Mal 2 heißt verdoppeln: <b>' + hi + ' + ' + hi + ' = ' + p + '</b>.';
-      case 3:  return 'Verdopple und leg einmal drauf: <b>' + (2 * hi) + ' + ' + hi + ' = ' + p + '</b>.';
-      case 4:  return 'Zweimal verdoppeln: <b>' + hi + ' → ' + (2 * hi) + ' → ' + p + '</b>.';
-      case 5:  return 'Mal 10, dann halbieren: <b>' + (10 * hi) + ' : 2 = ' + p + '</b>.';
-      case 6:  return 'Nimm die 5er-Reihe und leg einmal drauf: <b>' + (5 * hi) + ' + ' + hi + ' = ' + p + '</b>.';
-      case 7:  return 'Zerlege in 5 und 2: <b>' + (5 * hi) + ' + ' + (2 * hi) + ' = ' + p + '</b>.';
-      case 8:  return 'Dreimal verdoppeln: <b>' + hi + ' → ' + (2 * hi) + ' → ' + (4 * hi) + ' → ' + p + '</b>.';
-      case 9:  return 'Der 9er-Trick: mal 10, dann einmal weg: <b>' + (10 * hi) + ' − ' + hi + ' = ' + p + '</b>.';
-      case 10: return 'Mal 10 heißt: eine Null anhängen. <b>' + hi + ' → ' + p + '</b>.';
-    }
-    return '<b>' + a + ' × ' + b + ' = ' + p + '</b>';
-  }
-
-  /* Teilen heißt rückwärts malnehmen – und genau so wird es erklärt. */
-  function tipForDiv(p, b) {
-    var q = p / b;
-    if (b === 10) return 'Geteilt durch 10 heißt: eine Null weg. <b>' + p + ' → ' + q + '</b>.';
-    if (q === 1) return 'Etwas durch sich selbst geteilt ist immer <b>1</b>.';
-    var steps = [];
-    for (var i = 1; i <= q; i++) steps.push(i === q ? '<b>' + (i * b) + '</b>' : (i * b));
-    return 'Frag rückwärts: <b>' + b + ' × ? = ' + p + '</b>. Zähl die ' + b + 'er-Reihe hoch: ' +
-      steps.join(', ') + ' – das sind <b>' + q + '</b> Sprünge.';
-  }
-
   function tipForTask(t) {
     return t.kind === 'div' ? tipForDiv(t.p, t.b) : tipForMul(t.a, t.b);
   }
 
   /* ---------- Ton ---------- */
 
-  var audio = null;
-  function tone(freq, start, len, vol, type) {
-    if (!state.sound) return;
-    try {
-      if (!audio) audio = new (window.AudioContext || window.webkitAudioContext)();
-      if (audio.state === 'suspended') audio.resume();
-      var osc = audio.createOscillator(), gain = audio.createGain();
-      osc.type = type || 'sine';
-      osc.frequency.value = freq;
-      var t0 = audio.currentTime + start;
-      gain.gain.setValueAtTime(0.0001, t0);
-      gain.gain.exponentialRampToValueAtTime(vol, t0 + 0.015);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t0 + len);
-      osc.connect(gain); gain.connect(audio.destination);
-      osc.start(t0); osc.stop(t0 + len + 0.02);
-    } catch (e) {}
-  }
-
-  var SOUND = {
-    right: function (streak) {
-      var base = 660 + Math.min(streak, 8) * 30;
-      tone(base, 0, 0.12, 0.18);
-      tone(base * 1.5, 0.08, 0.16, 0.14);
-    },
-    step:  function () { tone(740, 0, 0.09, 0.13); tone(988, 0.06, 0.12, 0.1); },
-    wrong: function () { tone(300, 0, 0.16, 0.12, 'triangle'); tone(220, 0.1, 0.22, 0.1, 'triangle'); },
-    key:   function () { tone(520, 0, 0.05, 0.07, 'square'); },
-    combo: function () { [523, 659, 784, 1047].forEach(function (f, i) { tone(f, i * 0.07, 0.2, 0.14); }); },
-    win:   function () { [523, 659, 784, 1047, 1319].forEach(function (f, i) { tone(f, i * 0.09, 0.3, 0.16); }); }
-  };
-
   /* ---------- Konfetti ---------- */
-
-  var canvas = $('fx'), ctx = canvas.getContext('2d'), parts = [], raf = null;
-  var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  function sizeCanvas() {
-    var dpr = window.devicePixelRatio || 1;
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-  window.addEventListener('resize', sizeCanvas);
-  sizeCanvas();
-
-  var CONFETTI_COLORS = ['#f26430', '#2fb37f', '#f2c14e', '#2b87d3', '#b75bc9', '#d95f8b'];
-
-  function burst(x, y, count) {
-    if (reduced) return;
-    for (var i = 0; i < count; i++) {
-      var ang = Math.random() * Math.PI * 2;
-      var sp = 2 + Math.random() * 7;
-      parts.push({
-        x: x, y: y,
-        vx: Math.cos(ang) * sp,
-        vy: Math.sin(ang) * sp - 3,
-        s: 4 + Math.random() * 6,
-        rot: Math.random() * Math.PI,
-        vr: (Math.random() - 0.5) * 0.3,
-        life: 60 + rnd(40),
-        c: pick(CONFETTI_COLORS)
-      });
-    }
-    if (!raf) raf = requestAnimationFrame(tick);
-  }
-
-  function tick() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (var i = parts.length - 1; i >= 0; i--) {
-      var p = parts[i];
-      p.vy += 0.22; p.vx *= 0.99;
-      p.x += p.vx; p.y += p.vy; p.rot += p.vr; p.life--;
-      if (p.life <= 0 || p.y > window.innerHeight + 40) { parts.splice(i, 1); continue; }
-      ctx.save();
-      ctx.translate(p.x, p.y);
-      ctx.rotate(p.rot);
-      ctx.globalAlpha = Math.min(1, p.life / 25);
-      ctx.fillStyle = p.c;
-      ctx.fillRect(-p.s / 2, -p.s / 2, p.s, p.s * 0.6);
-      ctx.restore();
-    }
-    raf = parts.length ? requestAnimationFrame(tick) : null;
-    if (!raf) ctx.clearRect(0, 0, canvas.width, canvas.height);
-  }
-
-  function burstAt(el, count) {
-    if (!el || el.hidden) return;
-    var r = el.getBoundingClientRect();
-    if (!r.width && !r.height) return;
-    burst(r.left + r.width / 2, r.top + r.height / 2, count);
-  }
 
   /* ---------- Level & Tagesziel ---------- */
 
@@ -1744,9 +3868,15 @@ button { font-family: inherit; color: inherit; }
     parents: $('screen-parents')
   };
 
+  /* Der Fortschrittsbalken sagt auch als Zahl, wie weit die Runde ist. */
+  function setzeFortschritt(el, prozent) {
+    el.style.width = prozent + '%';
+    var bar = el.parentElement;
+    if (bar) bar.setAttribute('aria-valuenow', Math.round(prozent));
+  }
+
   function show(name) {
-    Object.keys(screens).forEach(function (k) { screens[k].hidden = (k !== name); });
-    window.scrollTo(0, 0);
+    Z.helfer.zeigeBildschirm(screens[name].id);
   }
 
   /* ---------- Stufenwahl ---------- */
@@ -1758,7 +3888,7 @@ button { font-family: inherit; color: inherit; }
       var badge = current ? '<span class="lc-now">jetzt</span>'
                 : c.recommended ? '<span class="lc-tip">empfohlen</span>' : '';
       return '<button type="button" class="level-card" data-level="' + id + '"' +
-        ' data-current="' + current + '" style="--c: ' + c.color + '">' +
+        ' data-current="' + current + '" style="--c: ' + c.color + '; --c-text: ' + c.colorText + '">' +
         '<span class="lc-sym">' + c.sym + '</span>' +
         '<span class="lc-body">' +
           '<span class="lc-head"><strong>' + c.name + '</strong>' + badge + '</span>' +
@@ -1814,6 +3944,7 @@ button { font-family: inherit; color: inherit; }
     $('level-name').textContent = cfg.name;
     $('level-detail').textContent = cfg.short;
     $('btn-level').style.setProperty('--c', cfg.color);
+    $('btn-level').style.setProperty('--c-text', cfg.colorText);
     $('goal-target').textContent = cfg.goal;
 
     var d = todayStats();
@@ -1921,16 +4052,16 @@ button { font-family: inherit; color: inherit; }
       var seconds = diff().blitz;
       round.endsAt = Date.now() + seconds * 1000;
       $('progress-fill').classList.add('is-time');
-      $('progress-fill').style.width = '100%';
+      setzeFortschritt($('progress-fill'), 100);
       round.timer = setInterval(function () {
         if (!round) return;
         var left = round.endsAt - Date.now();
-        $('progress-fill').style.width = clamp((left / (seconds * 1000)) * 100, 0, 100) + '%';
+        setzeFortschritt($('progress-fill'), clamp((left / (seconds * 1000)) * 100, 0, 100));
         if (left <= 0) endRound();
       }, 200);
     } else {
       $('progress-fill').classList.remove('is-time');
-      $('progress-fill').style.width = '0%';
+      setzeFortschritt($('progress-fill'), 0);
     }
     nextQuestion();
   }
@@ -1989,7 +4120,7 @@ button { font-family: inherit; color: inherit; }
     $('btn-tip').textContent = 'Tipp zeigen';
 
     if (round.type !== 'blitz') {
-      $('progress-fill').style.width = clamp((round.asked / round.target) * 100, 0, 100) + '%';
+      setzeFortschritt($('progress-fill'), clamp((round.asked / round.target) * 100, 0, 100));
     }
     updateStreakChip();
   }
@@ -2274,7 +4405,7 @@ button { font-family: inherit; color: inherit; }
     $('feedback').textContent = ' ';
     $('feedback').className = 'feedback';
     setMood('idle');
-    $('progress-fill').style.width = clamp((round.asked / round.target) * 100, 0, 100) + '%';
+    setzeFortschritt($('progress-fill'), clamp((round.asked / round.target) * 100, 0, 100));
     updateStreakChip();
     renderHalb();
   }
@@ -2753,6 +4884,7 @@ button { font-family: inherit; color: inherit; }
   document.querySelectorAll('.mode').forEach(function (btn) {
     btn.addEventListener('click', function () {
       if (btn.disabled) return;
+      if (btn.dataset.mode === 'laengen') { Z.laengen.ui.start(); return; }
       startByMode(btn.dataset.mode);
     });
   });
@@ -2817,6 +4949,7 @@ button { font-family: inherit; color: inherit; }
 
   $('btn-sound').addEventListener('click', function () {
     state.sound = !state.sound;
+    Z.effekte.ton(state.sound);
     save();
     $('btn-sound').setAttribute('aria-pressed', state.sound ? 'true' : 'false');
     $('sound-icon').textContent = state.sound ? '♪' : '✕';
@@ -2826,6 +4959,7 @@ button { font-family: inherit; color: inherit; }
   $('btn-reset').addEventListener('click', function () {
     if (!window.confirm('Wirklich den gesamten Fortschritt löschen? Sterne, Abzeichen und beide Karteikästen sind dann weg.')) return;
     state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+    Z.effekte.ton(state.sound);
     save();
     renderParents();
     renderHome();
@@ -2854,9 +4988,13 @@ button { font-family: inherit; color: inherit; }
     else if (e.key === 'Escape') quitRound();
   });
 
+  /* Das Längen-Modul kehrt hierüber zurück. */
+  Z.zeigeStartbildschirm = function () { renderHome(); show('home'); };
+
   /* ---------- Start ---------- */
 
   function boot() {
+    Z.effekte.ton(state.sound);
     if (state.unlockedCount === undefined) state.unlockedCount = unlockedRows().length;
     renderHome();
     if (state.level) show('home');
