@@ -763,8 +763,12 @@ button { font-family: inherit; color: inherit; }
   border-radius: var(--r-2);
   padding: 12px 14px;
   box-shadow: var(--shadow-soft);
+  /* Lange Wörter wie „Schwierigkeitsstufe“ dürfen umbrechen,
+     statt über den Kartenrand zu laufen. */
+  overflow-wrap: anywhere;
+  hyphens: auto;
 }
-.stat strong { display: block; font-family: var(--font-display); font-size: 1.5rem; font-variant-numeric: tabular-nums; }
+.stat strong { display: block; font-family: var(--font-display); font-size: 1.5rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .stat span { font-size: .76rem; color: var(--ink-soft); font-weight: 700; }
 .stat .detail { display: block; font-size: .8rem; color: var(--ink); font-weight: 700; margin-top: 2px; }
 
@@ -1215,6 +1219,82 @@ button { font-family: inherit; color: inherit; }
 .laengen-weiter-bereich { width: 100%; max-width: 400px; }
 .laengen-weiter-bereich .btn { width: 100%; }
 
+/* Ordnen: die angetippten Längen bekommen ihre Platznummer */
+.wahl-ordnen { display: flex; align-items: center; gap: 10px; text-align: left; }
+.wahl-ordnen .ordnung {
+  width: 26px; height: 26px;
+  flex: none;
+  border-radius: 50%;
+  border: 2px dashed var(--line);
+  display: grid; place-items: center;
+  font-size: .82rem;
+  color: var(--ink-faint);
+}
+.wahl-ordnen.is-gewaehlt { border-color: var(--laenge); }
+.wahl-ordnen.is-gewaehlt .ordnung {
+  border-style: solid;
+  border-color: var(--laenge);
+  background: var(--laenge);
+  color: var(--auf-bunt);
+}
+
+/* Elternbereich: die beiden Schalter fürs Längen-Modul */
+.schalter-liste { display: grid; gap: 8px; }
+.schalter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 2px solid var(--line);
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 10px 14px;
+  min-height: 44px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+.schalter .txt { flex: 1; display: flex; flex-direction: column; }
+.schalter strong { font-family: var(--font-display); font-size: .98rem; }
+.schalter small { font-size: .78rem; color: var(--ink-soft); font-weight: 600; }
+.schalter .knebel {
+  width: 46px; height: 26px; flex: none;
+  border-radius: 99px;
+  background: var(--ground-2);
+  position: relative;
+  transition: background .15s ease;
+}
+.schalter .knebel::after {
+  content: '';
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: 0 1px 3px rgba(0,0,0,.3);
+  transition: transform .15s ease;
+}
+.schalter[aria-pressed="true"] .knebel { background: var(--laenge); }
+.schalter[aria-pressed="true"] .knebel::after { transform: translateX(20px); }
+
+.fehler-liste { display: grid; gap: 6px; margin-top: 10px; }
+.fehler-zeile {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: .84rem;
+  font-weight: 600;
+}
+.fehler-zeile .balkenspur {
+  grid-column: 1 / -1;
+  height: 7px;
+  border-radius: 99px;
+  background: var(--ground-2);
+  overflow: hidden;
+}
+.fehler-zeile .balkenspur i { display: block; height: 100%; background: var(--laenge); border-radius: 99px; }
+.fehler-zeile b { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-weight: 800; }
+
 </style>
 </head>
 <body>
@@ -1475,6 +1555,7 @@ button { font-family: inherit; color: inherit; }
     </header>
     <p class="lead">Such dir eine Stufe aus. Eine Runde sind 10 Aufgaben – ohne Uhr, ohne Hetze.</p>
     <div class="stufen-liste" id="laengen-stufen"></div>
+    <p class="hint" id="laengen-hinweis-stufen"></p>
   </section>
 
   <!-- ======================= LÄNGEN: SPIEL ======================= -->
@@ -1566,6 +1647,9 @@ button { font-family: inherit; color: inherit; }
     </div>
 
     <div class="stats" id="stats"></div>
+
+    <h2 class="section-title">Längen</h2>
+    <div id="laengen-eltern"></div>
 
     <h2 class="section-title">Übungstage</h2>
     <div class="calendar" id="calendar"></div>
@@ -2086,6 +2170,84 @@ button { font-family: inherit; color: inherit; }
   };
 }));
 
+/* ===== laengen/speicher.js ===== */
+/* =============================================================
+   Zahlendrache – Modul „Längen“: Fortschritt merken
+
+   Eigener Schlüssel im localStorage, unabhängig vom 1x1-Spiel.
+   Dadurch kann das eine geändert werden, ohne das andere zu
+   gefährden. Die Versionsnummer sorgt dafür, dass ein alter Stand
+   später nicht falsch gelesen wird: fehlende Felder werden aus dem
+   Standard ergänzt, ein unbekannter Aufbau wird verworfen statt
+   halb übernommen.
+   ============================================================= */
+(function (root, factory) {
+  var api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else {
+    var Z = root.Zahlendrache = root.Zahlendrache || {};
+    (Z.laengen = Z.laengen || {}).speicher = api;
+  }
+}(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  var SCHLUESSEL = 'zahlendrache.laengen.v1';
+  var VERSION = 1;
+
+  function standard() {
+    return {
+      version: VERSION,
+      freigeschaltet: 1,      /* höchste Stufe, die gespielt werden darf */
+      stufen: {},             /* je Stufe: { niveau, letzte: [], gespielt, richtig } */
+      wiederholung: [],       /* [{ id, stufe }] – kommt in einer späteren Runde wieder */
+      fehlerTypen: {},        /* wie oft welcher Denkfehler vorkam */
+      sterne: 0,
+      runden: 0,
+      includeDm: true,
+      kommaFreigegeben: true
+    };
+  }
+
+  function stufenStand(stand, nr) {
+    var k = String(nr);
+    if (!stand.stufen[k]) stand.stufen[k] = { niveau: 1, letzte: [], gespielt: 0, richtig: 0 };
+    return stand.stufen[k];
+  }
+
+  function laden() {
+    var s = standard();
+    try {
+      var roh = localStorage.getItem(SCHLUESSEL);
+      if (!roh) return s;
+      var gespeichert = JSON.parse(roh);
+      if (!gespeichert || gespeichert.version !== VERSION) return s;
+      Object.keys(s).forEach(function (k) {
+        if (gespeichert[k] !== undefined && gespeichert[k] !== null) s[k] = gespeichert[k];
+      });
+    } catch (e) { /* kein Speicher verfügbar – dann eben ohne */ }
+    return s;
+  }
+
+  function sichern(stand) {
+    try { localStorage.setItem(SCHLUESSEL, JSON.stringify(stand)); } catch (e) {}
+  }
+
+  function zuruecksetzen() {
+    try { localStorage.removeItem(SCHLUESSEL); } catch (e) {}
+    return standard();
+  }
+
+  return {
+    SCHLUESSEL: SCHLUESSEL,
+    VERSION: VERSION,
+    standard: standard,
+    stufenStand: stufenStand,
+    laden: laden,
+    sichern: sichern,
+    zuruecksetzen: zuruecksetzen
+  };
+}));
+
 /* ===== laengen/texte.js ===== */
 /* =============================================================
    Zahlendrache – Modul „Längen“: alle Texte
@@ -2181,6 +2343,41 @@ button { font-family: inherit; color: inherit; }
     { name: 'ein Marathon',        satz: 'Ein Marathonlauf ist etwa {wert} ___ lang.',      frage: 'Wie lang ist ein Marathonlauf?',      wert: 42,  einheit: 'km' }
   ];
 
+
+  /* ---------- Sachaufgaben (Stufe 5) ----------
+     Erfundene Namen, Alltag aus Hamburg. Zahlen werden eingesetzt,
+     nicht behauptet – im Text steht nie eine echte Streckenangabe
+     als Tatsache.
+     art: 'differenz' | 'summe' | 'rest'
+     {n1} {n2} Namen · {a} {b} Längen · {einheit} gesuchte Einheit */
+  var NAMEN = ['Mia', 'Ben', 'Lena', 'Jonas', 'Emma', 'Nils', 'Frida', 'Paul', 'Ida', 'Theo'];
+
+  /* skala: in welcher Größenordnung die Aufgabe spielt.
+     'cm' = Zimmer und Basteln, 'm' = Wege und Strecken.
+     min/max sind Werte in dieser Einheit; das Ergebnis wird darin
+     abgefragt. Ein Schulweg ist eben keine 2 m 20 cm lang. */
+  var SACHAUFGABEN = [
+    { art: 'differenz', skala: 'cm', min: 150, max: 340,
+      text: '{n1} springt {a} weit, {n2} springt {b}. Wie viele {einheitLang} springt {n1} weiter?' },
+    { art: 'differenz', skala: 'cm', min: 90, max: 250,
+      text: 'Das Regal ist {a} breit. Ein Brett von {b} liegt darin. Wie viele {einheitLang} bleiben frei?' },
+    { art: 'differenz', skala: 'cm', min: 60, max: 200,
+      text: '{n1} hat ein Band von {a}. Für die Schleife braucht {n1} davon {b}. Wie viel bleibt übrig?' },
+    { art: 'summe', skala: 'cm', min: 40, max: 160,
+      text: '{n1} klebt zwei Bänder aneinander: {a} und {b}. Wie lang ist das Band zusammen?' },
+    { art: 'summe', skala: 'cm', min: 50, max: 180,
+      text: '{n1} stellt zwei Kisten übereinander: {a} und {b} hoch. Wie hoch ist der Turm?' },
+
+    { art: 'rest', skala: 'm', min: 900, max: 2400,
+      text: 'Der Schulweg ist {a} lang. {n1} ist schon {b} gegangen. Wie weit ist es noch?' },
+    { art: 'rest', skala: 'm', min: 1200, max: 3000,
+      text: 'Die Laufstrecke ist {a} lang. {n1} und {n2} haben {b} geschafft. Wie weit fehlt noch?' },
+    { art: 'summe', skala: 'm', min: 400, max: 1500,
+      text: '{n1} läuft am Montag {a} und am Dienstag {b}. Wie weit ist {n1} zusammen gelaufen?' },
+    { art: 'summe', skala: 'm', min: 300, max: 1200,
+      text: 'Die Hafenfähre fährt erst {a} und dann noch {b}. Wie lang ist die Fahrt zusammen?' }
+  ];
+
   /* ---------- Vergleichsdinge für „Etwa 1 m lang ist …“ ---------- */
   var VERGLEICHE = [
     { text: 'ein Strich im Heft',            mm: 1 },
@@ -2244,6 +2441,14 @@ button { font-family: inherit; color: inherit; }
                'Dann siehst du es: {linksUm} {zeichen} {rechtsUm}.'
     },
 
+    /* Beim Ordnen: nach den Zahlen sortiert statt nach den Längen.
+       {reihe} = richtige Reihenfolge als Text */
+    ORDNEN_ZAHLEN: {
+      bild: 'balken',
+      hinweis: 'Die Einheiten sind verschieden – dann sagt die Zahl allein nichts. ' +
+               'Rechne alles in dieselbe Einheit um. Richtig ist: {reihe}.'
+    },
+
     /* {start} {ende} {loesung} {einheit} */
     LINEAL_START: {
       bild: 'lineal',
@@ -2291,6 +2496,8 @@ button { font-family: inherit; color: inherit; }
 
   return {
     GEGENSTAENDE: GEGENSTAENDE,
+    NAMEN: NAMEN,
+    SACHAUFGABEN: SACHAUFGABEN,
     VERGLEICHE: VERGLEICHE,
     EINSTIEG: EINSTIEG,
     LOB: LOB,
@@ -2446,6 +2653,9 @@ button { font-family: inherit; color: inherit; }
     if (aufgabe.antwortArt === 'auswahl' || aufgabe.antwortArt === 'vergleich') {
       return diagnoseAuswahl(aufgabe, antwort);
     }
+    if (aufgabe.antwortArt === 'ordnen') {
+      return diagnoseOrdnen(aufgabe, antwort);
+    }
     if (aufgabe.antwortArt === 'zweiZahlen') {
       return diagnoseFelder(aufgabe, antwort);
     }
@@ -2470,6 +2680,30 @@ button { font-family: inherit; color: inherit; }
       return { code: 'EINHEIT_IGNORIERT', werte: gewaehlt.werte || {} };
     }
     return { code: gewaehlt.fehler || 'UNBEKANNT', werte: gewaehlt.werte || {} };
+  }
+
+  /* Beim Ordnen ist der klassische Fehler, nach der Maßzahl statt
+     nach der Länge zu sortieren: 99 cm hinter 1,05 m. */
+  function diagnoseOrdnen(aufgabe, reihenfolge) {
+    var soll = aufgabe.loesungReihenfolge;
+    var gleich = reihenfolge.length === soll.length &&
+      reihenfolge.every(function (v, i) { return v === soll[i]; });
+    if (gleich) return null;
+
+    var zahlVon = function (text) {
+      var m = String(text).match(/[\d]+(?:,[\d]+)?/);
+      return m ? Number(m[0].replace(',', '.')) : 0;
+    };
+    var nachZahl = aufgabe.optionen
+      .map(function (o, i) { return { i: i, z: zahlVon(o.text) }; })
+      .sort(function (a, b) { return a.z - b.z; })
+      .map(function (x) { return x.i; });
+    var wieZahl = reihenfolge.length === nachZahl.length &&
+      reihenfolge.every(function (v, i) { return v === nachZahl[i]; });
+
+    return { code: wieZahl ? 'ORDNEN_ZAHLEN' : 'UNBEKANNT', werte: {
+      reihe: aufgabe.loesungText, aufgabe: aufgabe.aufgabeText, loesung: aufgabe.loesungText
+    } };
   }
 
   function diagnoseFelder(aufgabe, felder) {
@@ -2514,6 +2748,17 @@ button { font-family: inherit; color: inherit; }
       if (treffer) return treffer;
     }
 
+    if (aufgabe.typ === 'gemischtZuKomma' && q && q.teile) {
+      /* 3 km 80 m = 3,080 km – wer „3,8“ schreibt, hat die Null
+         verloren, die den Platz der Zehner freihält. */
+      var ganz = q.teile[0][0], klein = String(q.teile[1][0]);
+      var ohneEndnullen = klein.replace(/0+$/, '') || '0';
+      if (antwort === Number(ganz + '.' + ohneEndnullen) ||
+          antwort === Number(ganz + '.' + klein)) {
+        return { code: 'KOMMA_NULL', werte: { aufgabe: at, loesung: lt } };
+      }
+    }
+
     if (q && q.teile) {
       treffer = erkenneGemischt(q.teile, z.einheit, antwort, at, lt);
       if (treffer) return treffer;
@@ -2525,7 +2770,7 @@ button { font-family: inherit; color: inherit; }
     /* Richtig umgerechnet, beim Rechnen verrutscht. Nur behaupten,
        wenn die Antwort in der Größenordnung der Lösung liegt –
        sonst wäre „du hast richtig umgerechnet“ eine Unterstellung. */
-    if (aufgabe.typ === 'rechnen' &&
+    if ((aufgabe.typ === 'rechnen' || aufgabe.typ === 'sachaufgabe') &&
         String(Math.abs(antwort)).length === String(Math.abs(aufgabe.loesung)).length) {
       return { code: 'RECHENFEHLER', werte: { rechnung: aufgabe.rechenweg || at, loesung: lt } };
     }
@@ -2594,8 +2839,34 @@ button { font-family: inherit; color: inherit; }
       mDm:    { hauptMin: 1, hauptMax: 9, nebenMin: 1, nebenMax: 9 },
       mDmCm:  { hauptMin: 1, hauptMax: 5, mittelMin: 1, mittelMax: 9, nebenMin: 1, nebenMax: 9 }
     },
-    lineal: { maxCm: 15 }
+    lineal: { maxCm: 15 },
+    /* Stufe 4: Kommaschreibweise. Das Komma trennt eine Einheit von
+       der nächstkleineren – nur so, wie es im Unterricht eingeführt
+       wird. ganzMax steigt mit dem Niveau. */
+    stufe4: [
+      { von: 'm',  nach: 'cm', stellen: 2, ganzMax: 9 },
+      { von: 'cm', nach: 'mm', stellen: 1, ganzMax: 9 },
+      { von: 'km', nach: 'm',  stellen: 3, ganzMax: 9 },
+      { von: 'dm', nach: 'cm', stellen: 1, ganzMax: 9, dm: true }
+    ],
+    stufe5: {
+      vergleich: { max: 300 },     /* in cm */
+      ordnen:    { anzahl: 4, max: 200 },
+      rechnen:   { max: 400 },
+      sach:      { max: 500 }
+    }
   };
+
+  /* Läuft es gut, werden die Zahlen etwas größer; nach zwei Fehlern
+     hintereinander wieder kleiner. niveau 0 … 2, 1 ist der Normalfall. */
+  var NIVEAU_FAKTOR = [0.6, 1, 1.45];
+
+  function skaliere(max, niveau, min) {
+    var m = Math.round(max * NIVEAU_FAKTOR[clampNiveau(niveau)]);
+    return Math.max(min === undefined ? 1 : min, m);
+  }
+
+  function clampNiveau(n) { return Math.max(0, Math.min(2, n === undefined ? 1 : n)); }
 
   function normalisiere(opt) {
     opt = opt || {};
@@ -2605,7 +2876,8 @@ button { font-family: inherit; color: inherit; }
       /* Freigegeben, seit die Kommaschreibweise gewünscht ist.
          Im Elternbereich abschaltbar; die Tests prüfen weiterhin,
          dass im gesperrten Zustand nirgends ein Komma auftaucht. */
-      kommaFreigegeben: opt.kommaFreigegeben !== false
+      kommaFreigegeben: opt.kommaFreigegeben !== false,
+      niveau: clampNiveau(opt.niveau)
     };
   }
 
@@ -2867,6 +3139,229 @@ button { font-family: inherit; color: inherit; }
     };
   }
 
+  /* ---------- Stufe 4: Kommaschreibweise ---------- */
+
+  /* 1,45 m = ___ cm. Die Fallen 1,05 (Null nach dem Komma) und 1,5
+     (nur eine Stelle) kommen absichtlich häufiger vor. */
+  function kommaZuEinheit(opt) {
+    var paare = BEREICHE.stufe4.filter(function (p) { return opt.includeDm || !p.dm; });
+    var p = core.waehle(opt.rng, paare);
+    var ganz = core.ganzzahl(opt.rng, 1, skaliere(p.ganzMax, opt.niveau, 2));
+
+    /* Nachkommateil: manchmal mit führender Null, manchmal verkürzt. */
+    var maxNach = Math.pow(10, p.stellen) - 1;
+    var nach = core.ganzzahl(opt.rng, 1, maxNach);
+    var art = core.ganzzahl(opt.rng, 1, 3);
+    if (p.stellen >= 2 && art === 1) nach = core.ganzzahl(opt.rng, 1, 9);                 /* 1,05 */
+    if (p.stellen >= 2 && art === 2) nach = core.ganzzahl(opt.rng, 1, 9) * Math.pow(10, p.stellen - 1); /* 1,50 */
+
+    var text = core.zahlDeutsch(ganz) + ',' + String(nach).padStart(p.stellen, '0');
+    var wert = Number(text.replace(',', '.'));
+    var mm = core.toMm(wert, p.von);
+    var loesung = core.fromMm(mm, p.nach);
+
+    return {
+      stufe: 4, typ: 'komma', id: 'komma-' + p.von + '-' + p.nach,
+      antwortArt: 'zahl',
+      frage: text + ' ' + E[p.von].kurz + ' = ___ ' + E[p.nach].kurz,
+      aufgabeText: text + ' ' + E[p.von].kurz,
+      loesungText: mitEinheit(loesung, p.nach),
+      quelle: { wert: wert, einheit: p.von },
+      ziel: { einheit: p.nach },
+      loesungMm: mm,
+      loesung: loesung,
+      einheitHinweis: E[p.nach].kurz,
+      bild: 'stellenwert'
+    };
+  }
+
+  /* 3 km 80 m = ___ km  →  3,080 */
+  function gemischtZuKomma(opt) {
+    var paare = BEREICHE.stufe4.filter(function (p) { return opt.includeDm || !p.dm; });
+    var p = core.waehle(opt.rng, paare);
+    var ganz = core.ganzzahl(opt.rng, 1, skaliere(p.ganzMax, opt.niveau, 2));
+    var klein = core.ganzzahl(opt.rng, 1, Math.pow(10, p.stellen) - 1);
+    var teile = [[ganz, p.von], [klein, p.nach]];
+    var mm = core.gemischtZuMm(teile);
+    var loesung = core.fromMm(mm, p.von);
+    var text = mitEinheit(ganz, p.von) + ' ' + mitEinheit(klein, p.nach);
+
+    return {
+      stufe: 4, typ: 'gemischtZuKomma', id: 'zuKomma-' + p.von,
+      antwortArt: 'zahl',
+      frage: text + ' = ___ ' + E[p.von].kurz,
+      aufgabeText: text,
+      loesungText: core.formatLaenge(mm, 'komma', { einheit: p.von }),
+      quelle: { teile: teile },
+      ziel: { einheit: p.von },
+      loesungMm: mm,
+      loesung: loesung,
+      einheitHinweis: E[p.von].kurz,
+      kommaNoetig: true,
+      bild: 'stellenwert'
+    };
+  }
+
+  /* ---------- Stufe 5: vergleichen, ordnen, rechnen ---------- */
+
+  /* Zwei Längen in verschiedenen Einheiten – oft mit gleicher
+     Maßzahl-Reihenfolge wie die Längen, manchmal umgekehrt. Genau
+     da trennt sich Rechnen von Raten. */
+  /* Mindestens eine der beiden Längen liegt über einem Meter –
+     sonst stehen beide in Zentimetern da und es gibt nichts
+     umzurechnen. */
+  function zweiLaengen(opt, maxCm) {
+    var a = core.ganzzahl(opt.rng, 100, skaliere(maxCm, opt.niveau, 140));
+    var abstand = core.ganzzahl(opt.rng, 0, 3) === 0 ? 0 : core.ganzzahl(opt.rng, 1, 40);
+    var b = Math.max(40, a + (core.ganzzahl(opt.rng, 0, 1) ? abstand : -abstand));
+    return [core.toMm(a, 'cm'), core.toMm(b, 'cm')];
+  }
+
+  /* Dieselbe Länge mal glatt, mal gemischt, mal als Kommazahl –
+     damit das Umrechnen nicht zu umgehen ist. Die Größenordnung
+     bestimmt, welche Einheiten dabei sinnvoll sind. */
+  function schreibe(opt, mm, skala) {
+    var klein = skala === 'm' ? 'm' : 'cm';
+    var gross = skala === 'm' ? 'km' : 'm';
+    var arten = ['glatt'];
+    var teilbar = mm % core.EINHEITEN[klein].faktor === 0;
+    if (teilbar && mm >= core.EINHEITEN[gross].faktor) arten.push('gemischt');
+    if (opt.kommaFreigegeben && teilbar && mm >= core.EINHEITEN[gross].faktor) arten.push('komma');
+    var art = core.waehle(opt.rng, arten);
+    if (art === 'komma') return core.formatLaenge(mm, 'komma', { einheit: gross });
+    if (art === 'gemischt') return core.formatLaenge(mm, 'gemischt', { einheiten: [gross, klein] });
+    return core.formatLaenge(mm, 'einfach', { einheit: klein });
+  }
+
+  function vergleichen(opt) {
+    var paar = zweiLaengen(opt, BEREICHE.stufe5.vergleich.max);
+    var links = paar[0], rechts = paar[1];
+    var linksText = schreibe(opt, links, 'cm'), rechtsText = schreibe(opt, rechts, 'cm');
+    var zeichen = links < rechts ? '<' : links > rechts ? '>' : '=';
+    var linksZahl = Number(linksText.match(/[\d,]+/)[0].replace(',', '.'));
+    var rechtsZahl = Number(rechtsText.match(/[\d,]+/)[0].replace(',', '.'));
+    var nachZahl = linksZahl < rechtsZahl ? '<' : linksZahl > rechtsZahl ? '>' : '=';
+
+    return {
+      stufe: 5, typ: 'vergleichen', id: 'vergleich',
+      antwortArt: 'auswahl',
+      frage: linksText + '  ○  ' + rechtsText,
+      aufgabeText: linksText + ' und ' + rechtsText,
+      loesungText: linksText + ' ' + zeichen + ' ' + rechtsText,
+      loesungMm: Math.max(links, rechts),
+      quelle: { links: links, rechts: rechts },
+      balken: [{ text: linksText, mm: links }, { text: rechtsText, mm: rechts }],
+      bild: 'balken',
+      optionen: ['<', '=', '>'].map(function (z) {
+        return {
+          text: z,
+          richtig: z === zeichen,
+          fehler: z === nachZahl && nachZahl !== zeichen ? 'EINHEIT_IGNORIERT' : 'UNBEKANNT',
+          werte: {
+            linksOriginal: linksText, rechtsOriginal: rechtsText,
+            linksUm: core.formatLaenge(links, 'einfach', { einheit: 'cm' }),
+            rechtsUm: core.formatLaenge(rechts, 'einfach', { einheit: 'cm' }),
+            zeichen: zeichen
+          }
+        };
+      })
+    };
+  }
+
+  function ordnen(opt) {
+    var b = BEREICHE.stufe5.ordnen;
+    var werte = [], versuche = 0;
+    while (werte.length < b.anzahl && versuche < 200) {
+      versuche++;
+      var mm = core.toMm(core.ganzzahl(opt.rng, 30, skaliere(b.max, opt.niveau, 80)), 'cm');
+      if (werte.indexOf(mm) < 0) werte.push(mm);
+    }
+    var eintraege = core.mische(opt.rng, werte).map(function (mm) {
+      return { mm: mm, text: schreibe(opt, mm, 'cm') };
+    });
+    var sortiert = eintraege.slice().sort(function (x, y) { return x.mm - y.mm; });
+
+    return {
+      stufe: 5, typ: 'ordnen', id: 'ordnen',
+      antwortArt: 'ordnen',
+      frage: 'Tippe die Längen der Reihe nach an, von der kürzesten zur längsten.',
+      aufgabeText: eintraege.map(function (e) { return e.text; }).join(' · '),
+      loesungText: sortiert.map(function (e) { return e.text; }).join(' < '),
+      loesungMm: sortiert[sortiert.length - 1].mm,
+      optionen: eintraege.map(function (e) { return { text: e.text, mm: e.mm }; }),
+      loesungReihenfolge: sortiert.map(function (e) { return eintraege.indexOf(e); }),
+      balken: eintraege,
+      bild: 'balken'
+    };
+  }
+
+  function rechnen(opt) {
+    var max = skaliere(BEREICHE.stufe5.rechnen.max, opt.niveau, 120);
+    var a = core.toMm(core.ganzzahl(opt.rng, 30, max), 'cm');
+    var b = core.toMm(core.ganzzahl(opt.rng, 10, Math.max(20, Math.round(max / 2))), 'cm');
+    var plus = core.ganzzahl(opt.rng, 0, 1) === 1;
+    if (!plus && b > a) { var t = a; a = b; b = t; }
+    /* Ein Ergebnis von 1 cm ist zwar glatt, aber keine Aufgabe. */
+    if (!plus && a - b < core.toMm(10, 'cm')) a = b + core.toMm(core.ganzzahl(opt.rng, 10, 60), 'cm');
+    var mm = plus ? a + b : a - b;
+    var aT = schreibe(opt, a, 'cm'), bT = schreibe(opt, b, 'cm');
+
+    return {
+      stufe: 5, typ: 'rechnen', id: 'rechnen-' + (plus ? 'plus' : 'minus'),
+      antwortArt: 'zahl',
+      frage: aT + (plus ? ' + ' : ' − ') + bT + ' = ___ cm',
+      aufgabeText: aT + (plus ? ' + ' : ' − ') + bT,
+      loesungText: core.formatLaenge(mm, 'einfach', { einheit: 'cm' }),
+      rechenweg: core.formatLaenge(a, 'einfach', { einheit: 'cm' }) + (plus ? ' + ' : ' − ') +
+                 core.formatLaenge(b, 'einfach', { einheit: 'cm' }),
+      quelle: { wert: core.fromMm(a, 'cm'), einheit: 'cm' },
+      ziel: { einheit: 'cm' },
+      loesungMm: mm,
+      loesung: core.fromMm(mm, 'cm'),
+      einheitHinweis: 'cm',
+      bild: null
+    };
+  }
+
+  function sachaufgabe(opt) {
+    var v = core.waehle(opt.rng, texte.SACHAUFGABEN);
+    var namen = core.mische(opt.rng, texte.NAMEN);
+    var einheit = v.skala === 'm' ? 'm' : 'cm';
+    var schritt = v.skala === 'm' ? 10 : 5;   /* glatte Zahlen */
+    var max = skaliere(v.max, opt.niveau, v.min + schritt * 4);
+
+    var gross = core.ganzzahl(opt.rng, Math.ceil(v.min / schritt), Math.floor(max / schritt)) * schritt;
+    var kleinMin = Math.max(1, Math.round(gross * 0.2 / schritt));
+    var kleinMax = Math.max(kleinMin + 1, Math.floor(gross * 0.7 / schritt));
+    var klein = core.ganzzahl(opt.rng, kleinMin, kleinMax) * schritt;
+
+    var grossMm = core.toMm(gross, einheit), kleinMm = core.toMm(klein, einheit);
+    var mm = v.art === 'summe' ? grossMm + kleinMm : grossMm - kleinMm;
+
+    var frage = texte.fuelle(v.text, {
+      n1: namen[0], n2: namen[1],
+      a: schreibe(opt, grossMm, v.skala), b: schreibe(opt, kleinMm, v.skala),
+      einheitLang: E[einheit].name, einheit: E[einheit].kurz
+    });
+
+    return {
+      stufe: 5, typ: 'sachaufgabe', id: 'sach-' + v.skala + '-' + v.art,
+      antwortArt: 'zahl',
+      frage: frage + ' Antworte in ' + E[einheit].name + 'n.',
+      aufgabeText: frage,
+      loesungText: core.formatLaenge(mm, 'einfach', { einheit: einheit }),
+      rechenweg: core.formatLaenge(grossMm, 'einfach', { einheit: einheit }) +
+                 (v.art === 'summe' ? ' + ' : ' − ') +
+                 core.formatLaenge(kleinMm, 'einfach', { einheit: einheit }),
+      quelle: { wert: gross, einheit: einheit },
+      ziel: { einheit: einheit },
+      loesungMm: mm,
+      loesung: core.fromMm(mm, einheit),
+      einheitHinweis: E[einheit].kurz,
+      bild: null
+    };
+  }
+
   /* ---------- Auswahl der Aufgabentypen je Stufe ---------- */
 
   var TYPEN = {
@@ -2888,12 +3383,26 @@ button { font-family: inherit; color: inherit; }
       { name: 'dmCm',  nurDm: true, bau: function (o) { return gemischtZuEinheit(o, { schluessel: 'dmCm', hauptEinheit: 'dm', nebenEinheit: 'cm', zielEinheit: 'cm' }); } },
       { name: 'mDm',   nurDm: true, bau: function (o) { return gemischtZuEinheit(o, { schluessel: 'mDm',  hauptEinheit: 'm',  nebenEinheit: 'dm', zielEinheit: 'dm' }); } },
       { name: 'mDmCm', nurDm: true, bau: dreiEinheiten }
+    ],
+    4: [
+      { name: 'kommaZuEinheit', nurKomma: true, bau: kommaZuEinheit },
+      { name: 'gemischtZuKomma', nurKomma: true, bau: gemischtZuKomma }
+    ],
+    5: [
+      { name: 'vergleichen',  bau: vergleichen },
+      { name: 'ordnen',       bau: ordnen },
+      { name: 'rechnen',      bau: rechnen },
+      { name: 'sachaufgabe',  bau: sachaufgabe }
     ]
   };
 
   function erzeugeAufgabe(stufe, optionen) {
     var opt = normalisiere(optionen);
-    var typen = (TYPEN[stufe] || []).filter(function (t) { return opt.includeDm || !t.nurDm; });
+    var typen = (TYPEN[stufe] || []).filter(function (t) {
+      if (t.nurDm && !opt.includeDm) return false;
+      if (t.nurKomma && !opt.kommaFreigegeben) return false;
+      return true;
+    });
     if (!typen.length) throw new Error('Für Stufe ' + stufe + ' gibt es noch keine Aufgaben');
     return core.waehle(opt.rng, typen).bau(opt);
   }
@@ -2924,6 +3433,7 @@ button { font-family: inherit; color: inherit; }
   return {
     BEREICHE: BEREICHE,
     TYPEN: TYPEN,
+    NIVEAU_FAKTOR: NIVEAU_FAKTOR,
     erzeugeAufgabe: erzeugeAufgabe,
     erzeugeRunde: erzeugeRunde
   };
@@ -3115,13 +3625,47 @@ button { font-family: inherit; color: inherit; }
       teile.join(''));
   }
 
+  /* ---------- Balken ----------
+     Zwei oder mehr Längen maßstäblich untereinander. Erst als Bild
+     wird sichtbar, dass 1,05 m länger ist als 99 cm, auch wenn die
+     Zahl kleiner aussieht. */
+  function balken(eintraege) {
+    var breite = 360, rand = 10, zeile = 34, beschriftung = 96;
+    var maxMm = eintraege.reduce(function (m, e) { return Math.max(m, e.mm); }, 1);
+    var platz = breite - rand * 2 - beschriftung - 6;
+    var hoehe = rand * 2 + eintraege.length * zeile;
+    var teile = [];
+
+    eintraege.forEach(function (e, i) {
+      var y = rand + i * zeile;
+      var laenge = Math.max(3, (e.mm / maxMm) * platz);
+      teile.push(txt(rand + beschriftung - 8, y + 18, e.text,
+        { groesse: 13, anker: 'end', farbe: TINTE }));
+      teile.push('<rect x="' + (rand + beschriftung) + '" y="' + (y + 6) + '" width="' + laenge +
+        '" height="16" rx="8" fill="' + (e.mm === maxMm ? AKZENT : GRUND) +
+        '" stroke="' + (e.mm === maxMm ? AKZENT : LINIE) + '" stroke-width="1.5"/>');
+    });
+
+    return svg(breite, hoehe, 'Die Längen als Balken nebeneinander', teile.join(''));
+  }
+
   /* Wählt das Bild zu einem Fehlertyp. */
   function zumFehler(art, aufgabe) {
     if (art === 'lineal' && aufgabe.quelle && aufgabe.quelle.maxCm) {
       return lineal(aufgabe.quelle.startMm, aufgabe.quelle.endeMm, aufgabe.quelle.maxCm);
     }
+    if (art === 'balken' && aufgabe.balken) {
+      return balken(aufgabe.balken.slice().sort(function (x, y) { return x.mm - y.mm; }));
+    }
     if (art === 'stellenwert') {
-      return stellenwert(aufgabe.loesungMm, {});
+      var opt = {};
+      if (aufgabe.typ === 'komma' && aufgabe.quelle && aufgabe.quelle.einheit) {
+        opt.kommaNach = aufgabe.quelle.einheit === 'm' ? '1 m' : E[aufgabe.quelle.einheit].kurz;
+      }
+      if (aufgabe.typ === 'gemischtZuKomma' && aufgabe.ziel && aufgabe.ziel.einheit) {
+        opt.kommaNach = aufgabe.ziel.einheit === 'm' ? '1 m' : E[aufgabe.ziel.einheit].kurz;
+      }
+      return stellenwert(aufgabe.loesungMm, opt);
     }
     if (art === 'treppe') {
       var von = (aufgabe.quelle && aufgabe.quelle.einheit) ||
@@ -3134,7 +3678,7 @@ button { font-family: inherit; color: inherit; }
     return '';
   }
 
-  return { treppe: treppe, stellenwert: stellenwert, lineal: lineal, zumFehler: zumFehler };
+  return { treppe: treppe, stellenwert: stellenwert, lineal: lineal, balken: balken, zumFehler: zumFehler };
 }));
 
 /* ===== laengen/ui.js ===== */
@@ -3155,20 +3699,38 @@ button { font-family: inherit; color: inherit; }
   var Z = root.Zahlendrache = root.Zahlendrache || {};
   var L = Z.laengen;
   var core = L.core, texte = L.texte, gen = L.generatoren, bilder = L.bilder;
+  var speicher = L.speicher;
   var diagnose = L.diagnose.diagnoseFehler;
   var $ = Z.helfer.$, pick = Z.helfer.pick, clamp = Z.helfer.clamp;
 
   var AUFGABEN_PRO_RUNDE = 10;
+  var FREISCHALTEN_AB = 8;      /* von den letzten 10 richtig */
+  var WIEDERHOLUNG_NACH = [3, 5];
+
+  var stand = speicher.laden();
 
   /* Stufennamen sind vorläufig beschreibend – die Drachennamen
      sucht das Kind später selbst aus. */
   var STUFEN = [
-    { nr: 1, name: 'Einheiten kennen',  kurz: 'Schätzen, zuordnen, Lineal ablesen', bereit: true },
-    { nr: 2, name: 'Umrechnen',         kurz: '3 m = 300 cm',                       bereit: true },
-    { nr: 3, name: 'Gemischte Angaben', kurz: '3 m 45 cm = 345 cm',                 bereit: true },
-    { nr: 4, name: 'Kommaschreibweise', kurz: '1,45 m = 145 cm',                    bereit: false },
-    { nr: 5, name: 'Vergleichen und rechnen', kurz: 'Größer, kleiner, plus, minus', bereit: false }
+    { nr: 1, name: 'Einheiten kennen',  kurz: 'Schätzen, zuordnen, Lineal ablesen' },
+    { nr: 2, name: 'Umrechnen',         kurz: '3 m = 300 cm' },
+    { nr: 3, name: 'Gemischte Angaben', kurz: '3 m 45 cm = 345 cm' },
+    { nr: 4, name: 'Kommaschreibweise', kurz: '1,45 m = 145 cm' },
+    { nr: 5, name: 'Vergleichen und rechnen', kurz: 'Größer, kleiner, plus, minus' }
   ];
+
+  /* Eine Stufe ist offen, wenn sie freigeschaltet wurde. Stufe 4
+     bleibt zu, solange die Kommaschreibweise abgeschaltet ist. */
+  function offen(nr) {
+    if (nr > stand.freigeschaltet) return false;
+    if (nr === 4 && !stand.kommaFreigegeben) return false;
+    return true;
+  }
+
+  function gesperrtWarum(nr) {
+    if (nr === 4 && !stand.kommaFreigegeben) return 'Komma aus';
+    return 'ab Stufe ' + (nr - 1);
+  }
 
   /* ---------- Zustand einer laufenden Runde ---------- */
 
@@ -3180,11 +3742,11 @@ button { font-family: inherit; color: inherit; }
   var istZwilling = false;
   var zwillingZaehler = 0;
 
-  function einstellungen() {
-    var s = (Z.einstellungen && Z.einstellungen()) || {};
+  function einstellungen(nr) {
     return {
-      includeDm: s.includeDm !== false,
-      kommaFreigegeben: s.kommaFreigegeben !== false
+      includeDm: stand.includeDm !== false,
+      kommaFreigegeben: stand.kommaFreigegeben !== false,
+      niveau: speicher.stufenStand(stand, nr).niveau
     };
   }
 
@@ -3202,39 +3764,57 @@ button { font-family: inherit; color: inherit; }
       knopf.type = 'button';
       knopf.className = 'stufe-karte';
       knopf.dataset.stufe = s.nr;
-      if (!s.bereit) knopf.disabled = true;
+      var frei = offen(s.nr);
+      if (!frei) knopf.disabled = true;
+      var st = speicher.stufenStand(stand, s.nr);
+      var quote = st.letzte.length
+        ? st.letzte.filter(function (x) { return x; }).length + ' von ' + st.letzte.length + ' richtig'
+        : '10 Aufgaben';
       knopf.innerHTML =
-        '<span class="stufe-nummer">' + s.nr + '</span>' +
+        '<span class="stufe-nummer">' + (frei ? s.nr : '🔒') + '</span>' +
         '<span class="stufe-text"><strong>' + s.name + '</strong><small>' + s.kurz + '</small></span>' +
-        (s.bereit ? '<span class="stufe-marke">10 Aufgaben</span>'
-                  : '<span class="stufe-marke">kommt bald</span>');
+        '<span class="stufe-marke">' + (frei ? quote : gesperrtWarum(s.nr)) + '</span>';
       liste.appendChild(knopf);
     });
+    var naechste = STUFEN.find(function (s) { return !offen(s.nr); });
+    $('laengen-hinweis-stufen').textContent = naechste
+      ? 'Die nächste Stufe öffnet sich, wenn 8 der letzten 10 Aufgaben richtig waren.'
+      : 'Alle Stufen sind offen. Wiederholen ist ausdrücklich erlaubt.';
     Z.helfer.zeigeBildschirm('screen-laengen-menue');
   }
 
   /* ---------- Runde ---------- */
 
   function starteRunde(nr) {
-    var opt = einstellungen();
+    var opt = einstellungen(nr);
     opt.rng = core.zufall();
     runde = {
       stufe: nr,
-      aufgaben: gen.erzeugeRunde(nr, AUFGABEN_PRO_RUNDE, opt),
+      ziel: AUFGABEN_PRO_RUNDE,
       index: 0,
       richtig: 0,
       serie: 0,
       besteSerie: 0,
+      fehlerInFolge: 0,
       sterne: 0,
       falsche: [],
+      letzterTyp: null,
+      /* Was in einer früheren Runde schiefging, steht hier und wird
+         gleich zu Beginn noch einmal gestellt. */
+      wiederholung: stand.wiederholung
+        .filter(function (w) { return w.stufe === nr; })
+        .slice(0, 3)
+        .map(function (w) { return { id: w.id, faellig: 0 }; }),
       opt: opt
     };
+    stand.wiederholung = stand.wiederholung.filter(function (w) { return w.stufe !== nr; });
     /* Der Drache wird vom 1x1-Spiel geborgt, statt ihn zweimal zu zeichnen. */
     var quelle = $('mascot');
     if (quelle && !$('laengen-drache').firstChild) {
       $('laengen-drache').innerHTML = quelle.innerHTML;
     }
     $('laengen-stufe-label').textContent = 'Stufe ' + nr + ' · ' + STUFEN[nr - 1].name;
+    stand.runden++;
     Z.helfer.zeigeBildschirm('screen-laengen-spiel');
     naechsteAufgabe();
   }
@@ -3242,8 +3822,35 @@ button { font-family: inherit; color: inherit; }
   function naechsteAufgabe() {
     istZwilling = false;
     zwillingZaehler = 0;
-    if (runde.index >= runde.aufgaben.length) { endeRunde(); return; }
-    zeigeAufgabe(runde.aufgaben[runde.index]);
+    if (runde.index >= runde.ziel) { endeRunde(); return; }
+
+    /* Steht eine Wiederholung an, hat sie Vorrang. */
+    var faellig = runde.wiederholung.filter(function (w) { return w.faellig <= runde.index; });
+    if (faellig.length) {
+      var w = faellig[0];
+      runde.wiederholung.splice(runde.wiederholung.indexOf(w), 1);
+      var wieder = mitId(runde.stufe, w.id);
+      if (wieder) { runde.letzterTyp = wieder.typ; zeigeAufgabe(wieder); return; }
+    }
+
+    /* Sonst eine neue, aber nicht zweimal derselbe Typ am Stück. */
+    var a = null;
+    var mehrere = gen.TYPEN[runde.stufe].length > 1;
+    for (var i = 0; i < 25; i++) {
+      a = gen.erzeugeAufgabe(runde.stufe, runde.opt);
+      if (!mehrere || a.typ !== runde.letzterTyp) break;
+    }
+    runde.letzterTyp = a.typ;
+    zeigeAufgabe(a);
+  }
+
+  /* Erzeugt so lange, bis eine Aufgabe derselben Art herauskommt. */
+  function mitId(stufe, id) {
+    for (var i = 0; i < 80; i++) {
+      var a = gen.erzeugeAufgabe(stufe, runde.opt);
+      if (a.id === id) return a;
+    }
+    return null;
   }
 
   /* Eine sehr ähnliche Aufgabe: gleicher Typ, gleiche Einheiten,
@@ -3256,9 +3863,33 @@ button { font-family: inherit; color: inherit; }
     return gen.erzeugeAufgabe(vorlage.stufe, runde.opt);
   }
 
+  /* ---------- Fortschritt festhalten ---------- */
+
+  function merke(richtigBeantwortet, code) {
+    var st = speicher.stufenStand(stand, runde.stufe);
+    st.gespielt++;
+    if (richtigBeantwortet) st.richtig++;
+    st.letzte.push(richtigBeantwortet ? 1 : 0);
+    while (st.letzte.length > 10) st.letzte.shift();
+    if (code) stand.fehlerTypen[code] = (stand.fehlerTypen[code] || 0) + 1;
+    speicher.sichern(stand);
+  }
+
+  function pruefeFreischaltung() {
+    var st = speicher.stufenStand(stand, runde.stufe);
+    var richtige = st.letzte.filter(function (x) { return x; }).length;
+    if (st.letzte.length >= 10 && richtige >= FREISCHALTEN_AB &&
+        stand.freigeschaltet === runde.stufe && runde.stufe < STUFEN.length) {
+      stand.freigeschaltet = runde.stufe + 1;
+      return STUFEN[runde.stufe];
+    }
+    return null;
+  }
+
   function zeigeAufgabe(a) {
     aufgabe = a;
     felder = a.antwortArt === 'zweiZahlen' ? ['', ''] : [''];
+    reihenfolge = [];
     aktivesFeld = 0;
     phase = 'frage';
 
@@ -3274,10 +3905,12 @@ button { font-family: inherit; color: inherit; }
   }
 
   function fortschritt() {
-    var p = clamp((runde.index / runde.aufgaben.length) * 100, 0, 100);
+    var p = clamp((runde.index / runde.ziel) * 100, 0, 100);
     $('laengen-fortschritt').style.width = p + '%';
     $('laengen-fortschritt').parentElement.setAttribute('aria-valuenow', Math.round(p));
   }
+
+  function fortschrittNenner() { return runde.ziel; }
 
   function serieAnzeigen() {
     $('laengen-serie-zahl').textContent = runde.serie;
@@ -3298,6 +3931,14 @@ button { font-family: inherit; color: inherit; }
     var bereich = $('laengen-antwort');
     var brauchtPad = aufgabe.antwortArt !== 'auswahl';
     $('laengen-pad-wrap').hidden = !brauchtPad;
+
+    if (aufgabe.antwortArt === 'ordnen') {
+      bereich.innerHTML = '<div class="wahl-liste">' + aufgabe.optionen.map(function (o, i) {
+        return '<button type="button" class="wahl wahl-ordnen" data-wahl="' + i + '">' +
+          '<span class="ordnung" aria-hidden="true"></span>' + o.text + '</button>';
+      }).join('') + '</div>';
+      return;
+    }
 
     if (aufgabe.antwortArt === 'auswahl') {
       bereich.innerHTML = '<div class="wahl-liste' +
@@ -3374,10 +4015,25 @@ button { font-family: inherit; color: inherit; }
     auswerten(aufgabe.antwortArt === 'zweiZahlen' ? werte : werte[0]);
   }
 
+  var reihenfolge = [];
+
   function waehle(index) {
     if (!runde || phase !== 'frage') return;
+
+    if (aufgabe.antwortArt === 'ordnen') {
+      if (reihenfolge.indexOf(index) >= 0) return;
+      reihenfolge.push(index);
+      var knopf = $('laengen-antwort').querySelector('.wahl[data-wahl="' + index + '"]');
+      knopf.classList.add('is-gewaehlt');
+      knopf.querySelector('.ordnung').textContent = reihenfolge.length;
+      knopf.setAttribute('aria-label', o(index) + ', Platz ' + reihenfolge.length);
+      if (reihenfolge.length === aufgabe.optionen.length) auswerten(reihenfolge.slice());
+      return;
+    }
     auswerten(index);
   }
+
+  function o(i) { return aufgabe.optionen[i].text; }
 
   /* ---------- Auswerten ---------- */
 
@@ -3395,6 +4051,7 @@ button { font-family: inherit; color: inherit; }
     runde.sterne += punkte;
     if (!istZwilling) { runde.richtig++; runde.index++; }
 
+    if (!istZwilling) { merke(true, null); runde.fehlerInFolge = 0; }
     markiere(antwort, true);
     stimmung('happy');
     Z.effekte.SOUND.right(runde.serie);
@@ -3427,7 +4084,21 @@ button { font-family: inherit; color: inherit; }
     serieAnzeigen();
     if (!istZwilling) {
       runde.index++;
-      runde.falsche.push({ frage: aufgabe.frage, loesung: aufgabe.loesungText, code: fehler.code });
+      runde.falsche.push({ frage: aufgabe.frage, loesung: aufgabe.loesungText,
+                           code: fehler.code, id: aufgabe.id });
+      merke(false, fehler.code);
+      runde.fehlerInFolge++;
+      /* Zwei Fehler hintereinander: kleinere Zahlen, sofort. */
+      if (runde.fehlerInFolge >= 2) {
+        var st = speicher.stufenStand(stand, runde.stufe);
+        st.niveau = Math.max(0, st.niveau - 1);
+        runde.opt.niveau = st.niveau;
+        runde.fehlerInFolge = 0;
+      }
+      /* Dieselbe Art Aufgabe kommt nach ein paar anderen wieder. */
+      var abstand = WIEDERHOLUNG_NACH[0] +
+        Math.floor(Math.random() * (WIEDERHOLUNG_NACH[1] - WIEDERHOLUNG_NACH[0] + 1));
+      runde.wiederholung.push({ id: aufgabe.id, faellig: runde.index + abstand });
     }
     fortschritt();
 
@@ -3464,7 +4135,16 @@ button { font-family: inherit; color: inherit; }
     return w;
   }
 
+  /* Lässt sich das Bild zum Fehlertyp nicht zeichnen – etwa eine
+     Treppe, wenn gar nicht zwischen Einheiten gewechselt wird –,
+     greift das Bild, das die Aufgabe selbst vorschlägt. */
   function bildZu(art, fehler, antwort) {
+    var b = zeichne(art, fehler, antwort);
+    if (!b && aufgabe.bild && aufgabe.bild !== art) b = zeichne(aufgabe.bild, fehler, antwort);
+    return b;
+  }
+
+  function zeichne(art, fehler, antwort) {
     if (fehler.code === 'GROESSENVORSTELLUNG' && aufgabe.richtigeEinheit) {
       var gewaehlt = aufgabe.optionen[antwort];
       if (gewaehlt && gewaehlt.einheit && gewaehlt.einheit !== aufgabe.richtigeEinheit) {
@@ -3483,6 +4163,14 @@ button { font-family: inherit; color: inherit; }
   }
 
   function markiere(antwort, stimmt) {
+    if (aufgabe.antwortArt === 'ordnen') {
+      var alle = $('laengen-antwort').querySelectorAll('.wahl');
+      for (var k = 0; k < alle.length; k++) {
+        alle[k].disabled = true;
+        alle[k].classList.add(stimmt ? 'is-richtig' : 'is-falsch');
+      }
+      return;
+    }
     if (aufgabe.antwortArt === 'auswahl') {
       var knoepfe = $('laengen-antwort').querySelectorAll('.wahl');
       for (var i = 0; i < knoepfe.length; i++) {
@@ -3515,16 +4203,34 @@ button { font-family: inherit; color: inherit; }
   function endeRunde() {
     var r = runde;
     phase = 'warten';
+
+    /* Was schiefging, kommt in einer späteren Runde wieder. */
+    r.falsche.forEach(function (f) {
+      if (!stand.wiederholung.some(function (w) { return w.id === f.id && w.stufe === r.stufe; })) {
+        stand.wiederholung.push({ id: f.id, stufe: r.stufe });
+      }
+    });
+    while (stand.wiederholung.length > 12) stand.wiederholung.shift();
+
+    /* Lief es gut, werden die Zahlen in dieser Stufe etwas größer. */
+    var st = speicher.stufenStand(stand, r.stufe);
+    if (r.richtig >= 8) st.niveau = Math.min(2, st.niveau + 1);
+    stand.sterne += r.sterne;
+    var neueStufe = pruefeFreischaltung();
+    speicher.sichern(stand);
     $('laengen-erg-stufe').textContent = 'Stufe ' + r.stufe + ' · ' + STUFEN[r.stufe - 1].name;
     $('laengen-erg-titel').textContent = r.falsche.length === 0 ? 'Fehlerfrei! Wahnsinn!' :
-      r.richtig >= r.aufgaben.length * 0.7 ? 'Stark gemacht!' : 'Gut geübt!';
+      r.richtig >= r.ziel * 0.7 ? 'Stark gemacht!' : 'Gut geübt!';
     $('laengen-erg-sterne').textContent = r.sterne;
     $('laengen-erg-richtig').textContent = r.richtig;
-    $('laengen-erg-gesamt').textContent = r.aufgaben.length;
+    $('laengen-erg-gesamt').textContent = r.ziel;
     $('laengen-erg-serie').textContent = r.besteSerie;
 
     var rueck = $('laengen-erg-rueckblick');
-    if (r.falsche.length) {
+    if (neueStufe) {
+      rueck.innerHTML = '<strong>Stufe ' + neueStufe.nr + ' ist jetzt offen: ' +
+        neueStufe.name + '!</strong>';
+    } else if (r.falsche.length) {
       rueck.innerHTML = 'Das üben wir weiter: ' +
         r.falsche.map(function (f) { return '<b>' + f.loesung + '</b>'; }).join(', ');
     } else {
@@ -3561,6 +4267,17 @@ button { font-family: inherit; color: inherit; }
     if (b) taste(b.dataset.key);
   });
 
+  var elternBereich = $('laengen-eltern');
+  if (elternBereich) {
+    elternBereich.addEventListener('click', function (e) {
+      var s = e.target.closest('.schalter');
+      if (!s) return;
+      var name = s.dataset.schalter;
+      L.ui.setzeSchalter(name, s.getAttribute('aria-pressed') !== 'true');
+      renderEltern();
+    });
+  }
+
   $('btn-laengen-heim').addEventListener('click', function () { Z.zeigeStartbildschirm(); });
   $('btn-laengen-quit').addEventListener('click', function () { runde = null; zeigeStufen(); });
   $('btn-laengen-stufen').addEventListener('click', zeigeStufen);
@@ -3575,7 +4292,7 @@ button { font-family: inherit; color: inherit; }
       else if (e.key === 'Escape') { runde = null; zeigeStufen(); }
       return;
     }
-    if (aufgabe && aufgabe.antwortArt === 'auswahl') {
+    if (aufgabe && (aufgabe.antwortArt === 'auswahl' || aufgabe.antwortArt === 'ordnen')) {
       var n = parseInt(e.key, 10);
       if (n >= 1 && n <= aufgabe.optionen.length) { waehle(n - 1); e.preventDefault(); }
       else if (e.key === 'Escape') { runde = null; zeigeStufen(); }
@@ -3590,7 +4307,98 @@ button { font-family: inherit; color: inherit; }
     } else if (e.key === 'Escape') { runde = null; zeigeStufen(); }
   });
 
-  L.ui = { start: start, STUFEN: STUFEN };
+  /* ---------- Elternbereich ----------
+     Zwei Schalter und die Frage, an der es wirklich hakt. Welcher
+     Denkfehler wie oft vorkam, sagt mehr als eine Punktzahl. */
+
+  function renderEltern() {
+    var ziel = $('laengen-eltern');
+    if (!ziel) return;
+
+    var gespielt = 0, richtig = 0;
+    Object.keys(stand.stufen).forEach(function (k) {
+      gespielt += stand.stufen[k].gespielt;
+      richtig += stand.stufen[k].richtig;
+    });
+    var quote = gespielt ? Math.round((richtig / gespielt) * 100) : 0;
+
+    var stufenZeilen = STUFEN.map(function (s) {
+      var st = speicher.stufenStand(stand, s.nr);
+      var zustand = !offen(s.nr) ? 'noch zu'
+        : st.gespielt === 0 ? 'noch nicht geübt'
+        : st.richtig + ' von ' + st.gespielt + ' richtig · Zahlenraum ' +
+          ['klein', 'normal', 'groß'][st.niveau];
+      return '<div class="fehler-zeile"><span>Stufe ' + s.nr + ' – ' + s.name +
+        '</span><b>' + zustand + '</b></div>';
+    }).join('');
+
+    var typen = Object.keys(stand.fehlerTypen)
+      .map(function (k) { return { code: k, n: stand.fehlerTypen[k] }; })
+      .sort(function (a, b) { return b.n - a.n; });
+    var hoechste = typen.length ? typen[0].n : 1;
+    var fehlerZeilen = typen.length
+      ? typen.map(function (f) {
+          return '<div class="fehler-zeile"><span>' + (FEHLER_KLARTEXT[f.code] || f.code) +
+            '</span><b>' + f.n + '×</b>' +
+            '<span class="balkenspur"><i style="width:' +
+            Math.round((f.n / hoechste) * 100) + '%"></i></span></div>';
+        }).join('')
+      : '<p class="lead">Noch keine Fehler aufgezeichnet.</p>';
+
+    ziel.innerHTML =
+      '<div class="schalter-liste">' +
+        schalter('includeDm', 'Dezimeter üben',
+          'Aus, wenn die Klasse ohne dm arbeitet.') +
+        schalter('kommaFreigegeben', 'Kommaschreibweise',
+          'Aus, solange das Thema im Unterricht noch nicht dran war. Stufe 4 bleibt dann zu.') +
+      '</div>' +
+      '<div class="stats" style="margin-top:12px">' +
+        '<div class="stat"><strong>' + quote + ' %</strong><span>richtig beantwortet</span>' +
+          '<span class="detail">' + richtig + ' von ' + gespielt + '</span></div>' +
+        '<div class="stat"><strong>' + stand.runden + '</strong><span>Längen-Runden</span></div>' +
+        '<div class="stat"><strong>' + stand.freigeschaltet + ' / 5</strong><span>Stufen offen</span></div>' +
+      '</div>' +
+      '<div class="fehler-liste">' + stufenZeilen + '</div>' +
+      '<h2 class="section-title">Woran es hakt</h2>' +
+      '<div class="fehler-liste">' + fehlerZeilen + '</div>';
+  }
+
+  var FEHLER_KLARTEXT = {
+    FAKTOR: 'Falsche Umrechnungszahl',
+    RICHTUNG: 'Mal statt geteilt (oder umgekehrt)',
+    NULL_VERGESSEN: 'Null bei gemischten Angaben vergessen',
+    KOMMA_ALS_TRENNER: 'Komma als Trennzeichen gelesen',
+    KOMMA_NULL: 'Null nach dem Komma übersehen',
+    EINHEIT_IGNORIERT: 'Nur die Zahlen verglichen',
+    ORDNEN_ZAHLEN: 'Nach der Zahl statt nach der Länge geordnet',
+    LINEAL_START: 'Am Lineal nicht ab null gemessen',
+    GROESSENVORSTELLUNG: 'Einheit passt nicht zur Größe',
+    RECHENFEHLER: 'Richtig umgerechnet, falsch gerechnet',
+    UNBEKANNT: 'Kein Muster erkennbar'
+  };
+
+  function schalter(name, titel, erklaerung) {
+    var an = stand[name] !== false;
+    return '<button type="button" class="schalter" data-schalter="' + name + '" ' +
+      'aria-pressed="' + an + '">' +
+      '<span class="txt"><strong>' + titel + '</strong><small>' + erklaerung + '</small></span>' +
+      '<span class="knebel" aria-hidden="true"></span></button>';
+  }
+
+  /* Der Elternbereich fragt hier nach Zahlen und stellt die
+     beiden Schalter. */
+  L.ui = {
+    start: start,
+    STUFEN: STUFEN,
+    renderEltern: renderEltern,
+    stand: function () { return stand; },
+    setzeSchalter: function (name, wert) {
+      stand[name] = !!wert;
+      if (name === 'kommaFreigegeben' && !wert && stand.freigeschaltet === 4) stand.freigeschaltet = 3;
+      speicher.sichern(stand);
+    },
+    zuruecksetzen: function () { stand = speicher.zuruecksetzen(); }
+  };
 }(typeof globalThis !== 'undefined' ? globalThis : this));
 
 /* ===== app.js ===== */
@@ -4944,7 +5752,11 @@ button { font-family: inherit; color: inherit; }
     var item = e.target.closest('.news-item.is-action');
     if (item) applyLevel(item.dataset.level);
   });
-  $('btn-parents').addEventListener('click', function () { renderParents(); show('parents'); });
+  $('btn-parents').addEventListener('click', function () {
+    renderParents();
+    if (Z.laengen && Z.laengen.ui && Z.laengen.ui.renderEltern) Z.laengen.ui.renderEltern();
+    show('parents');
+  });
   $('btn-back').addEventListener('click', function () { renderHome(); show('home'); });
 
   $('btn-sound').addEventListener('click', function () {
@@ -4957,9 +5769,11 @@ button { font-family: inherit; color: inherit; }
   });
 
   $('btn-reset').addEventListener('click', function () {
-    if (!window.confirm('Wirklich den gesamten Fortschritt löschen? Sterne, Abzeichen und beide Karteikästen sind dann weg.')) return;
+    if (!window.confirm('Wirklich den gesamten Fortschritt löschen? Sterne, Abzeichen, beide Karteikästen und der Längen-Fortschritt sind dann weg.')) return;
     state = JSON.parse(JSON.stringify(DEFAULT_STATE));
     Z.effekte.ton(state.sound);
+    /* Das Längen-Modul speichert eigenständig – mit zurücksetzen. */
+    if (Z.laengen && Z.laengen.ui && Z.laengen.ui.zuruecksetzen) Z.laengen.ui.zuruecksetzen();
     save();
     renderParents();
     renderHome();
