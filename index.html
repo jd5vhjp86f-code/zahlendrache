@@ -1295,6 +1295,20 @@ button { font-family: inherit; color: inherit; }
 .fehler-zeile .balkenspur i { display: block; height: 100%; background: var(--laenge); border-radius: 99px; }
 .fehler-zeile b { font-variant-numeric: tabular-nums; color: var(--ink-soft); font-weight: 800; }
 
+/* Bild, das zur Aufgabe selbst gehört – ohne das Lineal lässt sich
+   „Wie lang ist die Strecke?“ nicht beantworten. */
+.laengen-frage-bild { width: 100%; display: flex; justify-content: center; }
+.laengen-frage-bild:empty { display: none; }
+.laengen-frage-bild svg {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+  background: var(--surface);
+  border-radius: var(--r-2);
+  padding: 6px;
+  box-shadow: var(--shadow-soft);
+}
+
 </style>
 </head>
 <body>
@@ -1572,6 +1586,7 @@ button { font-family: inherit; color: inherit; }
       <div class="mascot" id="laengen-drache" data-mood="idle"></div>
       <p class="round-label" id="laengen-stufe-label">Längen</p>
       <p class="laengen-frage" id="laengen-frage"></p>
+      <div class="laengen-frage-bild" id="laengen-frage-bild"></div>
       <div class="laengen-antwort" id="laengen-antwort"></div>
       <p class="feedback" id="laengen-feedback" role="status" aria-live="polite">&nbsp;</p>
       <div class="helper laengen-hilfe" id="laengen-hilfe" role="status" aria-live="polite" hidden>
@@ -3004,7 +3019,10 @@ button { font-family: inherit; color: inherit; }
 
   /* Lineal ablesen; ab Variante „verschoben“ beginnt die Strecke nicht bei 0. */
   function linealAblesen(opt) {
-    var genau = core.ganzzahl(opt.rng, 1, 3) === 1 ? 'mm' : 'cm';
+    /* Erst ganze Zentimeter ablesen. Millimeter kommen dazu, wenn
+       die Stufe sicher läuft – so steht es im Plan: „Eingabe in cm,
+       später cm und mm". */
+    var genau = opt.niveau >= 1 && core.ganzzahl(opt.rng, 1, 3) === 1 ? 'mm' : 'cm';
     var verschoben = core.ganzzahl(opt.rng, 1, 2) === 1;
     var maxCm = BEREICHE.lineal.maxCm;
 
@@ -3030,6 +3048,9 @@ button { font-family: inherit; color: inherit; }
       loesungMm: laengeMm,
       loesung: loesung,
       einheitHinweis: E[einheit].kurz,
+      /* Ohne das Lineal ist die Frage nicht zu beantworten – es
+         gehört zur Aufgabe, nicht erst zur Erklärung. */
+      frageBild: 'lineal',
       bild: 'lineal'
     };
   }
@@ -3591,11 +3612,13 @@ button { font-family: inherit; color: inherit; }
      Mit der Strecke darauf. Beginnt sie nicht bei null, zeigt ein
      zweiter Marker, wo abgelesen werden muss. */
   function lineal(startMm, endeMm, maxCm) {
-    var breite = 360, rand = 14, hoehe = 104;
+    /* Höhe knapp am Inhalt: oben die Strecke samt Beschriftung,
+       unten die Zahlen. Vorher blieb darunter viel Weißraum. */
+    var breite = 360, rand = 14, hoehe = 72;
     var nutz = breite - rand * 2;
     var proMm = nutz / (maxCm * 10);
     var x = function (mm) { return rand + mm * proMm; };
-    var oben = 30, tief = 34;
+    var oben = 30, tief = 32;
     var teile = [];
 
     teile.push('<rect x="' + rand + '" y="' + oben + '" width="' + nutz + '" height="' + tief +
@@ -3620,9 +3643,12 @@ button { font-family: inherit; color: inherit; }
       teile.push(txt(x(startMm), oben - 24, 'Anfang', { groesse: 10, dick: 800, farbe: AKZENT }));
     }
 
-    return svg(breite, hoehe, 'Lineal mit einer Strecke von ' +
-      core.fromMm(startMm, 'cm') + ' bis ' + core.fromMm(endeMm, 'cm') + ' Zentimeter',
-      teile.join(''));
+    /* Nicht roh zusammenstückeln: fromMm liefert 8.8, und das ist
+       weder deutsch geschrieben noch erlaubt, solange das Komma im
+       Unterricht nicht dran war. */
+    var spanne = core.formatLaenge(startMm, 'gemischt', { einheiten: ['cm', 'mm'] }) +
+                 ' bis ' + core.formatLaenge(endeMm, 'gemischt', { einheiten: ['cm', 'mm'] });
+    return svg(breite, hoehe, 'Lineal mit einer Strecke von ' + spanne, teile.join(''));
   }
 
   /* ---------- Balken ----------
@@ -3894,7 +3920,15 @@ button { font-family: inherit; color: inherit; }
     phase = 'frage';
 
     $('laengen-frage').textContent = a.frage;
+    /* Bilder, ohne die die Aufgabe nicht lösbar wäre, stehen bei
+       der Frage. Balken beim Vergleichen gehören NICHT dazu – die
+       würden die Antwort verraten. */
+    $('laengen-frage-bild').innerHTML = a.frageBild ? bilder.zumFehler(a.frageBild, a) : '';
     $('laengen-hilfe').hidden = true;
+    /* Reste der vorigen Erklärung wegräumen, nicht nur verstecken. */
+    $('laengen-bild').innerHTML = '';
+    $('laengen-hinweis').innerHTML = '';
+    $('laengen-loesung').textContent = '';
     $('laengen-weiter-bereich').innerHTML = '';
     $('laengen-feedback').textContent = istZwilling ? 'Jetzt du – dieselbe Art Aufgabe.' : ' ';
     $('laengen-feedback').className = 'feedback';
@@ -4141,6 +4175,10 @@ button { font-family: inherit; color: inherit; }
   function bildZu(art, fehler, antwort) {
     var b = zeichne(art, fehler, antwort);
     if (!b && aufgabe.bild && aufgabe.bild !== art) b = zeichne(aufgabe.bild, fehler, antwort);
+    /* Steht dasselbe Bild schon bei der Frage, nicht doppelt zeigen. */
+    if (b && aufgabe.frageBild && $('laengen-frage-bild').innerHTML) {
+      if (b === $('laengen-frage-bild').innerHTML) return '';
+    }
     return b;
   }
 
