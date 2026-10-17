@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Zahlendrache 1x1</title>
+<meta name="theme-color" content="#f26430">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
 /* ============================================================
    Schriften, selbst gehostet – keine Anfrage an Dritte.
@@ -5865,6 +5869,12 @@ button { font-family: inherit; color: inherit; }
 
 </script>
 <script src="lernsync.js"></script>
+<script>
+/* Installierbar und offline nutzbar: Service Worker nur über HTTPS (oder localhost). */
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  navigator.serviceWorker.register('sw.js').catch(function () { /* dann eben ohne */ });
+}
+</script>
 <script>
 /* ===== profile/sync.js ===== */
 /* =============================================================
