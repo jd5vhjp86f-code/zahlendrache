@@ -2245,6 +2245,7 @@ button { font-family: inherit; color: inherit; }
 
   function sichern(stand) {
     try { localStorage.setItem(SCHLUESSEL, JSON.stringify(stand)); } catch (e) {}
+    if (typeof window !== 'undefined' && window.ZDSync) window.ZDSync.geaendert();
   }
 
   function zuruecksetzen() {
@@ -4531,6 +4532,7 @@ button { font-family: inherit; color: inherit; }
 
   function save() {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+    if (window.ZDSync) window.ZDSync.geaendert();
   }
 
   /* ---------- Aufgaben ---------- */
@@ -5861,6 +5863,275 @@ button { font-family: inherit; color: inherit; }
   }
 })();
 
+</script>
+<script src="lernsync.js"></script>
+<script>
+/* ===== profile/sync.js ===== */
+/* =============================================================
+   Zahlendrache – Profile und Abgleich zwischen Geräten
+
+   Jedes Kind hat ein Profil. Der Fortschritt (1x1 und Längen)
+   liegt wie bisher im localStorage; dieses Modul tauscht beim
+   Profilwechsel nur die beiden Schlüssel aus und gleicht sie über
+   den eigenen LernSync-Server ab, sobald auf dem Gerät einmal der
+   Familien-Code eingegeben wurde. Ohne Code oder ohne Netz läuft
+   alles wie bisher, nur eben nur auf diesem Gerät.
+   ============================================================= */
+(function () {
+  'use strict';
+  if (typeof LernSync !== 'function') return;
+
+  var KEYS = ['zahlendrache.v1', 'zahlendrache.laengen.v1'];
+  var AKTIV = 'zahlendrache.profil';
+  var NAME_RE = /^[a-z0-9äöüß][a-z0-9äöüß_-]{0,31}$/;
+
+  var sync = LernSync({ app: 'zahlendrache', onStatus: zeigeStatus });
+
+  function ls(fn) { try { return fn(); } catch (e) { return null; } }
+  function aktiv() { return ls(function () { return localStorage.getItem(AKTIV); }) || ''; }
+  function lese() {
+    var d = {};
+    KEYS.forEach(function (k) { d[k] = ls(function () { return localStorage.getItem(k); }); });
+    return d;
+  }
+  function schreibe(d) {
+    KEYS.forEach(function (k) {
+      ls(function () {
+        if (d && typeof d[k] === 'string') localStorage.setItem(k, d[k]);
+        else localStorage.removeItem(k);
+      });
+    });
+  }
+  function gleich(a, b) {
+    return KEYS.every(function (k) { return (a && a[k] || null) === (b && b[k] || null); });
+  }
+  function anzeige(p) { return p ? p.charAt(0).toUpperCase() + p.slice(1) : ''; }
+  function neuLaden() {
+    ls(function () { sessionStorage.setItem('zahlendrache.gewaehlt', '1'); });
+    location.reload();
+  }
+
+  /* ---------- Oberfläche ---------- */
+  var css = document.createElement('style');
+  css.textContent =
+    '.topbar-actions{display:flex;gap:8px;align-items:center}' +
+    '#btn-profil{position:relative;font-family:"Baloo 2",system-ui;font-weight:800;color:var(--ink)}' +
+    '#btn-profil .dot{position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;border:2px solid var(--surface);background:var(--line)}' +
+    '#btn-profil .dot[data-s="ok"]{background:var(--good)}#btn-profil .dot[data-s="offline"]{background:var(--warn)}#btn-profil .dot[data-s="code-falsch"]{background:var(--accent)}' +
+    '#profil-dialog{border:0;border-radius:var(--r-2);padding:20px;max-width:min(420px,calc(100vw - 32px));width:100%;background:var(--surface);color:var(--ink);box-shadow:0 12px 40px rgba(0,0,0,.25)}' +
+    '#profil-dialog::backdrop{background:rgba(10,25,32,.45)}' +
+    '#profil-dialog h2{margin:0 0 12px;font-size:1.4rem}' +
+    '.profil-liste{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:10px;margin-bottom:14px}' +
+    '.profil-liste .btn{font-family:"Baloo 2",system-ui;font-weight:800;min-height:56px}' +
+    '.profil-liste .btn[aria-current="true"]{border-color:var(--accent);box-shadow:0 3px 0 var(--accent-deep)}' +
+    '.profil-zeile{display:flex;gap:8px;margin:8px 0}' +
+    '.profil-zeile input{flex:1;min-width:0;font:inherit;font-size:1.05rem;padding:10px 12px;border:2px solid var(--line);border-radius:12px;background:var(--surface);color:var(--ink)}' +
+    '.profil-zeile .btn{font-size:1rem;padding:10px 14px}' +
+    '.profil-hinweis{font-size:.85rem;color:var(--ink-soft);margin:4px 0 0;min-height:1.2em}' +
+    '.profil-eltern{margin-top:16px;border-top:2px solid var(--line);padding-top:12px}' +
+    '.profil-eltern summary{cursor:pointer;color:var(--ink-soft);font-weight:700;font-size:.92rem}' +
+    '.profil-schliessen{margin-top:14px;width:100%}';
+  document.head.appendChild(css);
+
+  var soundBtn = document.getElementById('btn-sound');
+  var knopf = document.createElement('button');
+  knopf.className = 'icon-btn';
+  knopf.id = 'btn-profil';
+  knopf.type = 'button';
+  knopf.title = 'Wer spielt?';
+  knopf.innerHTML = '<span class="name"></span><span class="dot" aria-hidden="true"></span>';
+  if (soundBtn && soundBtn.parentNode) {
+    var gruppe = document.createElement('div');
+    gruppe.className = 'topbar-actions';
+    soundBtn.parentNode.insertBefore(gruppe, soundBtn);
+    gruppe.appendChild(knopf);
+    gruppe.appendChild(soundBtn);
+  }
+
+  /* Auf dem Stufenwahl-Bildschirm (neues Profil) gibt es keine Kopfleiste –
+     dort ein eigener kleiner Link zum Wechseln. */
+  var welcome = document.querySelector('#screen-welcome .welcome');
+  var wLink = document.createElement('button');
+  wLink.type = 'button';
+  wLink.className = 'link-btn';
+  wLink.id = 'profil-welcome';
+  wLink.hidden = true;
+  if (welcome) welcome.appendChild(wLink);
+
+  var dlg = document.createElement('dialog');
+  dlg.id = 'profil-dialog';
+  dlg.innerHTML =
+    '<h2>Wer spielt?</h2>' +
+    '<div class="profil-liste" id="profil-liste"></div>' +
+    '<form class="profil-zeile" id="profil-neu-form">' +
+      '<input id="profil-neu" type="text" maxlength="32" autocomplete="off" placeholder="Neuer Name" aria-label="Name für neues Profil">' +
+      '<button class="btn btn-primary" type="submit">Neu</button>' +
+    '</form>' +
+    '<p class="profil-hinweis" id="profil-hinweis"></p>' +
+    '<details class="profil-eltern" id="profil-eltern">' +
+      '<summary>Für Eltern: Geräte verbinden</summary>' +
+      '<p class="profil-hinweis">Mit dem Familien-Code wird der Fortschritt auf allen Geräten abgeglichen. Einmal pro Gerät eingeben.</p>' +
+      '<form class="profil-zeile" id="profil-code-form">' +
+        '<input id="profil-code" type="password" autocomplete="off" placeholder="Familien-Code" aria-label="Familien-Code">' +
+        '<button class="btn" type="submit">Verbinden</button>' +
+      '</form>' +
+      '<p class="profil-hinweis" id="profil-code-status"></p>' +
+    '</details>' +
+    '<button class="btn btn-ghost profil-schliessen" id="profil-zu" type="button">Schließen</button>';
+  document.body.appendChild(dlg);
+
+  function $(id) { return document.getElementById(id); }
+
+  function zeigeKnopf() {
+    var p = aktiv();
+    knopf.querySelector('.name').textContent = p ? anzeige(p).charAt(0) : '👤';
+    knopf.title = p ? 'Profil: ' + anzeige(p) + ' – wechseln' : 'Wer spielt?';
+    wLink.textContent = p ? 'Du bist nicht ' + anzeige(p) + '? Profil wechseln' : 'Wer spielt? Profil wählen';
+    wLink.hidden = false;
+  }
+
+  function zeigeStatus() {
+    var s = sync.hatCode() ? sync.status : 'aus';
+    knopf.querySelector('.dot').setAttribute('data-s', s);
+    var text = {
+      aus: 'Nicht verbunden – der Fortschritt bleibt auf diesem Gerät.',
+      ok: 'Verbunden ✓ – Fortschritt wird auf allen Geräten abgeglichen.',
+      offline: 'Gerade kein Netz – wird später abgeglichen.',
+      'code-falsch': 'Der Familien-Code stimmt nicht mehr. Bitte neu eingeben.'
+    }[s] || '';
+    var el = $('profil-code-status');
+    if (el) el.textContent = text;
+  }
+
+  function zeigeListe() {
+    var liste = $('profil-liste');
+    liste.innerHTML = '';
+    sync.profile().then(function (profile) {
+      var aktuell = aktiv();
+      if (aktuell && !profile.some(function (e) { return e.profil === aktuell; })) profile.push({ profil: aktuell });
+      profile.sort(function (a, b) { return a.profil.localeCompare(b.profil, 'de'); });
+      liste.innerHTML = '';
+      profile.forEach(function (e) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'btn';
+        b.textContent = anzeige(e.profil);
+        if (e.profil === aktuell) b.setAttribute('aria-current', 'true');
+        b.addEventListener('click', function () { waehle(e.profil); });
+        liste.appendChild(b);
+      });
+      $('profil-hinweis').textContent = profile.length ? '' : 'Noch kein Profil. Gib unten deinen Namen ein.';
+      zeigeStatus();
+    });
+  }
+
+  function oeffne() {
+    zeigeListe();
+    zeigeStatus();
+    $('profil-code').value = '';
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+  function schliesse() { if (dlg.open) dlg.close(); }
+
+  /* ---------- Profile ---------- */
+  function waehle(p) {
+    if (p === aktiv()) { schliesse(); return; }
+    $('profil-hinweis').textContent = 'Einen Moment …';
+    var alt = aktiv();
+    if (alt) sync.speichern(alt, lese());
+    sync.jetztSenden().then(function () {
+      ls(function () { localStorage.setItem(AKTIV, p); });
+      return sync.laden(p);
+    }).then(function (daten) {
+      schreibe(daten);
+      neuLaden();
+    });
+  }
+
+  function neuesProfil(roh) {
+    var p = String(roh || '').trim().toLowerCase().replace(/\s+/g, '-');
+    if (!NAME_RE.test(p)) {
+      $('profil-hinweis').textContent = 'Bitte nur Buchstaben, Zahlen und Bindestrich (höchstens 32 Zeichen).';
+      return;
+    }
+    if (!aktiv()) {
+      /* Erstes Profil auf diesem Gerät: Der bisherige Fortschritt gehört ihm. */
+      ls(function () { localStorage.setItem(AKTIV, p); });
+      sync.speichern(p, lese());
+      sync.jetztSenden();
+      zeigeKnopf();
+      schliesse();
+      return;
+    }
+    sync.profile().then(function (profile) {
+      if (profile.some(function (e) { return e.profil === p; })) { waehle(p); return; }
+      var alt = aktiv();
+      sync.speichern(alt, lese());
+      sync.jetztSenden().then(function () {
+        ls(function () { localStorage.setItem(AKTIV, p); });
+        schreibe(null); /* neues Kind fängt bei null an */
+        neuLaden();
+      });
+    });
+  }
+
+  knopf.addEventListener('click', oeffne);
+  wLink.addEventListener('click', oeffne);
+  $('profil-zu').addEventListener('click', schliesse);
+  $('profil-neu-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    neuesProfil($('profil-neu').value);
+  });
+  $('profil-code-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var code = $('profil-code').value;
+    if (!code) return;
+    $('profil-code-status').textContent = 'Prüfe …';
+    sync.codeSetzen(code).then(function (ok) {
+      if (!ok) { $('profil-code-status').textContent = 'Code falsch oder kein Netz.'; return; }
+      $('profil-code').value = '';
+      if (aktiv()) sync.speichern(aktiv(), lese());
+      zeigeListe();
+    });
+  });
+
+  /* Aufruf aus den Speicherfunktionen der App */
+  window.ZDSync = {
+    geaendert: function () { var p = aktiv(); if (p) sync.speichern(p, lese()); }
+  };
+
+  /* ---------- Start ---------- */
+  zeigeKnopf();
+  zeigeStatus();
+  var schonGewaehlt = ls(function () { return sessionStorage.getItem('zahlendrache.gewaehlt'); });
+  var p = aktiv();
+  if (p) {
+    sync.laden(p).then(function (daten) {
+      zeigeStatus();
+      /* Neuerer Stand von einem anderen Gerät: übernehmen und einmal neu starten.
+         Die Sperre verhindert eine Schleife, falls die App beim Start den
+         Stand leicht umschreibt (z. B. neue Standardfelder ergänzt). */
+      var zuletzt = Number(ls(function () { return sessionStorage.getItem('zahlendrache.syncReload'); }) || 0);
+      if (daten && !gleich(daten, lese()) && Date.now() - zuletzt > 30000) {
+        ls(function () { sessionStorage.setItem('zahlendrache.syncReload', String(Date.now())); });
+        schreibe(daten);
+        neuLaden();
+        return;
+      }
+      if (!schonGewaehlt) {
+        sync.profile().then(function (profile) {
+          ls(function () { sessionStorage.setItem('zahlendrache.gewaehlt', '1'); });
+          if (profile.length > 1) oeffne();
+        });
+      }
+    });
+  } else if (!schonGewaehlt) {
+    sync.profile().then(function (profile) {
+      ls(function () { sessionStorage.setItem('zahlendrache.gewaehlt', '1'); });
+      if (profile.length > 0) oeffne();
+    });
+  }
+}());
 </script>
 </body>
 </html>
